@@ -4,7 +4,7 @@
   "newProjectRoot": "projects",
   "projects": {
     "exDateMan": {
-      "root": "",
+      "root": "./",
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
@@ -55,6 +55,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
+            "baseHref": "/",
             "browserTarget": "exDateMan:build"
           },
           "configurations": {
