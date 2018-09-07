@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "thing-card.component.scss"
+    ],
+    "names": [],
+    "file": "thing-card.component.css"
+}
