@@ -12,4 +12,8 @@ export class ThingsComponent implements OnInit {
   ngOnInit() {
   }
 
+  onAddThing() {
+    alert('Add thing');
+  }
+
 }

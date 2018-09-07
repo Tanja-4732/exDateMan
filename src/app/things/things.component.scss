@@ -1,0 +1,14 @@
+.fab {
+  top: auto;
+  right: 20px;
+  bottom: 10px;
+  left: auto;
+  position: fixed;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: 5fr, 5fr;
+  gap: 1fr 1fr;
+}

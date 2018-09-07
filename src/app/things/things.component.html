@@ -1,6 +1,3 @@
-<button mat-fab class="fab">
-  <i class="material-icons">add</i>
-</button>
 <a href="" class="noUnderline">
   <app-thing-card></app-thing-card>
 </a>
@@ -19,4 +16,8 @@
 <a href="" class="noUnderline">
   <app-thing-card></app-thing-card>
 </a>
-    <router-outlet></router-outlet>
+<button mat-fab class="fab" (click)="onAddThing()">
+    <i class="material-icons">add</i>
+  </button>
+<router-outlet></router-outlet>
+<app-add-thing></app-add-thing>
