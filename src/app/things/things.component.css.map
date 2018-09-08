@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,IAAI,CAAC;EACH,GAAG,EAAE,IAAI;EACT,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI;EACZ,IAAI,EAAE,IAAI;EACV,QAAQ,EAAE,KAAK;CAChB;;AAGD,AAAA,KAAK,CAAC;EACJ,OAAO,EAAE,IAAI;EACb,qBAAqB,EAAE,QAAQ;EAC/B,GAAG,EAAE,OAAO;CACb",
-    "sources": [
-        "things.component.scss"
-    ],
-    "names": [],
-    "file": "things.component.css"
-}

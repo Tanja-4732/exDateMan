@@ -11,4 +11,8 @@ export class ThingsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  onAddThing() {
+
+  }
 }
