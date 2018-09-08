@@ -12,5 +12,10 @@ export class THING {
         throw Error("Already added");
       }
     });
+
+    // TODO remove the testing code
+    this.stocks.push(new STOCK(this, new Date(), "1 kg"));
   }
 }
+
+// TODO Automatic isLeft calculation (took 3 pieces of this stock)

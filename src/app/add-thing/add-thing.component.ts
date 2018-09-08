@@ -15,6 +15,6 @@ export class AddThingComponent implements OnInit {
 
   onAddThing() {
     THING.things.push(new THING(this.thingName, this.thingCategory));
-    alert("hi");
+    // alert("Thing " + this.thingName + " added");
   }
 }

@@ -1,9 +1,9 @@
-<mat-card>
-    <mat-card-header (click)="ngOnInit();">
-        <mat-card-title>{{thingName}}</mat-card-title>
-        <mat-card-subtitle>{{thingCategory}}</mat-card-subtitle>
+<mat-card (click)="onCard()">
+    <mat-card-header>
+        <mat-card-title>{{thing.name}}</mat-card-title>
+        <mat-card-subtitle>{{thing.category}}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
-        Text content
+    <mat-card-content *ngFor="let stock of thing.stocks">
+        {{stock.quantity}} * {{stock.exDate | date}}
     </mat-card-content>
 </mat-card>

@@ -6,9 +6,12 @@
   position: fixed;
 }
 
-
 .grid {
   display: grid;
-  grid-template-columns: 5fr, 5fr;
-  gap: 1fr 1fr;
+  grid-template-columns: auto auto;
+  // grid-auto-columns: 1fr, 1fr;
+  // gap: 1fr 1fr;
+
+  // display: flex !important;
+  // flex-direction: column !important;
 }

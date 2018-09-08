@@ -1,24 +1,27 @@
-<a href="" class="noUnderline">
-  <app-thing-card></app-thing-card>
-</a>
 
-<br/>
+<div class="grid">
+  <div *ngFor="let thing of things">
+    <app-thing-card [thing]="thing"></app-thing-card>
+  </div>
+</div>
 
-<a href="" class="noUnderline">
-  <app-thing-card></app-thing-card>
-</a>
+<br />
+
 <button mat-fab class="fab" (click)="onAddThing()">
-    <i class="material-icons">add</i>
-  </button>
-<router-outlet></router-outlet>
+  <i class="material-icons">add</i>
+</button>
 
+
+<!-- TODO remove the testing code -->
 <app-add-thing></app-add-thing>
 
-<br/>
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
+<br />
 
 <app-add-stock>
 
 </app-add-stock>
+
+<router-outlet></router-outlet>

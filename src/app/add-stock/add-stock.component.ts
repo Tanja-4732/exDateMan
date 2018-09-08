@@ -1,3 +1,5 @@
+import { THING } from "./../models/thing.model";
+import { STOCK } from "./../models/stock.model";
 import { Component, OnInit } from "@angular/core";
 
 @Component({
@@ -10,7 +12,16 @@ export class AddStockComponent implements OnInit {
   name: string;
   useUpIn: number; // Days
   quantity: string;
-  constructor() {}
+
+  private thing: THING;
+
+  onAddStock() {
+    this.thing.stocks.push(
+      new STOCK(this.thing, this.exDate, this.quantity, this.useUpIn)
+    );
+  }
+
+  // constructor(private thing: THING) {}
 
   ngOnInit() {}
 }

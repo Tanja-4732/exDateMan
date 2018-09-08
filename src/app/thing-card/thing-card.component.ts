@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { THING } from "./../models/thing.model";
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'app-thing-card',
-  templateUrl: './thing-card.component.html',
-  styleUrls: ['./thing-card.component.scss']
+  selector: "app-thing-card",
+  templateUrl: "./thing-card.component.html",
+  styleUrls: ["./thing-card.component.scss"]
 })
 export class ThingCardComponent implements OnInit {
+  constructor() {}
 
-  thingName = 'Ketchup';
-  thingCategory = 'Sauce';
+  @Input() thing: THING;
+  ngOnInit() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  /**
+   * When the user taps on a thing card
+   */
+  onCard() {}
 }

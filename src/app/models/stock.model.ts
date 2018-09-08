@@ -1,7 +1,7 @@
 import { THING } from "./thing.model";
 
 export class STOCK {
-  addDate = Date.now;
+  addDate = new Date();
   constructor(
     public thing: THING,
     public exDate: Date,
