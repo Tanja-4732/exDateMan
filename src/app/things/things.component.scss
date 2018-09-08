@@ -10,8 +10,6 @@
   display: grid;
   grid-template-columns: auto auto;
   // grid-auto-columns: 1fr, 1fr;
-  // gap: 1fr 1fr;
-
-  // display: flex !important;
-  // flex-direction: column !important;
+  // gap: 1rem 1rem;
+  gap: 10px 10px;
 }

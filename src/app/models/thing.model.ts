@@ -14,7 +14,7 @@ export class THING {
     });
 
     // TODO remove the testing code
-    this.stocks.push(new STOCK(this, new Date(), "1 kg"));
+    // this.stocks.push(new STOCK(this, new Date(), "1 kg"));
   }
 }
 
