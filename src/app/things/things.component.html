@@ -1,4 +1,8 @@
-
+<p *ngIf="things.length === 0">
+  Welcome!
+  <br>
+  Add things by hitting the plus button!
+</p>
 <div class="grid">
   <div *ngFor="let thing of things">
     <app-thing-card [thing]="thing"></app-thing-card>
@@ -7,13 +11,15 @@
 
 <br />
 
-<button mat-fab class="fab" (click)="onAddThing()">
-  <i class="material-icons">add</i>
-</button>
+<a routerLink="/addThing">
+  <button mat-fab class="fab" (click)="onAddThing()">
+    <i class="material-icons">add</i>
+  </button>
+</a>
 
 
 <!-- TODO remove the testing code -->
-<app-add-thing></app-add-thing>
+<!-- <app-add-thing></app-add-thing>
 
 <br />
 <br />
@@ -22,6 +28,6 @@
 
 <app-add-stock>
 
-</app-add-stock>
+</app-add-stock> -->
 
 <router-outlet></router-outlet>

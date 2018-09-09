@@ -1,8 +1,9 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { AppRoutingModule } from "./app-routing.module";
 
 import { FormsModule /* , ReactiveFormsModule */ } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatCheckboxModule,
   MatCardModule,
@@ -13,13 +14,13 @@ import {
   MatNativeDateModule
 } from "@angular/material";
 
-import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { ThingCardComponent } from "./thing-card/thing-card.component";
 import { StockCardComponent } from "./stock-card/stock-card.component";
 import { ThingsComponent } from "./things/things.component";
 import { AddThingComponent } from "./add-thing/add-thing.component";
 import { AddStockComponent } from "./add-stock/add-stock.component";
+import { StocksComponent } from './stocks/stocks.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AddStockComponent } from "./add-stock/add-stock.component";
     StockCardComponent,
     ThingsComponent,
     AddThingComponent,
-    AddStockComponent
+    AddStockComponent,
+    StocksComponent
   ],
   imports: [
     BrowserModule,
