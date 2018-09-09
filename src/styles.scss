@@ -5,3 +5,18 @@
 .noUnderline {
   text-decoration: none;
 }
+.grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  // grid-auto-columns: 1fr, 1fr;
+  // gap: 1rem 1rem;
+  gap: 10px 10px;
+}
+.fab {
+  top: auto !important;
+  right: 20px !important;
+  bottom: 10px !important;
+  left: auto !important;
+  position: fixed !important;
+}
+

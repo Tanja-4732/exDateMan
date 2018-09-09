@@ -9,11 +9,8 @@ import { Component, OnInit, Input } from "@angular/core";
 export class ThingCardComponent implements OnInit {
   constructor() {}
 
-  @Input() thing: THING;
-  ngOnInit() {}
+  @Input()
+  thing: THING;
 
-  /**
-   * When the user taps on a thing card
-   */
-  onCard() {}
+  ngOnInit() {}
 }

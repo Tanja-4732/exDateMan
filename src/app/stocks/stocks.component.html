@@ -1,3 +1,22 @@
-<p>
-  stocks works!
-</p>
+<div *ngIf="!stopOperation">
+  <a routerLink="/thing/{{thingName}}/add-stock">
+    <button mat-fab class="fab" (click)="onAddStock()">
+      <i class="material-icons">add</i>
+    </button>
+  </a>
+
+  <div *ngIf="stocks.length === 0">
+    {{thingName}} currently doesn't have any stocks.
+  </div>
+
+  <div class="grid">
+      <div *ngFor="let stock of stocks">
+        <app-stock-card [stock]="stock"></app-stock-card>
+      </div>
+    </div>
+</div>
+
+<div *ngIf="stopOperation">
+  Oh no. <br>
+  The thing "{{thingName}}" couldn't be found.
+</div>
