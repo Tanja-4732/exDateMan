@@ -1,3 +1,4 @@
+import { THING } from "./../models/thing.model";
 import { STOCK } from "./../models/stock.model";
 import { Input } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
@@ -9,9 +10,11 @@ import { Component, OnInit } from "@angular/core";
 })
 export class StockCardComponent implements OnInit {
   constructor() {}
-
+  thing: THING;
   @Input()
   stock: STOCK;
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.thing = this.stock.thing;
+  }
 }

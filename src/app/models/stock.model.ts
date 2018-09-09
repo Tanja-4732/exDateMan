@@ -11,6 +11,5 @@ export class STOCK {
     public percentLeft = 100.0
   ) {
     this.id = thing.lastStockId + 1;
-    thing.stocks.push(this);
   }
 }

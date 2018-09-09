@@ -1,3 +1,15 @@
-<p>
-  stock-card works!
-</p>
+<a routerLink="/thing/{{thing.name}}/stock/{{stock.id}}" class="noUnderline">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>#{{stock.id}}</mat-card-title>
+      <mat-card-subtitle>{{thing.name}} ({{thing.category}})</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngFor="let stock of thing.stocks">
+      Added on: {{stock.addDate | date}} <br>
+      Expiration date: {{stock.exDate | date}} <br>
+      Use up in: {{stock.useUpIn}} <br>
+      Quantity: {{stock.quantity}} <br>
+      Percent left: {{stock.percentLeft}}
+    </mat-card-content>
+  </mat-card>
+</a>

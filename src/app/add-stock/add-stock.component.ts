@@ -19,11 +19,10 @@ export class AddStockComponent implements OnInit {
   private thing: THING;
 
   onAddStock() {
-    new STOCK(this.thing, this.exDate, this.quantity, this.useUpIn);
+    this.thing.addStock(
+      new STOCK(this.thing, this.exDate, this.quantity, this.useUpIn)
+    );
   }
-
-  // constructor(private thing: THING) {}
-
   ngOnInit() {
     this.getThing();
   }
@@ -31,7 +30,6 @@ export class AddStockComponent implements OnInit {
   getThing() {
     this.thingName = this.router.snapshot.params["thingName"];
     console.log(this.thingName);
-
     try {
       this.thing = THING.getThingByName(this.thingName);
     } catch (error) {

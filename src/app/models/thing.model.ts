@@ -13,9 +13,6 @@ export class THING {
         throw Error("Already added");
       }
     });
-
-    // TODO remove the testing code
-    // this.stocks.push(new STOCK(this, new Date(), "1 kg"));
   }
 
   static getStocksByName(thingName: string): STOCK[] {
@@ -36,6 +33,11 @@ export class THING {
     }
     console.log("reached error");
     throw Error("Thing couldn't be found.");
+  }
+
+  addStock(stock: STOCK) {
+    this.stocks.push(stock);
+    this.lastStockId++;
   }
 }
 
