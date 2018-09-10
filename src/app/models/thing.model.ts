@@ -39,6 +39,15 @@ export class THING {
     this.stocks.push(stock);
     this.lastStockId++;
   }
+
+  getStockById(id: number) {
+    for (const stock of this.stocks) {
+      if (stock.id === id) {
+        return stock;
+      }
+    }
+    throw Error("Stock couldn't be found.");
+  }
 }
 
 // TODO Automatic isLeft calculation (took 3 pieces of this stock)

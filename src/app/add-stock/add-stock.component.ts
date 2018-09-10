@@ -9,8 +9,8 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./add-stock.component.scss"]
 })
 export class AddStockComponent implements OnInit {
-  stopOperation = false;
   constructor(private router: ActivatedRoute) {}
+  stopOperation = false;
   exDate: Date;
   useUpIn: number; // Days
   quantity: string;

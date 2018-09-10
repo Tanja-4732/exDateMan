@@ -1,3 +1,25 @@
-<p>
-  edit-stock works!
-</p>
+<div *ngIf="!stopOperation">
+  <mat-form-field>
+    <input matInput [matDatepicker]="exDatePicker" [(ngModel)]="exDate">
+    <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #exDatePicker></mat-datepicker>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="useUpIn">
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="quantity">
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="percent">
+  </mat-form-field>
+  <button mat-button (click)="onEditStock()">Add stock</button>
+</div>
+
+<div *ngIf="stopOperation">
+  Oh, no. <br>
+  {{thingName}} couldn't be found.
+</div>
