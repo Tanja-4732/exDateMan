@@ -21,6 +21,7 @@ import { ThingsComponent } from "./things/things.component";
 import { AddThingComponent } from "./add-thing/add-thing.component";
 import { AddStockComponent } from "./add-stock/add-stock.component";
 import { StocksComponent } from './stocks/stocks.component';
+import { EditStockComponent } from './edit-stock/edit-stock.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { StocksComponent } from './stocks/stocks.component';
     ThingsComponent,
     AddThingComponent,
     AddStockComponent,
-    StocksComponent
+    StocksComponent,
+    EditStockComponent
   ],
   imports: [
     BrowserModule,
