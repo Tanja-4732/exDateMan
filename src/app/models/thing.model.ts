@@ -38,7 +38,19 @@ export class THING {
   }
 
   deleteStockByID(id: number): any {
-    throw new Error("Method not implemented."); // TODO implement
+    console.log("deleteCalled");
+    this.stocks.splice(this.getStockIndexById(id), 1);
+  }
+
+  private getStockIndexById(id: number) {
+    let i = -1;
+    for (; i < this.stocks.length; i++) {
+      const stock = this.stocks[i + 1];
+      if (stock.id === id) {
+        return i;
+      }
+    }
+    return i;
   }
 
   addStock(stock: STOCK) {
@@ -48,7 +60,8 @@ export class THING {
 
   getStockById(id: number) {
     for (const stock of this.stocks) {
-      if (stock.id == id) { // TODO maybe change back to === from ==
+      if (stock.id == id) {
+        // TODO maybe change back to === from ==
         return stock;
       }
     }

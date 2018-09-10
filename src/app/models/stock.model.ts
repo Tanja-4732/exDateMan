@@ -32,9 +32,10 @@ export class STOCK {
   }
 
   set percentLeft(percentLeft: number) {
-    if (percentLeft !== 100 && percentLeft !== 0) {
+    if (percentLeft != 100 && percentLeft != 0) {
+      // TODO Change back to !== form !=
       this.openedOn = new Date();
-    } else if (percentLeft === 0) {
+    } else if (percentLeft == 0) {
       this.thing.deleteStockByID(this.id);
     }
     this._percentLeft = percentLeft;

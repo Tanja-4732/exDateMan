@@ -11,7 +11,8 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatDatepickerModule,
-  MatNativeDateModule
+  MatNativeDateModule,
+  MatSliderModule
 } from "@angular/material";
 
 import { AppComponent } from "./app.component";
@@ -45,7 +46,8 @@ import { EditStockComponent } from './edit-stock/edit-stock.component';
     MatInputModule,
     FormsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
