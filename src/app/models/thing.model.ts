@@ -18,10 +18,12 @@ export class THING {
   static getStocksByName(thingName: string): STOCK[] {
     for (const thing of THING.things) {
       if (thing.name === thingName) {
+        console.log("Found " + thingName);
+
         return thing.stocks;
       }
     }
-    console.log("reached error");
+    console.log("reached error while searching for " + thingName);
     throw Error("Thing couldn't be found.");
   }
 
@@ -35,6 +37,10 @@ export class THING {
     throw Error("Thing couldn't be found.");
   }
 
+  deleteStockByID(id: number): any {
+    throw new Error("Method not implemented."); // TODO implement
+  }
+
   addStock(stock: STOCK) {
     this.stocks.push(stock);
     this.lastStockId++;
@@ -42,7 +48,7 @@ export class THING {
 
   getStockById(id: number) {
     for (const stock of this.stocks) {
-      if (stock.id === id) {
+      if (stock.id == id) { // TODO maybe change back to === from ==
         return stock;
       }
     }

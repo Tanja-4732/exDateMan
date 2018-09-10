@@ -10,25 +10,38 @@ import { STOCK } from "../models/stock.model";
 })
 export class EditStockComponent implements OnInit {
   stopOperation = false;
+
+  thing: THING;
+  stock: STOCK;
+
+  thingName: string;
+  stockId: number;
+
   exDate: Date;
   useUpIn: number; // Days
   quantity: string;
-  stockId: number;
-  thing: THING;
-  stock: STOCK;
-  thingName: any;
+  percentLeft: number;
 
   constructor(private router: ActivatedRoute) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getStock();
+  }
 
   getStock() {
     this.thingName = this.router.snapshot.params["thingName"];
     this.stockId = this.router.snapshot.params["stockId"];
-    console.log(this.stockId);
+
+    this.thing = THING.getThingByName(this.thingName);
+    console.log("Stock ID=" + this.stockId);
+
+    this.stock = this.thing.getStockById(this.stockId);
     try {
-      this.thing = THING.getThingByName(this.thingName);
-      this.stock = this.thing.getStockById(this.stockId);
+
+      this.exDate = this.stock.exDate;
+      this.useUpIn = this.stock.useUpIn;
+      this.quantity = this.stock.quantity;
+      this.percentLeft = this.stock._percentLeft;
     } catch (error) {
       this.stopOperation = true;
       // console.error(error);
@@ -37,6 +50,9 @@ export class EditStockComponent implements OnInit {
   }
 
   onEditStock() {
-
+    this.stock.exDate = this.exDate;
+    this.stock.useUpIn = this.useUpIn;
+    this.stock.quantity = this.quantity;
+    this.stock.percentLeft = this.percentLeft;
   }
 }
