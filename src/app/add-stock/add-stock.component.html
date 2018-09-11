@@ -21,7 +21,8 @@
   <br>
   <mat-form-field appearance="outline">
     <mat-label>Use up in # days</mat-label>
-    <input matInput type="text" placeholder="3" [(ngModel)]="useUpIn">
+    <input matInput type="number" placeholder="3" [(ngModel)]="useUpIn">
+    <!-- <span matSuffix>&nbsp;days</span> -->
     <i matSuffix class="material-icons">update</i>
   </mat-form-field>
   <br>

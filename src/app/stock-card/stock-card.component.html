@@ -1,8 +1,8 @@
 <a routerLink="/thing/{{thing.name}}/stock/{{stock.id}}" class="noUnderline">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>#{{stock.id}}</mat-card-title>
-      <mat-card-subtitle>{{thing.name}} ({{thing.category}})</mat-card-subtitle>
+      <mat-card-title>Use up before {{stock.getExDate() | date}}</mat-card-title>
+      <mat-card-subtitle>Stock ID #{{stock.id}} of {{thing.name}} ({{thing.category}})</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       Added on: {{stock.addDate | date}} <br>

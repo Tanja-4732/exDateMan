@@ -12,7 +12,8 @@ import {
   MatInputModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  MatSliderModule
+  MatSliderModule,
+  MatToolbarModule
 } from "@angular/material";
 
 import { AppComponent } from "./app.component";
@@ -49,7 +50,8 @@ import { EditThingComponent } from './edit-thing/edit-thing.component';
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSliderModule
+    MatSliderModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
