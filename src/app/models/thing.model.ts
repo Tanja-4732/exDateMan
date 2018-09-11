@@ -35,6 +35,16 @@ export class THING {
     throw Error("Thing couldn't be found.");
   }
 
+  tryChangeName(thingName: string): boolean {
+    try {
+      THING.getThingByName(thingName);
+    } catch (e) {
+      this.name = thingName;
+      return true;
+    }
+    return false;
+  }
+
   deleteStockByID(id: number): any {
     this.stocks.splice(this.getStockIndexById(id), 1);
   }
