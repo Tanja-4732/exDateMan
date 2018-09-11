@@ -29,7 +29,6 @@ export class AddStockComponent implements OnInit {
 
   getThing() {
     this.thingName = this.router.snapshot.params["thingName"];
-    console.log(this.thingName);
     try {
       this.thing = THING.getThingByName(this.thingName);
     } catch (error) {

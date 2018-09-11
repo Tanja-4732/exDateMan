@@ -23,6 +23,7 @@ import { AddThingComponent } from "./add-thing/add-thing.component";
 import { AddStockComponent } from "./add-stock/add-stock.component";
 import { StocksComponent } from './stocks/stocks.component';
 import { EditStockComponent } from './edit-stock/edit-stock.component';
+import { EditThingComponent } from './edit-thing/edit-thing.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { EditStockComponent } from './edit-stock/edit-stock.component';
     AddThingComponent,
     AddStockComponent,
     StocksComponent,
-    EditStockComponent
+    EditStockComponent,
+    EditThingComponent
   ],
   imports: [
     BrowserModule,

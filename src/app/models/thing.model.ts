@@ -18,8 +18,6 @@ export class THING {
   static getStocksByName(thingName: string): STOCK[] {
     for (const thing of THING.things) {
       if (thing.name === thingName) {
-        console.log("Found " + thingName);
-
         return thing.stocks;
       }
     }
@@ -38,19 +36,18 @@ export class THING {
   }
 
   deleteStockByID(id: number): any {
-    console.log("deleteCalled");
     this.stocks.splice(this.getStockIndexById(id), 1);
   }
 
   private getStockIndexById(id: number) {
-    let i = -1;
+    let i = 0;
     for (; i < this.stocks.length; i++) {
-      const stock = this.stocks[i + 1];
+      const stock = this.stocks[i];
       if (stock.id === id) {
         return i;
       }
     }
-    return i;
+    return -1;
   }
 
   addStock(stock: STOCK) {

@@ -32,12 +32,9 @@ export class EditStockComponent implements OnInit {
     this.thingName = this.router.snapshot.params["thingName"];
     this.stockId = this.router.snapshot.params["stockId"];
 
-    this.thing = THING.getThingByName(this.thingName);
-    console.log("Stock ID=" + this.stockId);
-
-    this.stock = this.thing.getStockById(this.stockId);
     try {
-
+      this.thing = THING.getThingByName(this.thingName);
+      this.stock = this.thing.getStockById(this.stockId);
       this.exDate = this.stock.exDate;
       this.useUpIn = this.stock.useUpIn;
       this.quantity = this.stock.quantity;

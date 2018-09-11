@@ -1,4 +1,6 @@
 <div *ngIf="!stopOperation">
+<button mat-button routerLink="/thing/{{thingName}}/edit-thing">Edit thing</button>
+<br>
   <a routerLink="/thing/{{thingName}}/add-stock">
     <button mat-fab class="fab" (click)="onAddStock()">
       <i class="material-icons">add</i>

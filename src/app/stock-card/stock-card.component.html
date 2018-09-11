@@ -4,7 +4,7 @@
       <mat-card-title>#{{stock.id}}</mat-card-title>
       <mat-card-subtitle>{{thing.name}} ({{thing.category}})</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content *ngFor="let stock of thing.stocks">
+    <mat-card-content>
       Added on: {{stock.addDate | date}} <br>
       Expiration date: {{stock.exDate | date}} <br>
       Use up in: {{stock.useUpIn}} <br>
