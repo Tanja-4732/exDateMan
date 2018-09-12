@@ -20,6 +20,7 @@ export class EditThingComponent implements OnInit {
   thingCategory: string;
   thing: THING;
   unavailableName: string;
+
   ngOnInit() {
     this.getThing();
   }
@@ -44,19 +45,35 @@ export class EditThingComponent implements OnInit {
       this.unavailableName = this.thingName;
     }
   }
+
   onDeleteThing() {
-    // const dialogRef = this.
-    // const reallyDelete =
-// TODO implement
-    this.thing.deleteThingByName(this.thingName);
+    let reallyDelete: boolean;
+    reallyDelete = false;
+
+    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+      height: "400px",
+      width: "600px",
+      // position: "center",
+      data: { reallyDelete: reallyDelete }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log("The dialog was closed.");
+      reallyDelete = result;
+    });
+
+    if (reallyDelete) {
+      this.thing.deleteThingByName(this.thingName);
+    }
   }
 }
 
-  export class DeleteConfirmationDialog {
-    constructor(public dialogRef: MatDialogRef<DeleteConfirmationDialog>,
-      @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
-      onNoClick(): void {
-        this.dialogRef.close();
-      }
+export class DeleteConfirmationDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteConfirmationDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData
+  ) {}
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
