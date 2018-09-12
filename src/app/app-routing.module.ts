@@ -1,4 +1,4 @@
-import { EditThingComponent } from './edit-thing/edit-thing.component';
+import { EditThingComponent } from "./edit-thing/edit-thing.component";
 import { EditStockComponent } from "./edit-stock/edit-stock.component";
 import { AddStockComponent } from "./add-stock/add-stock.component";
 import { StocksComponent } from "./stocks/stocks.component";
@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: "thing/:thingName", component: StocksComponent },
   { path: "thing/:thingName/edit-thing", component: EditThingComponent },
   { path: "thing/:thingName/add-stock", component: AddStockComponent },
-  { path: "thing/:thingName/stock/:stockId", component: EditStockComponent }
+  { path: "thing/:thingName/stock/:stockId", component: EditStockComponent },
 ];
 
 @NgModule({

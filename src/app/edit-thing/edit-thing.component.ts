@@ -1,6 +1,11 @@
 import { THING } from "./../models/thing.model";
 import { ActivatedRoute } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Inject } from "@angular/core";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+
+export interface DialogData {
+  reallyDelete: boolean;
+}
 
 @Component({
   selector: "app-edit-thing",
@@ -8,7 +13,7 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./edit-thing.component.scss"]
 })
 export class EditThingComponent implements OnInit {
-  constructor(private router: ActivatedRoute) {}
+  constructor(private router: ActivatedRoute, public dialog: MatDialog) {}
   stopOperation = false;
   nameUnavailable = false;
   thingName: string;
@@ -38,5 +43,20 @@ export class EditThingComponent implements OnInit {
       this.nameUnavailable = true;
       this.unavailableName = this.thingName;
     }
+  }
+  onDeleteThing() {
+    // const dialogRef = this.
+    // const reallyDelete =
+// TODO implement
+    this.thing.deleteThingByName(this.thingName);
+  }
+}
+
+  export class DeleteConfirmationDialog {
+    constructor(public dialogRef: MatDialogRef<DeleteConfirmationDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+      onNoClick(): void {
+        this.dialogRef.close();
+      }
   }
 }

@@ -1,5 +1,5 @@
 <div *ngIf="!stopOperation">
-<button mat-button routerLink="/thing/{{thingName}}/edit-thing">Edit thing</button>
+<button mat-raised-button routerLink="/thing/{{thingName}}/edit-thing">Edit/delete thing</button>
 <br>
   <a routerLink="/thing/{{thingName}}/add-stock">
     <button mat-fab class="fab" (click)="onAddStock()">

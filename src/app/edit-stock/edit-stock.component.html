@@ -24,7 +24,7 @@
     <i matSuffix class="material-icons">pie_chart</i>
   </mat-form-field>
   <mat-slider min="0" max="100" step="1" [(value)]="percentLeft"></mat-slider>
-  <button mat-button (click)="onEditStock()">Edit stock</button>
+  <button mat-raised-button (click)="onEditStock()">Edit stock</button>
 </div>
 
 <div *ngIf="stopOperation">

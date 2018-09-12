@@ -11,7 +11,10 @@
       <i matSuffix class="material-icons">category</i>
       <input matInput type="text" placeholder="Vegetables" [(ngModel)]="thingCategory">
     </mat-form-field>
-    <button mat-button (click)="onEditThing()">Edit thing</button>
+    <br>
+    <button mat-raised-button (click)="onEditThing()" color="primary">Edit thing</button>
+    &nbsp;
+    <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
     <div *ngIf="nameUnavailable">The name {{unavailableName}} is already in use.</div>
   </div>
 <div *ngIf="stopOperation">

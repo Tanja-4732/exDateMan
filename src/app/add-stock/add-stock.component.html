@@ -31,7 +31,7 @@
     <input matInput type="text" placeholder="3 kg" [(ngModel)]="quantity">
     <i matSuffix class="material-icons">equalizer</i>
   </mat-form-field>
-  <button mat-button (click)="onAddStock()">Add stock</button>
+  <button mat-raised-button (click)="onAddStock()">Add stock</button>
 </div>
 
 <div *ngIf="stopOperation">

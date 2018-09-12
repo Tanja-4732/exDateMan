@@ -74,6 +74,20 @@ export class THING {
     }
     throw Error("Stock couldn't be found.");
   }
+
+  getThingIndexByName(thingName: string): number {
+    let i: number;
+    for (i = 0; i < THING.things.length; i++) {
+      if (THING.things[i].name === thingName) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  deleteThingByName(name: string) {
+    THING.things.splice(this.getThingIndexByName(name), 1);
+  }
 }
 
 // TODO Automatic isLeft calculation (took 3 pieces of this stock)
