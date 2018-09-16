@@ -23,8 +23,12 @@
     <input matInput type="text" placeholder="50%" [(ngModel)]="percentLeft">
     <i matSuffix class="material-icons">pie_chart</i>
   </mat-form-field>
+  <br>
+  Or use the slider:
   <mat-slider min="0" max="100" step="1" [(value)]="percentLeft"></mat-slider>
-  <button mat-raised-button (click)="onEditStock()">Edit stock</button>
+  <br>
+  <br>
+  <button mat-raised-button (click)="onEditStock()" color="accent">Edit stock</button>
 </div>
 
 <div *ngIf="stopOperation">
