@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
+import { HttpClientModule } from "@angular/common/http";
 
 import { FormsModule /* , ReactiveFormsModule */ } from "@angular/forms";
 import {
@@ -24,11 +25,10 @@ import { ThingsComponent } from "./things/things.component";
 import { AddThingComponent } from "./add-thing/add-thing.component";
 import { AddStockComponent } from "./add-stock/add-stock.component";
 
-import { StocksComponent } from './stocks/stocks.component';
-import { EditStockComponent } from './edit-stock/edit-stock.component';
-import { EditThingComponent } from './edit-thing/edit-thing.component';
-import { LoginComponent } from './login/login.component';
-
+import { StocksComponent } from "./stocks/stocks.component";
+import { EditStockComponent } from "./edit-stock/edit-stock.component";
+import { EditThingComponent } from "./edit-thing/edit-thing.component";
+import { LoginComponent } from "./login/login.component";
 
 @NgModule({
   declarations: [
@@ -46,6 +46,7 @@ import { LoginComponent } from './login/login.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatCheckboxModule,
     MatCardModule,
