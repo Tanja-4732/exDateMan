@@ -9,8 +9,8 @@ import { Routes, RouterModule } from "@angular/router";
 import { ThingsComponent } from "./things/things.component";
 
 const routes: Routes = [
-  { path: "", component: }
-  // { path: "", redirectTo: "/things", pathMatch: "full" },
+  // { path: "", component:  },
+  { path: "", redirectTo: "/things", pathMatch: "full" },
   { path: "login", component: LoginComponent },
   { path: "things", component: ThingsComponent },
   { path: "addThing", component: AddThingComponent },
