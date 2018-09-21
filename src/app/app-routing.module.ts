@@ -17,7 +17,8 @@ const routes: Routes = [
   { path: "thing/:thingName", component: StocksComponent },
   { path: "thing/:thingName/edit-thing", component: EditThingComponent },
   { path: "thing/:thingName/add-stock", component: AddStockComponent },
-  { path: "thing/:thingName/stock/:stockId", component: EditStockComponent }
+  { path: "thing/:thingName/stock/:stockId", component: EditStockComponent },
+  { path: "", redirectTo: "/things", pathMatch: "full" },
 ];
 
 @NgModule({
