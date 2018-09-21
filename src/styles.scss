@@ -45,9 +45,9 @@
 .grid {
   display: grid;
   grid-template-columns: auto auto;
+  gap: 10px 10px;
   // grid-auto-columns: 1fr, 1fr;
   // gap: 1rem 1rem;
-  gap: 10px 10px;
 }
 
 .fab {
