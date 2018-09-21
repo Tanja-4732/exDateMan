@@ -1,19 +1,19 @@
-const express = require("express");
-const path = require("path");
+import { Request, Response } from "express";
+import * as express from "express";
+import * as path from "path";
 
 const app = express();
 
-app.use(express.static(__dirname + "/dist/exDateMan"));
-
-app.get("/api", (req, res, next) => {
+// TODO Give next a type
+app.get("/api", (req: Request, res: Response, next) => {
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader("Content-Type", "text/plain");
   // res.sendFile(path.join(__dirname + "/dist/exDateMan/index.html"));
-  res.end('Hello World');
+  res.end("Hello World");
 });
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/dist/exDateMan/index.html"))
+app.get("/*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname + "/dist/exDateMan/index.html"));
 });
 
 app.listen(process.env.PORT || 420);
