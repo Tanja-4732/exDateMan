@@ -27,7 +27,9 @@ export class DBConnectionService {
     throw Error("implement");
   }
 
-  getAllThings()
+  getAllThings() {
+
+  }
 
 
 }
