@@ -1,8 +1,21 @@
-import { Request, Response } from "express";
-import * as express from "express";
-import * as path from "path";
+// import "babel-polyfill";
 
-const app = express();
+import * as path from "path";
+import * as express from "express";
+import * as bodyParser from "body-parser";
+
+import routes from "./routes";
+import config from "./config/config";
+
+
+
+
+
+
+
+
+
+
 
 // TODO Give next a type
 app.get("/api", (req: Request, res: Response, next) => {
