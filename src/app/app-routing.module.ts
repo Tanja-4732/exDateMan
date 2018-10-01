@@ -1,3 +1,4 @@
+import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from "./login/login.component";
 import { EditThingComponent } from "./edit-thing/edit-thing.component";
 import { EditStockComponent } from "./edit-stock/edit-stock.component";
@@ -12,6 +13,9 @@ const routes: Routes = [
   // { path: "", component:  },
   { path: "", redirectTo: "/things", pathMatch: "full" },
   { path: "login", component: LoginComponent },
+  { path: "login/:email", component: LoginComponent },
+  { path: "register/", component: RegisterComponent },
+  { path: "register/:email", component: RegisterComponent },
   { path: "things", component: ThingsComponent },
   { path: "addThing", component: AddThingComponent },
   { path: "thing/:thingName", component: StocksComponent },

@@ -30,6 +30,7 @@ import { StocksComponent } from "./stocks/stocks.component";
 import { EditStockComponent } from "./edit-stock/edit-stock.component";
 import { EditThingComponent } from "./edit-thing/edit-thing.component";
 import { LoginComponent } from "./login/login.component";
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { LoginComponent } from "./login/login.component";
     StocksComponent,
     EditStockComponent,
     EditThingComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
