@@ -66,6 +66,12 @@ export class EditThingComponent implements OnInit {
       this.thing.deleteThingByName(this.thingName);
     }
   }
+
+  onDeleteNow() {
+    if (confirm("Really delete " + this.thingName + "?")) {
+      this.thing.deleteThingByName(this.thingName);
+    }
+  }
 }
 
 export class DeleteConfirmationDialog {

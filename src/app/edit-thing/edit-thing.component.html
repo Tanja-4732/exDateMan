@@ -14,7 +14,7 @@
     <br>
     <button mat-raised-button (click)="onEditThing()" color="primary">Edit thing</button>
     &nbsp;
-    <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
+    <button mat-raised-button (click)="onDeleteNow()" color="warn">Delete thing</button>
     <div *ngIf="nameUnavailable">The name {{unavailableName}} is already in use.</div>
   </div>
 <div *ngIf="stopOperation">
