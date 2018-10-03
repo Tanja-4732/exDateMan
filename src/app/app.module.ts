@@ -31,6 +31,7 @@ import { EditStockComponent } from "./edit-stock/edit-stock.component";
 import { EditThingComponent } from "./edit-thing/edit-thing.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from './register/register.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { RegisterComponent } from './register/register.component';
     EditStockComponent,
     EditThingComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

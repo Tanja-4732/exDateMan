@@ -52,9 +52,8 @@ export class EditThingComponent implements OnInit {
 
     const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
       height: "400px",
-      width: "600px",
-      // position: "center",
-      data: { reallyDelete: this.reallyDelete }
+      width: "600px"
+      // data: { reallyDelete: this.reallyDelete }
     });
 
     dialogRef.afterClosed().subscribe(result => {
