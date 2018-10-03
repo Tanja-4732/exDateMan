@@ -1,4 +1,4 @@
-import { DBConnectionService } from './services/DBConnection/dbconnection.service';
+import { DBConnectionService } from "./services/DBConnection/dbconnection.service";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -28,10 +28,12 @@ import { AddStockComponent } from "./add-stock/add-stock.component";
 
 import { StocksComponent } from "./stocks/stocks.component";
 import { EditStockComponent } from "./edit-stock/edit-stock.component";
-import { EditThingComponent } from "./edit-thing/edit-thing.component";
+import {
+  EditThingComponent,
+  DeleteConfirmationDialogComponent
+} from "./edit-thing/edit-thing.component";
 import { LoginComponent } from "./login/login.component";
-import { RegisterComponent } from './register/register.component';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { RegisterComponent } from "./register/register.component";
 
 @NgModule({
   declarations: [
@@ -46,7 +48,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     EditThingComponent,
     LoginComponent,
     RegisterComponent,
-    ConfirmDialogComponent
+    DeleteConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatDialogModule
   ],
   providers: [DBConnectionService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DeleteConfirmationDialogComponent]
 })
 export class AppModule {}

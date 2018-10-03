@@ -3,7 +3,9 @@ import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
+// Interface
 export interface DialogData {
+  thingName: string;
   reallyDelete: boolean;
 }
 
@@ -31,7 +33,9 @@ export class EditThingComponent implements OnInit {
     try {
       this.thing = THING.getThingByName(this.thingName);
       this.thingCategory = this.thing.category;
-    } catch (e) {}
+    } catch (e) {
+      this.stopOperation = true;
+    }
   }
 
   onEditThing() {
@@ -50,10 +54,10 @@ export class EditThingComponent implements OnInit {
   onDeleteThing() {
     this.reallyDelete = false;
 
-    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       height: "400px",
-      width: "600px"
-      // data: { reallyDelete: this.reallyDelete }
+      width: "600px",
+      data: { thingName: this.thingName, reallyDelete: this.reallyDelete }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -73,11 +77,18 @@ export class EditThingComponent implements OnInit {
   }
 }
 
-export class DeleteConfirmationDialog {
+// Dialog implementation
+@Component({
+  selector: "app-confirm-dialog",
+  templateUrl: "./confirm-dialog.component.html"
+})
+export class DeleteConfirmationDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<DeleteConfirmationDialog>,
+    public dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {}
+  ) {
+    console.log(data.thingName);
+  }
   onNoClick(): void {
     this.dialogRef.close();
   }
