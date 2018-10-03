@@ -1,1 +1,9 @@
-<h1 mat-dialog-title>Really delete {{data.thingName}}?</h1>
+<span mat-dialog-title>Really delete {{data.thing.name}}?</span>
+<div mat-dialog-content>
+  It has {{data.thing.stocks.length}} stocks, which will also get deleted. <br>
+  This action cannot be undone.
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button (click)="onYes()" color="warn">Yes</button>
+</div>

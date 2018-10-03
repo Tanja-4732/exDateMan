@@ -1,42 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
-
-@font-face {
-  font-family: 'GeosansLight';
-  src:url('./assets/fonts/GeosansLight/GeosansLight.ttf.woff') format('woff'),
-      url('./assets/fonts/GeosansLight/GeosansLight.ttf.svg#GeosansLight') format('svg'),
-      url('./assets/fonts/GeosansLight/GeosansLight.ttf.eot'),
-      url('./assets/fonts/GeosansLight/GeosansLight.ttf.eot?#iefix') format('embedded-opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-*, .gsl {
-  font-family: 'GeosansLight' ;
-}
-
 // @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 // @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~@angular/material/prebuilt-themes/purple-green.css";
 // @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
 
+@font-face {
+  font-family: 'GeosansLight';
+  src: url('./assets/fonts/GeosansLight/GeosansLight.ttf.woff') format('woff'),
+    url('./assets/fonts/GeosansLight/GeosansLight.ttf.svg#GeosansLight') format('svg'),
+    url('./assets/fonts/GeosansLight/GeosansLight.ttf.eot'),
+    url('./assets/fonts/GeosansLight/GeosansLight.ttf.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-// @import "~@angular/material/theming";
-// @include mat-core();
+.gsl {
+  font-family: 'GeosansLight';
+}
 
-// $my-theme-primary: mat-palette($mat-cyan);
-// $my-theme-accent: mat-palette($mat-teal);
-
-// // Include non-theme styles for core.
-// @include mat-core();
-
-// // Define a theme.
-// $primary: mat-palette($mat-purple, 700, 500, 800);
-// $accent:  mat-palette($mat-green, A200, A100, A400);
-
-// $theme: mat-dark-theme($primary, $accent);
-
-// // Include all theme styles for the components.
-// @include angular-material-theme($theme);
 
 .noUnderline {
   text-decoration: none;
@@ -61,3 +41,16 @@
 .no-margin {
   margin: 0px !important;
 }
+
+// @import "~@angular/material/theming";
+// @include mat-core();
+// $my-theme-primary: mat-palette($mat-cyan);
+// $my-theme-accent: mat-palette($mat-teal);
+// // Include non-theme styles for core.
+// @include mat-core();
+// // Define a theme.
+// $primary: mat-palette($mat-purple, 700, 500, 800);
+// $accent:  mat-palette($mat-green, A200, A100, A400);
+// $theme: mat-dark-theme($primary, $accent);
+// // Include all theme styles for the components.
+// @include angular-material-theme($theme);

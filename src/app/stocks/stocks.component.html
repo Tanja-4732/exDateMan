@@ -8,7 +8,7 @@
     </button>
   </a>
 
-  <div *ngIf="stocks.length === 0">
+  <div *ngIf="stocks.length === 0" class="mat-typography">
     {{thingName}} currently doesn't have any stocks.
   </div>
 
@@ -19,7 +19,9 @@
     </div>
 </div>
 
-<div *ngIf="stopOperation">
-  Oh no. <br>
+<div *ngIf="stopOperation" class="mat-typography">
+  <h1>
+    Oh no.
+  </h1>
   The thing "{{thingName}}" couldn't be found.
 </div>

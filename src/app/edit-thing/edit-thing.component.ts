@@ -5,7 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 // Interface
 export interface DialogData {
-  thingName: string;
+  thing: THING;
   reallyDelete: boolean;
 }
 
@@ -55,9 +55,9 @@ export class EditThingComponent implements OnInit {
     this.reallyDelete = false;
 
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
-      height: "400px",
-      width: "600px",
-      data: { thingName: this.thingName, reallyDelete: this.reallyDelete }
+      // height: "400px",
+      // width: "600px",
+      data: { thing: this.thing, reallyDelete: this.reallyDelete }
     });
 
     dialogRef.afterClosed().subscribe(result => {
