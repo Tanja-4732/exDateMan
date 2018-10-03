@@ -12,7 +12,7 @@
       <input matInput type="text" placeholder="Vegetables" [(ngModel)]="thingCategory">
     </mat-form-field>
     <br>
-    <button mat-raised-button (click)="onEditThing()" color="primary">Edit thing</button>
+    <button mat-raised-button (click)="onEditThing()" color="accent">Edit thing</button>
     &nbsp;
     <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
     <div *ngIf="nameUnavailable">The name {{unavailableName}} is already in use.</div>
