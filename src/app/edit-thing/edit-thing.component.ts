@@ -6,7 +6,6 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 // Interface
 export interface DialogData {
   thing: THING;
-  reallyDelete: boolean;
 }
 
 @Component({
@@ -57,23 +56,14 @@ export class EditThingComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       // height: "400px",
       // width: "600px",
-      data: { thing: this.thing, reallyDelete: this.reallyDelete }
+      data: { thing: this.thing }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("The dialog was closed.");
-      this.reallyDelete = result;
+      if (result) {
+        this.thing.deleteThingByName(this.thingName);
+      }
     });
-
-    if (this.reallyDelete) {
-      this.thing.deleteThingByName(this.thingName);
-    }
-  }
-
-  clickMethod() {
-    if (confirm("Are you sure to delete " + this.thingName)) {
-      this.thing.deleteThingByName(this.thingName);
-    }
   }
 }
 
@@ -86,10 +76,5 @@ export class DeleteConfirmationDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {
-    console.log(data.thingName);
-  }
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+  ) {}
 }

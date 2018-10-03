@@ -1,8 +1,7 @@
-<p *ngIf="things.length === 0" class="mat-typography">
-  Welcome!
-  <br>
-  Add things by hitting the plus button!
-</p>
+<span *ngIf="things.length === 0" class="mat-typography">
+  <h1>Welcome!</h1>
+  Add things by hitting the plus button.
+</span>
 <div class="grid">
   <div *ngFor="let thing of things">
     <app-thing-card [thing]="thing"></app-thing-card>
@@ -14,5 +13,3 @@
     <i class="material-icons">add</i>
   </button>
 </a>
-
-<router-outlet></router-outlet>

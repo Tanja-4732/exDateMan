@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: "", redirectTo: "/things", pathMatch: "full" },
   { path: "login", component: LoginComponent },
   { path: "login/:email", component: LoginComponent },
-  { path: "register/", component: RegisterComponent },
+  { path: "register", component: RegisterComponent },
   { path: "register/:email", component: RegisterComponent },
   { path: "things", component: ThingsComponent },
   { path: "addThing", component: AddThingComponent },
