@@ -13,7 +13,7 @@ addons:
 
 script:
   - npm run lint
-  - npm install
+  # - npm install
   # - npm run test:headless
   # - npm run build
   # - ng build --aot
