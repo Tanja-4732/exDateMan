@@ -1,4 +1,5 @@
-import { RegisterComponent } from './register/register.component';
+import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
+import { RegisterComponent } from "./register/register.component";
 import { LoginComponent } from "./login/login.component";
 import { EditThingComponent } from "./edit-thing/edit-thing.component";
 import { EditStockComponent } from "./edit-stock/edit-stock.component";
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: "thing/:thingName/add-stock", component: AddStockComponent },
   { path: "thing/:thingName/stock/:stockId", component: EditStockComponent },
   { path: "", redirectTo: "/things", pathMatch: "full" },
+  { path: "**", component: PageNotFoundComponent }
 ];
 
 @NgModule({

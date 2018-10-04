@@ -34,6 +34,7 @@ import {
 } from "./edit-thing/edit-thing.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { RegisterComponent } from "./register/register.component";
     EditThingComponent,
     LoginComponent,
     RegisterComponent,
-    DeleteConfirmationDialogComponent
+    DeleteConfirmationDialogComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
