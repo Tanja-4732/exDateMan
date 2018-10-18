@@ -1,5 +1,6 @@
-import { THING } from "./../models/thing.model";
 import { Component, OnInit } from "@angular/core";
+import { THING } from "../models/thing.model";
+import { RestService } from "../services/Rest/rest.service";
 
 @Component({
   selector: "app-add-thing",
@@ -9,12 +10,21 @@ import { Component, OnInit } from "@angular/core";
 export class AddThingComponent implements OnInit {
   thingName: string;
   thingCategory: string;
-  constructor() {}
+
+  constructor(private rest: RestService) {}
 
   ngOnInit() {}
 
   onAddThing() {
-    THING.things.push(new THING(this.thingName, this.thingCategory));
+    const thing = new THING(this.thingName, this.thingCategory);
+    THING.things.push(thing); // TODO maybe remove; replace by local storage
+    this.createThing(thing);
     // alert("Thing " + this.thingName + " added");
+  }
+
+  createThing(thing: THING) {
+    this.rest.createThing(thing).subscribe(response => {
+      console.log(response);
+    });
   }
 }

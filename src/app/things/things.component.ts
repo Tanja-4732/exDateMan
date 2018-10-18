@@ -1,3 +1,4 @@
+import { RestService } from './../services/Rest/rest.service';
 import { THING } from "./../models/thing.model";
 import { Component, OnInit } from "@angular/core";
 
@@ -8,12 +9,18 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ThingsComponent implements OnInit {
   things = THING.things;
-  constructor() {}
+  constructor(private rest: RestService) {}
 
-  ngOnInit() {}
-
-  onAddThing() {
-
+  ngOnInit() {
+    this.getThings();
   }
 
+  getThings() {
+    this.rest.getThings().subscribe((data: Array<THING>)=>{
+      THING.things = data;
+      console.log(data);
+    });
+  }
+
+  onAddThing() {}
 }
