@@ -8,6 +8,7 @@ import { THING } from "src/app/models/thing.model";
   providedIn: "root"
 })
 export class RestService {
+  private token = "hdjeHIn53I87€qQ@fm";
   constructor(private http: HttpClient) {}
 
   endpoint = "http://localhost:420/api/v1/";

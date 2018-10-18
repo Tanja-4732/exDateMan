@@ -30,11 +30,13 @@ app.use(bodyParser.raw({
 
 app.use(express.static(__dirname + "/dist/exDateMan"));
 
-app.get("/api/v1/things", (req, res, next) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  // res.sendFile(path.join(__dirname + "/dist/exDateMan/index.html"));
-  res.end("Here come da things // TODO ");
+app.get("/api/v1/things", async (req, res, next) => {
+  console.log('*');
+  const {
+    rows
+  } = await db.all('SELECT * FROM users');
+  res.render('user', rows);
+  console.log(res.toString);
 });
 
 app.post("/api/v1/thing", (req, res, next) => {
