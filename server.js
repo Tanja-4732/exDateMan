@@ -27,6 +27,7 @@ app.use(bodyParser.raw({
   }
 }));
 
+// TODO Parse JSON and DB connection
 
 app.use(express.static(__dirname + "/dist/exDateMan"));
 
