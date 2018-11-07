@@ -1,4 +1,4 @@
-import { RestService } from './../services/Rest/rest.service';
+import { RestService } from "./../services/Rest/rest.service";
 import { THING } from "./../models/thing.model";
 import { Component, OnInit } from "@angular/core";
 
@@ -16,7 +16,9 @@ export class ThingsComponent implements OnInit {
   }
 
   getThings() {
-    this.rest.getThings().subscribe((data: Array<THING>)=>{
+    console.log("Getting things...");
+
+    this.rest.getThings().subscribe((data: Array<THING>) => {
       THING.things = data;
       console.log(data);
     });

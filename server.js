@@ -1,7 +1,33 @@
 const express = require("express");
 const path = require("path");
+const pgp = require('pg-promise')();
+
+const db = pgp({
+  host: "ec2-23-21-236-249.compute-1.amazonaws.com",
+  port: 5432,
+  database: "hmmmmm",
+  user: "hmmmmm",
+  password: "hmmmmm",
+  ssl: true
+});
 
 const app = express();
+
+const routes = require("./routes");
+
+app.use('/api/v1/', routes);
+
+
+// End here
+
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+let cheatStore;
 
 var bodyParser = require('body-parser');
 
@@ -27,27 +53,43 @@ app.use(bodyParser.raw({
   }
 }));
 
+
+async function getThings() {
+  const things = await db.any('select * from "Things";')
+}
+
 // TODO Parse JSON and DB connection
 
 app.use(express.static(__dirname + "/dist/exDateMan"));
 
-app.get("/api/v1/things", async (req, res, next) => {
-  console.log('*');
-  const {
-    rows
-  } = await db.all('SELECT * FROM users');
-  res.render('user', rows);
-  console.log(res.toString);
-});
-
-app.post("/api/v1/thing", (req, res, next) => {
-  console.log("Body: " + req.rawBody);
-  res.statusCode = 200;
-
-})
-
+// Serve main page to user
 app.get("/*", (req, res) => {
+  console.log("The main page has been requested.");
+
   res.sendFile(path.join(__dirname + "/dist/exDateMan/index.html"))
 });
+
+
+app.get("/api/v1/things", async (req, res, next) => {
+  console.log("Code 1: All things");
+
+});
+
+app.get("/api/v1/thing/:id", (req, res, next) => {
+  console.log("Code 2");
+  // console.log("Body: " + req.params);
+  // console.log("Body: " + req.rawBody);
+  res.statusCode = 200;
+  res.send(req.params);
+});
+
+app.post("/api/v1/thing/", (req, res, next) => {
+  console.log("Code 3");
+  cheatStore = req.rawBody;
+  res.statusCode = 200;
+  res.send(req.rawBody);
+});
+
+
 
 app.listen(process.env.PORT || 420);

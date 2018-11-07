@@ -31,4 +31,11 @@ export class RestService {
     console.log(thing);
     return this.http.post(this.endpoint + "thing", thing);
   }
+
+  updateThing(thing: THING) {
+    console.log("Updating...");
+
+    console.log(thing);
+    return this.http.post(this.endpoint + "thing", thing);
+  }
 }

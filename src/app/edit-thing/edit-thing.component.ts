@@ -2,6 +2,7 @@ import { THING } from "./../models/thing.model";
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { RestService } from "../services/Rest/rest.service";
 
 // Interface
 export interface DialogData {
@@ -14,7 +15,12 @@ export interface DialogData {
   styleUrls: ["./edit-thing.component.scss"]
 })
 export class EditThingComponent implements OnInit {
-  constructor(private router: ActivatedRoute, public dialog: MatDialog) {}
+  constructor(
+    private router: ActivatedRoute,
+    public dialog: MatDialog,
+    private rest: RestService
+  ) {}
+
   stopOperation = false;
   nameUnavailable = false;
   thingName: string;
@@ -40,14 +46,18 @@ export class EditThingComponent implements OnInit {
   onEditThing() {
     if (this.thingName === this.thing.name) {
       this.thing.category = this.thingCategory;
-      return;
-    }
-    if (this.thing.tryChangeName(this.thingName)) {
-      this.thing.category = this.thingCategory;
     } else {
-      this.nameUnavailable = true;
-      this.unavailableName = this.thingName;
+      if (this.thing.tryChangeName(this.thingName)) {
+        this.thing.category = this.thingCategory;
+      } else {
+        this.nameUnavailable = true;
+        this.unavailableName = this.thingName;
+        return;
+      }
     }
+    this.rest.updateThing(this.thing).subscribe(response => {
+      console.log(response);
+    });
   }
 
   onDeleteThing() {
