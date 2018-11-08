@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
-		"svn.ignoreMissingSvnWarning": true
+		"svn.ignoreMissingSvnWarning": true,
+		"cSpell.words": [
+			"amazonaws"
+		]
 	}
 }

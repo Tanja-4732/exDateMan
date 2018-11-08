@@ -1,15 +1,6 @@
 const express = require("express");
 const path = require("path");
-const pgp = require('pg-promise')();
-
-const db = pgp({
-  host: "ec2-23-21-236-249.compute-1.amazonaws.com",
-  port: 5432,
-  database: "hmmmmm",
-  user: "hmmmmm",
-  password: "hmmmmm",
-  ssl: true
-});
+// const db = require("queries"); TODO enable
 
 const app = express();
 
@@ -18,16 +9,11 @@ const routes = require("./routes");
 app.use('/api/v1/', routes);
 
 
-// End here
-
-
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-let cheatStore;
 
 var bodyParser = require('body-parser');
 
@@ -70,10 +56,6 @@ app.get("/*", (req, res) => {
 });
 
 
-app.get("/api/v1/things", async (req, res, next) => {
-  console.log("Code 1: All things");
-
-});
 
 app.get("/api/v1/thing/:id", (req, res, next) => {
   console.log("Code 2");
