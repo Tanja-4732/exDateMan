@@ -6,6 +6,8 @@ var options = {
 };
 
 
+
+
 var pgp = require('pg-promise')(options);
 const db = pgp({
   host: process.env.DB_HOST,
