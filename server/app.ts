@@ -1,10 +1,10 @@
-// Adapted from https://itnext.io/building-restful-web-apis-with-node-js-express-mongodb-and-typescript-part-1-2-195bdaf129cf
-
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import { Routes } from "./Routes/routes";
 
 class App {
   public app: express.Application;
+  public routes: Routes = new Routes();
 
   constructor() {
     this.app = express();
@@ -12,9 +12,10 @@ class App {
   }
 
   private config(): void {
-    // support application/json type post data
+    // JSON
     this.app.use(bodyParser.json());
-    // support application/x-www-form-urlencoded post data
+
+    // Form Data
     this.app.use(bodyParser.urlencoded({ extended: false }));
   }
 }
