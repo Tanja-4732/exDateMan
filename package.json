@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Manages expiration dates",
   "scripts": {
+    "dev": "nodemon -e ts -w ./server -w ./server.ts -x ts-node ./server.ts",
     "ng": "ng",
     "start": "ts-node server.ts",
     "start-js": "ts-node server.js",

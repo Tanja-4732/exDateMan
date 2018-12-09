@@ -2,7 +2,7 @@ const things = require('express').Router();
 // const all = require('./all').default;
 // const single = require('./single');
 const stocks = require('./stocks');
-const db = require("../../queries")
+const db = require("../../../queries")
 
 // things.get('/', (req, res, next) => {
 //   res.status(200);
