@@ -4,8 +4,8 @@
   "description": "Manages expiration dates",
   "scripts": {
     "ng": "ng",
-    "start": "ts-node server.js",
-    "start-ts": "ts-node server.ts",
+    "start": "ts-node server.ts",
+    "start-js": "ts-node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
