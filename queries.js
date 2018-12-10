@@ -83,7 +83,7 @@ function updateThing(req, res, next) {
 
 function removeThing(req, res, next) {
   var thingID = parseInt(req.params.thingID);
-  db.result('delete from "Things" where id = $1', thingID)
+  db.result('delete from "Things" where "ThingUID" = $1', thingID)
     .then(function (result) {
       res.status(200)
         .json({

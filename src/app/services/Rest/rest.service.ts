@@ -23,9 +23,21 @@ export class RestService {
   //   return body || {};
   // }
 
-  getThings(): Observable<any> {
-    return this.http.get(this.endpoint + "things");
+  private extractData(res: Response) {
+    let body = res;
+    return body || { };
   }
+
+  getThing(thingUID: number): THING {
+    const result = this.http.get(this.endpoint + 'things/' + thingUID);
+    return new THING(result + "", "test");
+  }
+
+  getThings(): Observable<any> {
+    return this.http.get(this.endpoint + 'things/').map(res => )
+    // .pipe(map(this.extractData));
+  }
+
 
   createThing(thing: THING) {
     console.log(thing);
@@ -38,4 +50,18 @@ export class RestService {
     console.log(thing);
     return this.http.post(this.endpoint + "thing", thing);
   }
+
+
+  // private handleError<T> (operation = 'operation', result?: T) {
+  //   return (error: any): Observable<T> => {
+
+  //     console.error(error); // log to console instead
+
+  //     // TODO: better job of transforming error for user consumption
+  //     console.log(`${operation} failed: ${error.message}`);
+
+  //     // Let the app keep running by returning an empty result.
+  //     return of(result as T);
+  //   };
+  // }
 }
