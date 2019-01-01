@@ -7,7 +7,7 @@ var options = {
 
 
 
-
+// Connection config
 var pgp = require('pg-promise')(options);
 const db = pgp({
   host: process.env.HP_HOST,
