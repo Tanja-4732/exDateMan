@@ -1,29 +1,57 @@
-# ExDateMan
+# Expiration date manager
 
-[![Build Status](https://travis-ci.com/Bernd-L/exDateMan.svg?branch=master)](https://travis-ci.com/Bernd-L/exDateMan)
+The easy, intuitive and efficient way to manage a shared food inventory - WIP
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.4.
+[![Build Status](https://travis-ci.com/Bernd-L/exDateMan.svg?branch=master)](https://travis-ci.com/Bernd-L/exDateMan) ![Dependencies](https://img.shields.io/librariesio/github/Bernd-L/exDateMan.svg) [![Coverage](https://img.shields.io/codeclimate/coverage/Bernd-L/exDateMan.svg)](https://coveralls.io/repos/github/Bernd-L/exDateMan/badge.svg?branch=master) ![Badges Count](https://img.shields.io/badge/badges-not%20enough-orange.svg)
 
-## Development server
+## Contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- [Expiration date manager](#expiration-date-manager)
+  - [Contents](#contents)
+  - [Description](#description)
+  - [Features](#features)
+  - [Technologies used](#technologies-used)
+  - [License](#license)
 
-## Code scaffolding
+## Description
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The purpose of ExDateMan is to know what's in the fridge at a glance, form anywhere, by anyone. It is meant to be deployed to a webserver capable of running node apps.
 
-## Build
+The user can easily and efficiently add, edit, remove and view the things stocked in ones fridge.
+Using a centralized approach, all authorized users (eg. your flatmates) can work together in an intuitive manner when managing their shared food inventory.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Features
 
-## Running unit tests
+- Items sorted by type
+- Quantity of each stock stored as string
+- Capable of handling of use-up-in-n-days-after-opening values
+- Item types can be assigned categories
+- Date pickers
+- Mobile friendly
+- View the entire inventory and all expiration dates on the start screen at a glance
+- Get warned when something is about to expire (wip)
+- Added-on dates
+- Calculates real expiry date when a use-up-in-n-days-after-opening value is set
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Technologies used
 
-## Running end-to-end tests
+The entire front-end is one single single-page-application made using the best web framework, Angular.
+The back-end is written in JavaScript for Node.js.I'm currently working on re-implementing the back-end in TypeScript using [ts-node](https://github.com/TypeStrong/ts-node), as seen on the `ts-node` branch.
+The back-end is set up to communicate with the front-end via JSON messages using HTTPS. A postgres database is expected to be available using the following credential mapped as follows:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+| Environment variable | Expected value                            |
+| -------------------- | ----------------------------------------- |
+| `HP_DB`              | The name of the Postgres database         |
+| `HP_HOST`            | The host address of the Postgres database |
+| `HP_PORT`            | The port of the Postgres database         |
+| `HP_PWD`             | The password for the Postgres database    |
+| `HP_USER`            | The username for the Postgres database    |
 
-## Further help
+The project has a `Procfile` because this project is meant to be deployed to Heroku.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## License
+
+I may add a license later.
+
+Copyright (c) 2018-2019 Bernd-L.
+All rights reserved.
