@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { RestService } from "./../services/Rest/rest.service";
 import { THING } from "./../models/thing.model";
 import { Component, OnInit } from "@angular/core";
@@ -9,6 +10,7 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ThingsComponent implements OnInit {
   things = THING.things;
+  thingsObservable: Observable<THING[]>;
   constructor(private rest: RestService) {}
 
   ngOnInit() {
@@ -18,9 +20,15 @@ export class ThingsComponent implements OnInit {
   getThings() {
     console.log("Getting things...");
 
-    this.rest.getThings().subscribe((data: Array<THING>) => {
-      THING.things = data;
+    // this.rest.getThings().subscribe((data: Array<THING>) => {
+    //   THING.things = data;
+    //   console.log(data);
+    // });
+
+    THING.things = [];
+    this.rest.getThings().subscribe((data: THING[]) => {
       console.log(data);
+      THING.things = data;
     });
   }
 

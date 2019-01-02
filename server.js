@@ -4,8 +4,9 @@ const path = require("path");
 
 const app = express();
 
-const routes = require("./routes");
 
+app.use(express.static(__dirname + "/dist/exDateMan"));
+const routes = require("./routes");
 app.use('/api/v1/', routes);
 
 
@@ -46,7 +47,6 @@ async function getThings() {
 
 // TODO Parse JSON and DB connection
 
-app.use(express.static(__dirname + "/dist/exDateMan"));
 
 // Serve main page to user
 app.get("/*", (req, res) => {
@@ -57,20 +57,20 @@ app.get("/*", (req, res) => {
 
 
 
-app.get("/api/v1/thing/:id", (req, res, next) => {
-  console.log("Code 2");
-  // console.log("Body: " + req.params);
-  // console.log("Body: " + req.rawBody);
-  res.statusCode = 200;
-  res.send(req.params);
-});
+// app.get("/api/v1/thing/:id", (req, res, next) => {
+//   console.log("Code 2");
+//   // console.log("Body: " + req.params);
+//   // console.log("Body: " + req.rawBody);
+//   res.statusCode = 200;
+//   res.send(req.params);
+// });
 
-app.post("/api/v1/thing/", (req, res, next) => {
-  console.log("Code 3");
-  cheatStore = req.rawBody;
-  res.statusCode = 200;
-  res.send(req.rawBody);
-});
+// app.post("/api/v1/thing/", (req, res, next) => {
+//   console.log("Code 3");
+//   cheatStore = req.rawBody;
+//   res.statusCode = 200;
+//   res.send(req.rawBody);
+// });
 
 
 
