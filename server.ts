@@ -2,7 +2,7 @@ import { log } from "util";
 import { Request, Response, Application } from "express";
 import App from "./server/app";
 
-const PORT: number = parseInt(process.env.PORT, 2) || 420;
+const PORT: string = process.env.PORT || 420 + "";
 
 const app: App = new App(__dirname);
 
