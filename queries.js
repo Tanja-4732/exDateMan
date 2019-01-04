@@ -7,14 +7,14 @@ var options = {
 
 
 
-
+// Connection config
 var pgp = require('pg-promise')(options);
 const db = pgp({
-  host: process.env.DB_HOST,
-  port: 5432,
-  database: process.env.DB,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: process.env.HP_HOST,
+  port: process.env.HP_PORT,
+  database: process.env.HP_DB,
+  user: process.env.HP_USER,
+  password: process.env.HP_PWD,
   ssl: true
 });
 
@@ -83,7 +83,7 @@ function updateThing(req, res, next) {
 
 function removeThing(req, res, next) {
   var thingID = parseInt(req.params.thingID);
-  db.result('delete from "Things" where id = $1', thingID)
+  db.result('delete from "Things" where "ThingUID" = $1', thingID)
     .then(function (result) {
       res.status(200)
         .json({
