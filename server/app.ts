@@ -6,13 +6,12 @@ import { log } from "util";
 
 class App {
   public app: express.Application;
-  public routes: Routes = new Routes(this.rootPath); // TODO check difference
+  public routePrv: Routes = new Routes();
 
-  constructor(private readonly rootPath: string) { // TODO check difference: params should be empty
+  constructor() {
     this.app = express();
     this.config();
-    this.routes.routes(this.app); // TODO check difference
-    log("app.ts: rootPath=" + rootPath); // TODO check difference
+    this.routePrv.routes(this.app);
   }
 
   private config(): void {
@@ -22,9 +21,9 @@ class App {
     // application/x-www-form-urlencoded
     this.app.use(bodyParser.urlencoded({ extended: false }));
 
-    this.app.use(express.static(path.join(this.rootPath + "/dist/exDateMan"))); // TODO check difference
+    this.app.use(express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))); // TODO check difference
   }
 }
 
-export default new App(process.env.EDM_ROOT_PATH).app;
+export default new App().app;
 // export default App;

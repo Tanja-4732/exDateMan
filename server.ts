@@ -1,5 +1,4 @@
 import { log } from "util";
-import { Request, Response, Application } from "express"; // TODO maybe delete
 
 // Set port
 const PORT: string = process.env.PORT || 420 + "";

@@ -9,7 +9,7 @@ import * as path from "path";
  * @class Routes
  */
 export class Routes {
-  constructor(private readonly rootPath: string) {}
+  constructor() {}
 
   /**
    * Sets the routes
@@ -18,14 +18,6 @@ export class Routes {
    * @memberof Routes
    */
   public routes(app: Application): void {
-    log("Routes.ts: this.rootPath=" + this.rootPath);
-    // The default path; return index.html
-    app.route("/").get((req: Request, res: Response) => {
-      res
-        .status(200)
-        .sendFile(path.join(this.rootPath, "./dist/exDateMan/index.html"));
-    });
-
     // Contact
     app
       .route("/contact")
@@ -66,5 +58,14 @@ export class Routes {
           message: "DELETE request successful!!!!"
         });
       });
+
+    // The default path; return index.html
+    app.route("/*").get((req: Request, res: Response) => {
+      res
+        .status(200)
+        .sendFile(
+          path.join(process.env.EDM_ROOT_PATH, "./dist/exDateMan/index.html")
+        );
+    });
   }
 }
