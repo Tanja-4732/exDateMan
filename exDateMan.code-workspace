@@ -1,14 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"svn.ignoreMissingSvnWarning": true,
-		"cSpell.words": [
-      "amazonaws",
-      "jasminewd"
-    ]
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ]
 }
