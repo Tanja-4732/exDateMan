@@ -18,6 +18,7 @@ export class Routes {
    * @memberof Routes
    */
   public routes(app: Application): void {
+    log("Routes.ts: this.rootPath=" + this.rootPath);
     // The default path; return index.html
     app.route("/").get((req: Request, res: Response) => {
       res
@@ -32,14 +33,14 @@ export class Routes {
       .get((req: Request, res: Response) => {
         // Get all contacts
         res.status(200).send({
-          message: "GET request successful!!!!"
+          message: "GET request successful"
         });
       })
       // POST endpoint
       .post((req: Request, res: Response) => {
         // Create new contact
         res.status(200).send({
-          message: "POST request successful!!!!"
+          message: "POST request successful"
         });
       });
 

@@ -1,13 +1,14 @@
 import { log } from "util";
-import { Request, Response, Application } from "express";
-import App from "./server/app";
+import { Request, Response, Application } from "express"; // TODO maybe delete
 
+// Set port
 const PORT: string = process.env.PORT || 420 + "";
+// Set EDM_ROOT_PATH (the root path of the server)
+process.env.EDM_ROOT_PATH = __dirname;
 
-const app: App = new App(__dirname);
-
-app.app.listen(PORT, () => {
-  log("Express server listening on port " + PORT);
+import app from "./server/app";
+app.listen(PORT, () => {
+  log("server.ts: Express server listening on port " + PORT);
 });
 
 /*
