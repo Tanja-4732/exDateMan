@@ -1,3 +1,4 @@
+import { ThingController } from "./../controllers/apiController";
 import { Request, Response, Application } from "express";
 import { log } from "util";
 import * as path from "path";
@@ -9,6 +10,8 @@ import * as path from "path";
  * @class Routes
  */
 export class Routes {
+  public thingController: ThingController = new ThingController();
+
   constructor() {}
 
   /**
@@ -18,11 +21,13 @@ export class Routes {
    * @memberof Routes
    */
   public routes(app: Application): void {
+    log("routes.ts: init");
     // Contact
     app
-      .route("/contact")
+      .route("/api/v1/thing")
       // GET endpoint
       .get((req: Request, res: Response) => {
+        log("routes: all things");
         // Get all contacts
         res.status(200).send({
           message: "GET request successful"
@@ -38,7 +43,7 @@ export class Routes {
 
     // Contact detail
     app
-      .route("/contact/:contactId")
+      .route("/api/v1/thing/:contactId")
       // get specific contact
       .get((req: Request, res: Response) => {
         // Get a single contact detail

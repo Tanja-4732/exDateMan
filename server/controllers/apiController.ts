@@ -1,11 +1,18 @@
 import { model } from "mongoose";
-import { ThingSchema } from "server/models/thingModel";
+import { ThingSchema } from "../models/thingModel";
 import { Request, Response } from "express";
 
 const Thing = model("Thing", ThingSchema);
 
 export class ThingController {
   public addNewThing(req: Request, res: Response) {
-    // TODO continue implementation
+    let newThing = new Thing(req.body);
+
+    newThing.save((err, thing) => {
+      if (err) {
+        res.send(err);
+      }
+      res.json(thing);
+    });
   }
 }
