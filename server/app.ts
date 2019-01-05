@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { Routes } from "./Routes/apiRoutes";
+import { Routes } from "./Routes/routes";
 import * as path from "path";
 import { log } from "util";
 
