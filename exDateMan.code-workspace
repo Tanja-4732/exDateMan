@@ -2,6 +2,10 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "uri": "gitlens:/exDateMan@old-js/d:/Users/bernd/Documents/Repos/exDateMan?{\"path\":\"/d:/Users/bernd/Documents/Repos/exDateMan\",\"ref\":\"old-js\",\"repoPath\":\"d:/Users/bernd/Documents/Repos/exDateMan\"}",
+      "name": "exDateMan @ old-js"
     }
   ]
 }

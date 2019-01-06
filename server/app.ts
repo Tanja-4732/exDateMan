@@ -3,6 +3,7 @@ import * as bodyParser from "body-parser";
 import { Routes } from "./Routes/routes";
 import * as path from "path";
 import { log } from "util";
+import * as mongoose from "mongoose";
 
 class App {
   public app: express.Application;
@@ -10,18 +11,27 @@ class App {
 
   constructor() {
     this.app = express();
-    this.config();
+    this.serverConfig();
     this.routePrv.routes(this.app);
+    this.mongoSetup();
   }
 
-  private config(): void {
+  private serverConfig(): void {
     // application/json
     this.app.use(bodyParser.json());
 
     // application/x-www-form-urlencoded
     this.app.use(bodyParser.urlencoded({ extended: false }));
 
-    this.app.use(express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))); // TODO check difference
+    this.app.use(
+      express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
+    ); // TODO check difference
+  }
+
+  private mongoSetup(): void {
+    // mongoose.Promise = global.Promise;
+    require("mongoose").Promise = global.Promise;
+    mongoose.connect(process.env.MLAB_STRING_EDM);
   }
 }
 

@@ -1,4 +1,4 @@
-import { ThingController } from "./../controllers/apiController";
+import { ThingController } from "../controllers/thingController";
 import { Request, Response, Application } from "express";
 import { log } from "util";
 import * as path from "path";
@@ -15,9 +15,9 @@ export class Routes {
   constructor() {}
 
   /**
-   * Sets the routes
+   * Sets the routes for the app
    *
-   * @param {Application} app The app object
+   * @param {Application} app The app object of which to set the routes
    * @memberof Routes
    */
   public routes(app: Application): void {
@@ -25,21 +25,17 @@ export class Routes {
     // Contact
     app
       .route("/api/v1/thing")
-      // GET endpoint
+
       .get((req: Request, res: Response) => {
         log("routes: all things");
-        // Get all contacts
+        // Get all things
         res.status(200).send({
-          message: "GET request successful"
+          message: "GET all the things"
         });
       })
+
       // POST endpoint
-      .post((req: Request, res: Response) => {
-        // Create new contact
-        res.status(200).send({
-          message: "POST request successful"
-        });
-      });
+      .post(this.thingController.addThing);
 
     // Contact detail
     app
