@@ -4,8 +4,8 @@
       "path": "."
     },
     {
-      "uri": "gitlens:/exDateMan@old-js/d:/Users/bernd/Documents/Repos/exDateMan?{\"path\":\"/d:/Users/bernd/Documents/Repos/exDateMan\",\"ref\":\"old-js\",\"repoPath\":\"d:/Users/bernd/Documents/Repos/exDateMan\"}",
-      "name": "exDateMan @ old-js"
+      "uri": "gitlens:/exDateMan@origin/old-js/d:/Dokumente/Repos/exDateMan?{\"path\":\"/d:/Dokumente/Repos/exDateMan\",\"ref\":\"origin/old-js\",\"repoPath\":\"d:/Dokumente/Repos/exDateMan\"}",
+      "name": "exDateMan @ origin/old-js"
     }
   ]
 }

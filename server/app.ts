@@ -1,18 +1,18 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import { Routes } from "./Routes/routes";
+import * as routes from "./routes/routes";
 import * as path from "path";
 import { log } from "util";
 import * as mongoose from "mongoose";
 
 class App {
   public app: express.Application;
-  public routePrv: Routes = new Routes();
+  // public routePrv: Routes = new Routes(this.app);
 
   constructor() {
     this.app = express();
     this.serverConfig();
-    this.routePrv.routes(this.app);
+    // this.routePrv.setRoutes();
     this.mongoSetup();
   }
 
@@ -22,6 +22,10 @@ class App {
 
     // application/x-www-form-urlencoded
     this.app.use(bodyParser.urlencoded({ extended: false }));
+
+    // this.app.use(new Routes());
+
+    this.app.use("/api/", routes);
 
     this.app.use(
       express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
