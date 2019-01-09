@@ -12,8 +12,7 @@ class App {
   constructor() {
     this.app = express();
     this.serverConfig();
-    // this.routePrv.setRoutes();
-    this.mongoSetup();
+    // this.mongoSetup();
   }
 
   private serverConfig(): void {
@@ -25,11 +24,11 @@ class App {
 
     // this.app.use(new Routes());
 
-    this.app.use("/api/", routes);
-
     this.app.use(
       express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
-    ); // TODO check difference
+    );
+    this.app.use(routes);
+
   }
 
   private mongoSetup(): void {
