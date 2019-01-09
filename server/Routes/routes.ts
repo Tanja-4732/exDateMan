@@ -1,11 +1,26 @@
-// import { ThingController } from "../controllers/thingController";
-import { Request, Response, Application, Router } from "express";
+import * as path from "path";
+import { log } from 'util';
+import { Request, Response, Application, Router, NextFunction } from "express";
 
-let routes = Router();
-routes.get("/", (req, res) => {
-  res.status(200).json({
-    message: 'Connected to ExDateMan API.'
-  });
+import apiRoutes from "./api/apiRoutes";
+
+const routes: Router = Router();
+
+// API routes
+routes.use("/api/", apiRoutes);
+
+// Serve main page
+routes.use((req: Request, res: Response, next: NextFunction) => {
+  // res.redirect("/");
+  // log("Triggered fallback");
+  log(  req.originalUrl);
+  res
+      .status(200)
+      .sendFile(
+        "dist/exDateMan/index.html",
+        {root: process.env.EDM_ROOT_PATH}
+      );
+
 });
 
 export default routes;
