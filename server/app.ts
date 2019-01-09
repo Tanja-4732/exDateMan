@@ -1,6 +1,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import * as routes from "./routes/routes";
+import routes from "./routes/routes";
 import * as path from "path";
 import { log } from "util";
 import * as mongoose from "mongoose";
