@@ -13,7 +13,7 @@ routes.use("/api/", apiRoutes);
 routes.use((req: Request, res: Response, next: NextFunction) => {
   // res.redirect("/");
   // log("Triggered fallback");
-  log(  req.originalUrl);
+  // log(  req.originalUrl);
   res
       .status(200)
       .sendFile(

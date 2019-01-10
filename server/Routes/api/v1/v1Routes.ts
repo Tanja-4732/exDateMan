@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 
 let v1Routes = Router();
 
-v1Routes.get("/", (req, res) => {
+v1Routes.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "Connected to ExDateMan API version 1"
   });
