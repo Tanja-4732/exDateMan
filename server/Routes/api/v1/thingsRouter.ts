@@ -11,10 +11,14 @@ apiRoutes.use("/", (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// Return all things
 apiRoutes.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "Welcome to the ExDateMan API!"
-  });
+  // TODO
+});
+
+// Return one thing
+apiRoutes.get("/:thingNb", (req: Request, res: Response) => {
+  // TODO
 });
 
 
