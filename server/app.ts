@@ -22,13 +22,13 @@ class App {
     // application/x-www-form-urlencoded
     this.app.use(bodyParser.urlencoded({ extended: false }));
 
-    // this.app.use(new Routes());
-
+    // Enable static file serving
     this.app.use(
       express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
     );
-    this.app.use(routes);
 
+    // Load all the routes
+    this.app.use(routes);
   }
 
   private mongoSetup(): void {
@@ -39,4 +39,3 @@ class App {
 }
 
 export default new App().app;
-// export default App;

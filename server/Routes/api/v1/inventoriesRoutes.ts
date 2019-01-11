@@ -6,8 +6,8 @@ const inventoriesRoutes: Router = Router();
 
 // Don't return all inventories
 inventoriesRoutes.get("/", (req: Request, res: Response) => {
-  res.status(304).json({
-    message: "The enumeration of all inventories is not supported."
+  res.status(403).json({
+    message: "The enumeration of all inventories is not permitted."
   });
 });
 

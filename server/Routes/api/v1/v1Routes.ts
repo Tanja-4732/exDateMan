@@ -14,7 +14,7 @@ v1Routes.get("/", (req: Request, res: Response) => {
 });
 
 // Use the things routes
-v1Routes.use("/things", thingsRoutes);
+v1Routes.use("/inventories", inventoriesRoutes);
 
 // Authentication test
 v1Routes.use("/auth", authRoutes);

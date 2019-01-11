@@ -53,6 +53,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
     "@angular/language-service": "^6.1.10",
+    "@types/express-jwt": "0.0.41",
     "@types/jasmine": "^2.8.9",
     "@types/jasminewd2": "^2.0.5",
     "@types/mongoose": "^5.3.7",
