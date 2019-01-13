@@ -1,0 +1,105 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F9D43D0D-8A0F-4BDF-A577-64C9201447A6" name="User">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:03:18 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="UserId" id="A3DFA491-1A45-4CA3-8D86-2EAA66C90562">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:03:28 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="UserName" id="21CD9748-E675-5E78-D4BC-39420FC278FF">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:03:40 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="UserEmail" id="70CF7760-E344-97B0-EB1E-AB74B0FC28EC">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:04:10 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="UserPwdSaltedHash" id="BA6DA559-449D-49BC-A837-0BE387E24193">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:04:27 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="UserPwdHashSalt" id="AAC14D36-EAAF-5569-5089-4C33D755F98F">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:04:48 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="UserCreatedOn" id="4CBDC032-7410-CDFA-E7F0-DECA476F2D12">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:14:46 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D81F9403-778D-8FE9-7BA0-4186B6EF0E5D" name="User PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:03:37 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>A3DFA491-1A45-4CA3-8D86-2EAA66C90562</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

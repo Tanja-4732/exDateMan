@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="InventoryReadPermittedUser" directorySegmentName="seg_0" id="5E1F2D3F-574B-AD4F-D675-9C0203622F2C">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:21:55 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<identifying>false</identifying>
+<nameOnTarget>InventoryReadPermittedUser</nameOnTarget>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>*</sourceCardinality>
+<sourceEntity>F9D43D0D-8A0F-4BDF-A577-64C9201447A6</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>C064873F-4C33-B479-47CD-F68F186FF98D</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

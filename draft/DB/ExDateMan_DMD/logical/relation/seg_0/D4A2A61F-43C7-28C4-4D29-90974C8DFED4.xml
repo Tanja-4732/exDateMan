@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="Thing_Stock" directorySegmentName="seg_0" id="D4A2A61F-43C7-28C4-4D29-90974C8DFED4">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:02:06 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<sourcePk>B61E7CA9-A82F-2183-CD81-A2294D414777</sourcePk>
+<identifying>true</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>85289081-6089-A6C2-10ED-2F49A432F8C6</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>1FF57F18-5F8C-8ACE-D9D7-F1EB5684D79E</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>
