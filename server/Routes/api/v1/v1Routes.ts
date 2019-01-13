@@ -14,7 +14,7 @@ v1Routes.get("/", (req: Request, res: Response) => {
 });
 
 // Use the inventories routes
-v1Routes.use("/inventories", inventoriesRoutes);
+v1Routes.use("/inv", inventoriesRoutes);
 
 // Authentication test
 v1Routes.use("/auth", authRoutes);

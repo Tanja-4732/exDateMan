@@ -1,6 +1,5 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
-import { Db } from "mongodb";
 
 const inventoriesRoutes: Router = Router();
 
@@ -11,6 +10,7 @@ inventoriesRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
+// Give information about a specific inventory, if the user is authorized to do so
 inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
   // if (existsInDB(req.params.inventoryId)) { // TODO implement
   res.status(200).json({
@@ -28,5 +28,7 @@ inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
   });
   // } // TODO implement
 });
+
+// Use things routes
 
 export default inventoriesRoutes;
