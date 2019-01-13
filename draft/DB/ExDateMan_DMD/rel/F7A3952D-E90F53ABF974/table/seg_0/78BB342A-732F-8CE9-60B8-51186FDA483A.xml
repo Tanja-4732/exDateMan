@@ -1,0 +1,169 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="78BB342A-732F-8CE9-60B8-51186FDA483A" name="Stock">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>1FF57F18-5F8C-8ACE-D9D7-F1EB5684D79E</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="StockId" id="AED1BB64-A5B4-BC98-DA07-E04E7E1859D5">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>1FCF7251-183C-CEB6-237A-3D06216F1079</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockNo" id="6E9B11A0-AE75-382B-F521-582CBD8D18EC">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>02729BE2-C3D3-D45B-F512-48F89742F4BF</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Thing_ThingId" id="193D30B2-B99F-5BF1-6508-E6569F405E65">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>B540683E-EBFF-3972-48BF-38D3E23CDC47</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="1499398F-A1F2-6DDE-BAA1-A0216C78D99C"/>
+</associations>
+</Column>
+<Column name="StockAddedOn" id="0A1CF551-DA81-FE1B-35F5-80CF894D058C">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>55EB1BA8-71B3-FFA0-E21C-9DBC522684C9</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockExDate" id="C59A3CE9-C087-7676-F836-5F45814A8CE3">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>80775523-81B8-0F89-7C3B-5BEAFCC74E14</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockQuantity" id="6C7EA1A5-43D9-737B-C8B0-881FCD04518E">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>18A9B49E-17A2-FFCB-6BC2-0C2E425A6E26</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockUseUpIn" id="783B222A-171F-8063-B280-79BB06F3D009">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>8A7065E2-492B-46CF-E15F-AFDAD9B062DE</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockPercentLeft" id="F0A8A2C8-C8E3-5C99-0763-8ABA4E344A30">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>426B8481-8DEC-BBEF-AD17-0F4C4F823043</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT021</logicalDatatype>
+<dataTypePrecision>3</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<ownDataTypeParameters>,3,2</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Thing_Inventory_InventoryId" id="648BDA21-EB2F-6326-617F-081A45C33755">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>5FAEEED6-6FD2-305A-E2E5-802EC24D90FF</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
+</associations>
+</Column>
+<Column name="Thing_Inventory_InventoryOwnerUserId" id="CCC07F7B-AEFE-43B9-BAC4-DCBCD0F64888">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>2F4AB60B-7212-7790-8FEF-779D17BE896F</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="FC806B4A-8657-6E4A-A1E5-3F0858EFC18C" name="Stock_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>0009D96B-6A8F-2491-6FCA-9528FB216069</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="193D30B2-B99F-5BF1-6508-E6569F405E65"/>
+<colUsage columnID="648BDA21-EB2F-6326-617F-081A45C33755"/>
+<colUsage columnID="CCC07F7B-AEFE-43B9-BAC4-DCBCD0F64888"/>
+<colUsage columnID="AED1BB64-A5B4-BC98-DA07-E04E7E1859D5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5FB84B27-6A38-6238-A272-EA8E66F82AC2" name="Stock_Thing_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>D4A2A61F-43C7-28C4-4D29-90974C8DFED4</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="193D30B2-B99F-5BF1-6508-E6569F405E65"/>
+<colUsage columnID="648BDA21-EB2F-6326-617F-081A45C33755"/>
+<colUsage columnID="CCC07F7B-AEFE-43B9-BAC4-DCBCD0F64888"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8BCA861C-A9B2-E194-D3E8-026BC3296246" name="Inventory">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>C064873F-4C33-B479-47CD-F68F186FF98D</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="InventoryId" id="A1B60C81-63D9-4B79-BA58-25A371A4FD53">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>89DDD5A0-7850-3CB8-3FDC-3460D62F2714</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="InventoryName" id="D76869BB-D021-C692-3871-661458E6C4C4">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>DE14EA98-1361-8A22-35DA-6A51DAB5279E</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="InventoryCreatedOn" id="11B66A1A-8AA8-CC04-3793-3DDB9335B95E">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>1F468DCE-0C8E-FA64-C7B7-0A028D52CB75</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="User_UserId" id="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>F77EEC61-8449-E264-A4E5-D29C57A1D014</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="53ABC94D-2D18-826A-428E-BDA0A91C2432" referredColumn="0C77F159-6298-7E02-D789-15E4CF76F042"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EE202F69-A145-27E6-85DF-02CD2A3D4AA4" name="Inventory_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>54FC5E5E-79FB-BF8C-360C-47B1D63D4356</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
+<colUsage columnID="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="449541EA-207C-7213-0210-D71DE9938015" name="Inventory_User_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>60D4FDEC-42CA-B97D-586F-9F75D5A9BE1B</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
