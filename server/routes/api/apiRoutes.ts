@@ -9,7 +9,7 @@ const apiRoutes: Router = Router();
 // Security
 apiRoutes.use(
   "/",
-  jwt({ secret: "sneak-around" }),
+  // jwt({ secret: "sneak-around" }),
   (req: Request, res: Response, next: NextFunction) => {
     log("So secure.");
     next();

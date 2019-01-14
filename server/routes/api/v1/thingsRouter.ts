@@ -1,27 +1,25 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
 
-import v1Routes from "./v1/v1Routes";
+import v1Routes from "./stocksRouter";
 
-const apiRoutes: Router = Router();
-
-// Security
-apiRoutes.use("/", (req: Request, res: Response, next: NextFunction) => {
-  log("So secure.");
-  next();
-});
+const thingsRoutes: Router = Router();
 
 // Return all things
-apiRoutes.get("/", (req: Request, res: Response) => {
+thingsRoutes.get("/", (req: Request, res: Response) => {
   // TODO
+  log("inventoryId=" + req.params.inventoryId);
+  req.res.status(200).json({
+    message: "These are all the things of the inventory with id: " + res.locals.inventoryId
+  });
 });
 
 // Return one thing
-apiRoutes.get("/:thingNb", (req: Request, res: Response) => {
+thingsRoutes.get("/:thingNb", (req: Request, res: Response) => {
   // TODO
+
 });
 
+thingsRoutes.use("/v1", v1Routes);
 
-apiRoutes.use("/v1", v1Routes);
-
-export default apiRoutes;
+export default thingsRoutes;

@@ -1,5 +1,6 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
+import thingsRoutes from "./thingsRouter";
 
 const inventoriesRoutes: Router = Router();
 
@@ -9,6 +10,16 @@ inventoriesRoutes.get("/", (req: Request, res: Response) => {
     message: "The enumeration of all inventories is not permitted."
   });
 });
+
+// Use things routes
+inventoriesRoutes.use("/:inventoryId/things",
+  (req: Request, res: Response, next: NextFunction) => {
+    log("Inv to things");
+    res.locals.inventoryId = req.params.inventoryId;
+    next();
+  }
+  , thingsRoutes
+);
 
 // Give information about a specific inventory, if the user is authorized to do so
 inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
@@ -28,7 +39,5 @@ inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
   });
   // } // TODO implement
 });
-
-// Use things routes
 
 export default inventoriesRoutes;

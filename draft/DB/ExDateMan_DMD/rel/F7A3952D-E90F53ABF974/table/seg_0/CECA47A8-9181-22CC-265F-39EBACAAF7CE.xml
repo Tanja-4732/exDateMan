@@ -46,7 +46,7 @@
 <colAssociation fkAssociation="C01E3AD9-BF22-4462-48C4-AD760DACF376" referredColumn="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
 </associations>
 </Column>
-<Column name="Inventory_InventoryOwnerUserId" id="A9616D43-502F-29FB-E059-F07345FB6B02">
+<Column name="Inventory_User_UserId" id="A9616D43-502F-29FB-E059-F07345FB6B02">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 20:39:09 UTC</createdTime>
 <generatorID>D30F4398-5EB5-95E0-9503-B70FD1F9E593</generatorID>
@@ -60,6 +60,17 @@
 <associations>
 <colAssociation fkAssociation="C01E3AD9-BF22-4462-48C4-AD760DACF376" referredColumn="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
 </associations>
+</Column>
+<Column name="ThingNo" id="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-14 07:03:37 UTC</createdTime>
+<generatorID>F8494C40-E8DA-7888-295B-315C289C4AD8</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">

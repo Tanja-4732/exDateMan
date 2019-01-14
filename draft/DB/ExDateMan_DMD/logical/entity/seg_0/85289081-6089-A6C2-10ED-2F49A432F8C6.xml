@@ -28,6 +28,18 @@
 <dataTypeSize>10 BYTE</dataTypeSize>
 <ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="ThingNo" id="F8494C40-E8DA-7888-295B-315C289C4AD8">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-14 07:02:53 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="ThingName" id="0DFABFB0-DC35-BA58-086B-AFD360A6731E">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 12:47:08 UTC</createdTime>
@@ -74,8 +86,9 @@
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 12:47:02 UTC</createdTime>
 <ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
