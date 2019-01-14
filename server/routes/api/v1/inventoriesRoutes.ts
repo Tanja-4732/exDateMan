@@ -25,7 +25,7 @@ inventoriesRoutes.use("/:inventoryId/things", thingsRoutes);
 
 // Give information about a specific inventory, if the user is authorized to do so
 inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
-  // if (existsInDB(req.params.inventoryId)) { // TODO implement
+  if (existsInDB(req.params.inventoryId)) { // TODO implement
   res.status(200).json({
     owner: {
       userId: "userId",
@@ -35,11 +35,11 @@ inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
     readPermitted: [23424, 167542, 457457, 896722],
     writePermitted: [23424, 457457]
   });
-  // } else { // TODO implement
+  } else { // TODO implement
   res.status(400).json({
     message: "The enumeration of all inventories is not permitted."
   });
-  // } // TODO implement
+  } // TODO implement
 });
 
 export default inventoriesRoutes;

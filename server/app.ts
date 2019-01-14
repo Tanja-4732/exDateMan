@@ -4,6 +4,7 @@ import routes from "./routes/routes";
 import * as path from "path";
 import { log } from "util";
 import * as mongoose from "mongoose";
+import "reflect-metadata";
 
 class App {
   public app: express.Application;
