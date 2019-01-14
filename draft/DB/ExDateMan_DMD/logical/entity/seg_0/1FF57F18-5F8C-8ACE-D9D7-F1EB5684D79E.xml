@@ -52,7 +52,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT057</logicalDatatype>
 <dataTypeSize>10 BYTE</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="StockAddedOn" id="55EB1BA8-71B3-FFA0-E21C-9DBC522684C9">
 <createdBy>Bernd</createdBy>
@@ -61,6 +61,19 @@
 <engineerTo>
 <item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
 </engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="StockOpenedOn" id="0873DF05-34E9-1803-C4A6-25DC53C77A86">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-14 22:41:42 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
