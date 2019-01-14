@@ -16,6 +16,7 @@ apiRoutes.use(
   }
 );
 
+// Simple welcome message
 apiRoutes.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "Welcome to the ExDateMan API!"
