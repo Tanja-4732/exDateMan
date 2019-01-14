@@ -5,6 +5,19 @@ import stocksRoutes from "./stocksRouter";
 
 const thingsRoutes: Router = Router();
 
+// Set the thingNo
+thingsRoutes.use(
+  "/:thingNo",
+  (req: Request, res: Response, next: NextFunction) => {
+    res.locals.thingNo = req.params.thingNo;
+    next();
+  }
+);
+
+// Use stocks routes
+thingsRoutes.use("/:thingNo/stocks", stocksRoutes);
+
+// CRUD
 // Return all things
 thingsRoutes.get("/", (req: Request, res: Response) => {
   // TODO
@@ -13,11 +26,6 @@ thingsRoutes.get("/", (req: Request, res: Response) => {
     message: "These are all the things of the inventory with id: " + res.locals.inventoryId
   });
 });
-
-
-/*
-      CRUD
-*/
 
 // Return one thing
 thingsRoutes.get("/:thingNo", (req: Request, res: Response) => {
