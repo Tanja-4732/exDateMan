@@ -1,7 +1,7 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
 
-import v1Routes from "./stocksRouter";
+import stocksRoutes from "./stocksRouter";
 
 const thingsRoutes: Router = Router();
 
@@ -14,12 +14,45 @@ thingsRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
+
+/*
+      CRUD
+*/
+
 // Return one thing
-thingsRoutes.get("/:thingNb", (req: Request, res: Response) => {
+thingsRoutes.get("/:thingNo", (req: Request, res: Response) => {
   // TODO
 
 });
 
-thingsRoutes.use("/v1", v1Routes);
+// Create new thing
+thingsRoutes.post("/", (req: Request, res: Response) => {
+  // TODO
+
+});
+
+// Replace thing
+thingsRoutes.put("/:thingNo", (req: Request, res: Response) => {
+  // TODO
+
+});
+
+// Remove thing
+thingsRoutes.delete("/:thingNo", (req: Request, res: Response) => {
+  // TODO
+
+});
+
+// Set thingNo
+thingsRoutes.use(
+  "/:thingNo",
+   (req: Request, res: Response, next: NextFunction) => {
+       res.locals.thingNo = req.params.thingNo;
+    next();
+  }
+);
+
+// Use stocks routes
+thingsRoutes.use("/:thingNo/stocks", stocksRoutes);
 
 export default thingsRoutes;

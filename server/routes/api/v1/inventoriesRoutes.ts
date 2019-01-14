@@ -11,15 +11,17 @@ inventoriesRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Use things routes
-inventoriesRoutes.use("/:inventoryId/things",
+// Set inventoryId
+inventoriesRoutes.use(
+  "/:inventoryId",
   (req: Request, res: Response, next: NextFunction) => {
-    log("Inv to things");
     res.locals.inventoryId = req.params.inventoryId;
     next();
   }
-  , thingsRoutes
 );
+
+// Use things routes
+inventoriesRoutes.use("/:inventoryId/things", thingsRoutes);
 
 // Give information about a specific inventory, if the user is authorized to do so
 inventoriesRoutes.use("/:inventoryId", (req: Request, res: Response) => {
