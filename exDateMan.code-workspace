@@ -6,7 +6,8 @@
   ],
   "settings": {
     "cSpell.words": [
-      "Bernd's"
+      "Bernd's",
+      "typeorm"
     ]
   }
 }

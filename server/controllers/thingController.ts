@@ -1,5 +1,5 @@
 import { model } from "mongoose";
-import { ThingSchema } from "../models/thingModel";
+import { ThingSchema } from "../models/mongodb/thingModel";
 import { Request, Response } from "express";
 
 const Thing = model("Thing", ThingSchema);

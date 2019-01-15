@@ -5,10 +5,10 @@ export class Inventory {
   @PrimaryGeneratedColumn()
   InventoryId: number;
 
-  @Column()
+  @Column("text")
   InventoryName: string;
 
-  @Column()
+  @Column("date")
   InventoryCreatedOn: Date;
 
   @Column()
