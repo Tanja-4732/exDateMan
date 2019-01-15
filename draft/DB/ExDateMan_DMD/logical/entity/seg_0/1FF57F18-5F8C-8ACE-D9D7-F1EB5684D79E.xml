@@ -145,20 +145,6 @@
 <logicalDatatype>LOGDT057</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="InventoryOwnerUserId" id="2F4AB60B-7212-7790-8FEF-779D17BE896F">
-<createdBy>Bernd</createdBy>
-<createdTime>2019-01-13 20:17:26 UTC</createdTime>
-<generatorID>D4A2A61F-43C7-28C4-4D29-90974C8DFED4</generatorID>
-<ownerDesignName>ExDateMan_DMD</ownerDesignName>
-<engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
-</engineerTo>
-<referedAttribute>D30F4398-5EB5-95E0-9503-B70FD1F9E593</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT057</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="0009D96B-6A8F-2491-6FCA-9528FB216069" name="Stock PK">
@@ -172,7 +158,6 @@
 <usedAttributes>
 <attributeRef>B540683E-EBFF-3972-48BF-38D3E23CDC47</attributeRef>
 <attributeRef>5FAEEED6-6FD2-305A-E2E5-802EC24D90FF</attributeRef>
-<attributeRef>2F4AB60B-7212-7790-8FEF-779D17BE896F</attributeRef>
 <attributeRef>1FCF7251-183C-CEB6-237A-3D06216F1079</attributeRef>
 </usedAttributes>
 </identifier>

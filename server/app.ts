@@ -46,7 +46,7 @@ class App {
       password: process.env.EDM_PWD,
       database: process.env.EDM_DB,
       ssl: true,
-      entities: [Inventory],
+      entities: [__dirname + "/models/*"],
       synchronize: true,
       logging: true
     })

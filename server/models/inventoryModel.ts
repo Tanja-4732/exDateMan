@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm";
+import { InventoryUser } from "./inventoryUserModel";
 
 @Entity()
 export class Inventory {
@@ -9,8 +10,9 @@ export class Inventory {
   InventoryName: string;
 
   @Column("date")
+  // @CreateDateColumn()
   InventoryCreatedOn: Date;
 
-  @Column()
-  InventoryOwnerUserId: number;
+  @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.inventory)
+  inventoryUsers: InventoryUser[];
 }
