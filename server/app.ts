@@ -16,9 +16,9 @@ class App {
 
   constructor() {
     this.app = express();
-    this.serverConfig();
-    // this.mongoSetup();
     this.dbSetup(1);
+    // this.mongoSetup();
+    this.serverConfig();
   }
 
   private serverConfig(): void {
