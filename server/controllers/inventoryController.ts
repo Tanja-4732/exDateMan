@@ -5,7 +5,6 @@ import { Request, Response, NextFunction, Router } from "express";
 const inventory: Inventory = new Inventory();
 
 export default class InventoryController {
-  private entityManager: EntityManager = getManager();
 
   /**
    * Handles queries about general inventory information.
@@ -19,8 +18,9 @@ export default class InventoryController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<void> {
-    const inventory: Inventory = await this.entityManager.findOne(
+    ): Promise<void> {
+      const entityManager: EntityManager = getManager();
+    const inventory: Inventory = await entityManager.findOne(
       Inventory,
       res.locals.inventoryId
     );

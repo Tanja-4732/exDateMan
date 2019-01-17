@@ -5,6 +5,20 @@ import InventoryController from "../../../controllers/inventoryController";
 
 const inventoriesRoutes: Router = Router();
 
+/**
+ * Security
+ *
+ * Validate user token and set the userId in the res object
+ */
+inventoriesRoutes.use(
+  "/",
+  // jwt({ secret: "sneak-around" }),
+  (req: Request, res: Response, next: NextFunction) => {
+    log("So secure.");
+    next();
+  }
+);
+
 // Don't return all inventories
 inventoriesRoutes.get("/", (req: Request, res: Response) => {
   res.status(403).json({
