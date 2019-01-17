@@ -3,6 +3,13 @@ import { InventoryUser } from "./inventoryUserModel";
 
 @Entity()
 export class Inventory {
+
+  constructor(InventoryId: number, InventoryName: string) {
+    this.InventoryId = InventoryId;
+    this.InventoryName = InventoryName;
+    this.InventoryCreatedOn = new Date();
+  }
+
   @PrimaryGeneratedColumn()
   InventoryId: number;
 

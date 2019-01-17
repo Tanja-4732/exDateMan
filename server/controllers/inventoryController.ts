@@ -30,4 +30,14 @@ export default class InventoryController {
       users: inventory.inventoryUsers
     });
   }
+
+  public addNewInventory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+    ): void {
+      const entityManager: EntityManager = getManager();
+      const temp = new Inventory(req.body.);
+      entityManager.save(temp);
+    }
 }
