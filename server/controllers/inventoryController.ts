@@ -1,6 +1,7 @@
 import { getManager, EntityManager } from "typeorm";
 import { Inventory } from "../models/inventoryModel";
 import { Request, Response, NextFunction, Router } from "express";
+import { User } from "server/models/userModel";
 
 const inventory: Inventory = new Inventory();
 
@@ -37,7 +38,9 @@ export default class InventoryController {
     next: NextFunction
     ): void {
       const entityManager: EntityManager = getManager();
-      const temp = new Inventory(req.body.);
+      const temp = new Inventory(req.body.name);
+      const creatingUser: User = entityManager.findOne()
+      temp.inventoryUsers.push()
       entityManager.save(temp);
     }
 }
