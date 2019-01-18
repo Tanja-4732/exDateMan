@@ -8,13 +8,14 @@ const inventoriesRoutes: Router = Router();
 /**
  * Security
  *
- * Validate user token and set the userId in the res object
+ * Validate user token and set the userId in the res.locals object
  */
 inventoriesRoutes.use(
   "/",
   // jwt({ secret: "sneak-around" }),
   (req: Request, res: Response, next: NextFunction) => {
     log("So secure.");
+    res.locals.userId = 42;
     next();
   }
 );
@@ -39,6 +40,12 @@ inventoriesRoutes.use(
 inventoriesRoutes.use("/:inventoryId/things", thingsRoutes);
 
 // Give information about a specific inventory, if the user is authorized to do so
-inventoriesRoutes.use("/:inventoryId", new InventoryController().getInventoryDetails);
+inventoriesRoutes.get(
+  "/:inventoryId",
+  new InventoryController().getInventoryDetails
+);
+
+// Create new inventory
+inventoriesRoutes.post("/", new InventoryController().addNewInventory);
 
 export default inventoriesRoutes;
