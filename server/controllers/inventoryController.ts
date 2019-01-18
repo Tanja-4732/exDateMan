@@ -3,8 +3,6 @@ import { Inventory } from "../models/inventoryModel";
 import { Request, Response, NextFunction, Router } from "express";
 import { User } from "server/models/userModel";
 
-const inventory: Inventory = new Inventory();
-
 export default class InventoryController {
 
   /**
@@ -32,15 +30,29 @@ export default class InventoryController {
     });
   }
 
+  /**
+   * Adds a new inventory to the db based on the received JSON
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof InventoryController
+   */
   public addNewInventory(
     req: Request,
     res: Response,
     next: NextFunction
     ): void {
       const entityManager: EntityManager = getManager();
-      const temp = new Inventory(req.body.name);
-      const creatingUser: User = entityManager.findOne()
-      temp.inventoryUsers.push()
-      entityManager.save(temp);
+      // Generate the inventory object to later be saved to the db
+      const invToAdd: Inventory = new Inventory(req.body.name);
+      // Find the user who issued this request
+      const creatingUser: User = entityManager.findOne(req)
+      // Make an array of users
+      // TODO
+      // Set the array of users
+      invToAdd.inventoryUsers.push()
+      // Add the inventory to the db
+      entityManager.save(invToAdd);
     }
 }
