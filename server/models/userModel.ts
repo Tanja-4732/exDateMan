@@ -16,7 +16,7 @@ export class User {
   UserName: string;
 
   @Column()
-  UserEmail: string;
+  Email: string;
 
   @Column()
   UserPwdSaltedHash: string;

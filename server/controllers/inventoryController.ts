@@ -42,11 +42,11 @@ export default class InventoryController {
    * @param {NextFunction} next
    * @memberof InventoryController
    */
-  public addNewInventory(
+  public async addNewInventory(
     req: Request,
     res: Response,
     next: NextFunction
-  ): void {
+  ): Promise<void> {
     const entityManager: EntityManager = getManager();
 
     // Generate the inventory object to later be saved to the db
@@ -55,10 +55,10 @@ export default class InventoryController {
     const invToAdd: Inventory = new Inventory(req.body.name);
 
     // Find the user who issued this request
-    const owningUser: User = entityManager.findOne(User, res.locals.userId);
+    const owningUser: User = await entityManager.findOne(User, res.locals.userId);
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
-    const invUsers: InventoryUser[] = InventoryUser[];
+    const invUsers: InventoryUser[] = InventoryUser[0];
 
     // Add all of the admins
     req.body.admins.forEach(adminId => {
