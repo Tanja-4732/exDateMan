@@ -3,6 +3,7 @@ import { log } from "util";
 
 import authRoutes from "./authRoutes";
 import inventoriesRoutes from "./inventoriesRoutes";
+import AuthController, { auth } from "../../../controllers/authController";
 
 const v1Routes: Router = Router();
 
@@ -14,7 +15,8 @@ v1Routes.get("/", (req: Request, res: Response) => {
 });
 
 // Use the inventories routes
-v1Routes.use("/inv", inventoriesRoutes);
+// v1Routes.use("/inv", auth, inventoriesRoutes);
+v1Routes.use("/inv", new AuthController().authenticate, inventoriesRoutes);
 
 // Authentication test
 v1Routes.use("/auth", authRoutes);

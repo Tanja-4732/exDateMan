@@ -13,6 +13,6 @@ authRoutes.get("/", (req: Request, res: Response) => {
 });
 
 
-authRoutes.post("/login", authController.loginRoute);
+authRoutes.post("/login", authController.login);
 
 export default authRoutes;

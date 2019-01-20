@@ -6,6 +6,7 @@ import { log } from "util";
 // import * as mongoose from "mongoose"; // useless
 import "reflect-metadata";
 import { createConnection, Connection } from "typeorm";
+import * as cookieParser from "cookie-parser";
 
 import { Inventory } from "./models/inventoryModel";
 
@@ -22,6 +23,9 @@ class App {
   }
 
   private serverConfig(): void {
+    // cookie-parser is for cookies; and cookies is for JWT
+    this.app.use(cookieParser());
+
     // application/json
     this.app.use(bodyParser.json());
 
