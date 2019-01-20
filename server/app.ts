@@ -6,9 +6,10 @@ import { log } from "util";
 // import * as mongoose from "mongoose"; // useless
 import "reflect-metadata";
 import { createConnection, Connection } from "typeorm";
-import * as cookieParser from "cookie-parser";
+// import * as cookieParser from "cookie-parser";
 
 import { Inventory } from "./models/inventoryModel";
+import cookieParser = require("cookie-parser");
 
 class App {
   public app: express.Application;
@@ -30,7 +31,7 @@ class App {
     this.app.use(bodyParser.json());
 
     // application/x-www-form-urlencoded
-    this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(bodyParser.urlencoded({ extended: true }));
 
     // Enable static file serving
     this.app.use(

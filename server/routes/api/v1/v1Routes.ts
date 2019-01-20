@@ -6,6 +6,7 @@ import inventoriesRoutes from "./inventoriesRoutes";
 import AuthController, { auth } from "../../../controllers/authController";
 
 const v1Routes: Router = Router();
+const authController: AuthController = new AuthController();
 
 // Default welcome message
 v1Routes.get("/", (req: Request, res: Response) => {
@@ -16,7 +17,8 @@ v1Routes.get("/", (req: Request, res: Response) => {
 
 // Use the inventories routes
 // v1Routes.use("/inv", auth, inventoriesRoutes);
-v1Routes.use("/inv", new AuthController().authenticate, inventoriesRoutes);
+// v1Routes.use("/inv", new AuthController().authenticate, inventoriesRoutes);
+v1Routes.use("/inv", authController.authenticate, inventoriesRoutes);
 
 // Authentication test
 v1Routes.use("/auth", authRoutes);

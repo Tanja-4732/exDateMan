@@ -11,6 +11,12 @@ const RSA_PRIVATE_KEY: Buffer = readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 const PUBLIC_KEY: Buffer = readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
+  public setTestCookie(req: Request, res: Response, next: NextFunction): any {
+    res.cookie("test", "testing").json({
+      message: "success"
+    });
+  }
+
   /**
    * Login to JWT
    *
@@ -37,9 +43,8 @@ export default class AuthController {
       console.error(error);
     }
 
-    res.cookie("test", "testing");
-    // res.cookie("JWT", jwtBearerToken, { httpOnly: true, secure: true }).json({
-    res.cookie("JWT", jwtBearerToken).json({
+    res.cookie("JWT", jwtBearerToken, { httpOnly: true }).json({
+      // res.cookie("JWT", jwtBearerToken).json({
       status: "success",
       user: actingUser.UserName
     });
@@ -58,13 +63,18 @@ export default class AuthController {
     log("So secure 2");
     log(req.cookies);
     log(req.cookies["testing"]);
-    // let decoded = jwt.verify(req.cookies["JWT"], PUBLIC_KEY);
 
-    res.cookie("rememberme", "1", {
-      expires: new Date(Date.now() + 900000),
-      httpOnly: true
-    });
-    res.json(req.cookies);
+    let decoded;
+    try {
+      decoded = jwt.verify(req.cookies["JWT"], PUBLIC_KEY);
+    } catch (e) {
+      log(e);
+      res.status(401).json({
+        status: 401,
+        error: "unauthorized",
+        message: "invalid credentials (need valid JWT as cookie)"
+      });
+    }
 
     next();
   }
