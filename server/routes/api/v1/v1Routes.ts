@@ -15,12 +15,10 @@ v1Routes.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Use the inventories routes
-// v1Routes.use("/inv", auth, inventoriesRoutes);
-// v1Routes.use("/inv", new AuthController().authenticate, inventoriesRoutes);
+// Authenticate and use the inventories routes
 v1Routes.use("/inv", authController.authenticate, inventoriesRoutes);
 
-// Authentication test
+// Use authentication routes
 v1Routes.use("/auth", authRoutes);
 
 export default v1Routes;

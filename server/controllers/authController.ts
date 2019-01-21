@@ -61,8 +61,7 @@ export default class AuthController {
     next: NextFunction
   ): Promise<void> {
     log("So secure 2");
-    log(req.cookies);
-    log(req.cookies["testing"]);
+    log("All cookies: " + req.cookies);
 
     let decoded;
     try {
@@ -75,11 +74,8 @@ export default class AuthController {
         message: "invalid credentials (need valid JWT as cookie)"
       });
     }
-
+    res.locals.userId = decoded.sub;
+    log("UserId: " + res.locals.userId);
     next();
   }
 }
-
-export const auth = expressJwt({
-  secret: PUBLIC_KEY
-});

@@ -12,7 +12,6 @@ authRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
-// authRoutes.all("/login", authController.setTestCookie); // TODO remove
 authRoutes.post("/login", authController.login);
 
 export default authRoutes;
