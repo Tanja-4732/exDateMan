@@ -56,25 +56,31 @@ export default class InventoryController {
 
     // Find the user who issued this request
     const owningUser: User = await entityManager.findOne(User, res.locals.userId);
+    log("Owning user: " + owningUser.Email);
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
-    const invUsers: InventoryUser[] = InventoryUser[0];
+    const invUsers: InventoryUser[] = InventoryUser[1];
 
     // Add all of the admins
-    req.body.admins.forEach(adminId => {
-      const adminToAdd: User = entityManager.findOne(User, adminId);
-      const invUser = new InventoryUser();
-      invUser.user = adminToAdd;
+    // req.body.admins.forEach((adminId: number) => {
+    //   const adminToAdd: User = entityManager.findOne(User, adminId);
+    //   const invUser = new InventoryUser();
+    //   invUser.user = adminToAdd;
+    //   invUser.inventory = invToAdd;
+    //   invUsers.push(invUser);
+    // });
+
+    // Set inventory owner
+    invUsers[0].user = owningUser;
+    invUsers[0].InventoryUserAccessRights = InventoryUserAccessRightsEnum.OWNER;
+
+    // Set the inventory reference in each inventoryUser
+    invUsers.forEach((invUser: InventoryUser) => {
       invUser.inventory = invToAdd;
-      invUsers.push(invUser);
     });
 
-    invUsers.user = owningUser;
-    invUsers.inventory = invToAdd;
-    invUsers.InventoryUserAccessRights = InventoryUserAccessRightsEnum.OWNER;
-
     // Set the array of users
-    invToAdd.inventoryUsers.push(invUsers);
+    invToAdd.inventoryUsers = invUsers;
 
     // Add the inventory to the db
     entityManager.save(invToAdd);
