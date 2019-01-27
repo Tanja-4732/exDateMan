@@ -7,8 +7,18 @@ import * as expressJwt from "express-jwt";
 import { log } from "util";
 import { hash, compareSync } from "bcrypt";
 
-const RSA_PRIVATE_KEY: Buffer = readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
-const PUBLIC_KEY: Buffer = readFileSync(process.env.EDM_PUBLIC_KEY);
+/**
+ * The private key either as a string or a buffer
+ */
+const RSA_PRIVATE_KEY: string | Buffer =
+  process.env.EDM_RSA_PRIVATE_KEY_VAL ||
+  readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
+
+  /**
+   * The public key either as a string or a buffer
+   */
+const PUBLIC_KEY: string | Buffer =
+  process.env.EDM_PUBLIC_KEY || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
   /**
