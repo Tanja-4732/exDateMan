@@ -19,10 +19,7 @@ export class User {
   Email: string;
 
   @Column()
-  UserPwdSaltedHash: string;
-
-  @Column()
-  UserPwdHashSalt: string;
+  SaltedPwdHash: string;
 
   @Column("date")
   // @CreateDateColumn()

@@ -11,8 +11,20 @@ const RSA_PRIVATE_KEY: Buffer = readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 const PUBLIC_KEY: Buffer = readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
+  /**
+   * Registers new users
+   */
   public register(req: Request, res: Response, next: NextFunction): any {
+    /**
+     * The number of rounds the passwords hash will be salted for
+     */
     const saltRounds: number = 10 as number;
+
+    /**
+     * The password requested to be set
+     * for the new account by the applicant
+     * in plain text
+     */
     const plaintextPassword: string = req.body.pwd as string;
 
     hash(plaintextPassword, saltRounds, (err: Error, hash: string) => {
@@ -53,12 +65,7 @@ export default class AuthController {
     }
 
     // Credential validation, return 401 on invalid credentials
-    log(
-      compareSync(
-        password,
-        "Password.hash.h3re"
-      ) + ""
-    );
+    log(compareSync(password, actingUser.SaltedPwdHash) + "");
 
     let jwtBearerToken: string;
     try {
