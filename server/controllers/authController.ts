@@ -3,17 +3,20 @@ import UserController from "./userController";
 import * as jwt from "jsonwebtoken";
 import { readFileSync } from "fs";
 import { User } from "server/models/userModel";
-// import expressJwt = require("express-jwt");
 import * as expressJwt from "express-jwt";
 import { log } from "util";
+import { hash, compareSync } from "bcrypt";
 
 const RSA_PRIVATE_KEY: Buffer = readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 const PUBLIC_KEY: Buffer = readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
-  public setTestCookie(req: Request, res: Response, next: NextFunction): any {
-    res.cookie("test", "testing").json({
-      message: "success"
+  public register(req: Request, res: Response, next: NextFunction): any {
+    const saltRounds: number = 10 as number;
+    const plaintextPassword: string = req.body.pwd as string;
+
+    hash(plaintextPassword, saltRounds, (err: Error, hash: string) => {
+      log(hash);
     });
   }
 
@@ -49,7 +52,13 @@ export default class AuthController {
       });
     }
 
-    // TODO Implement credential validation here 401
+    // Credential validation, return 401 on invalid credentials
+    log(
+      compareSync(
+        password,
+        "Password.hash.h3re"
+      ) + ""
+    );
 
     let jwtBearerToken: string;
     try {
@@ -94,10 +103,7 @@ export default class AuthController {
       });
     }
 
-    log(decoded);
-
     res.locals.actingUser = decoded.sub;
-    log("ActingUser: " + res.locals.actingUser);
     next();
   }
 }

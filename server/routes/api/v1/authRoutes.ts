@@ -12,6 +12,10 @@ authRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
+// Handle login requests
 authRoutes.post("/login", authController.login);
+
+// Handle registration requests
+authRoutes.post("/register", authController.register);
 
 export default authRoutes;
