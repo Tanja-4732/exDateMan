@@ -14,11 +14,11 @@ const RSA_PRIVATE_KEY: string | Buffer =
   process.env.EDM_RSA_PRIVATE_KEY_VAL ||
   readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 
-  /**
-   * The public key either as a string or a buffer
-   */
+/**
+ * The public key either as a string or a buffer
+ */
 const PUBLIC_KEY: string | Buffer =
-  process.env.EDM_PUBLIC_KEY || readFileSync(process.env.EDM_PUBLIC_KEY);
+  process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
   /**
