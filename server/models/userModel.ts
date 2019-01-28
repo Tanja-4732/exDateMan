@@ -21,7 +21,7 @@ export class User {
   @Column()
   SaltedPwdHash: string;
 
-  @Column("date")
+  @Column("date", {nullable: false, default: null })
   // @CreateDateColumn()
   UserCreatedOn: Date;
 

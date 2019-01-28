@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import UserController from "./userController";
 import * as jwt from "jsonwebtoken";
 import { readFileSync } from "fs";
-import { User } from "server/models/userModel";
+import { User } from "../models/userModel";
 import * as expressJwt from "express-jwt";
 import { log } from "util";
 import { hash, compareSync } from "bcrypt";
@@ -24,21 +24,51 @@ export default class AuthController {
   /**
    * Registers new users
    */
-  public register(req: Request, res: Response, next: NextFunction): any {
+  public async register(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     /**
      * The number of rounds the passwords hash will be salted for
      */
     const saltRounds: number = 10 as number;
 
     /**
-     * The password requested to be set
-     * for the new account by the applicant
-     * in plain text
+     * The user to be added to the db
      */
-    const plaintextPassword: string = req.body.pwd as string;
+    const newUser: User = new User();
 
-    hash(plaintextPassword, saltRounds, (err: Error, hash: string) => {
-      log(hash);
+    newUser.Email = req.body.email;
+
+    // The current date
+    newUser.UserCreatedOn = new Date(new Date().setHours(0, 0, 0, 0));
+
+    newUser.UserName = req.body.name;
+
+    // Calculate and set the hash
+    hash(req.body.pwd, saltRounds, (err: Error, hashValue: string) => {
+      log(hashValue);
+      newUser.SaltedPwdHash = hashValue;
+    });
+
+    // Add the user to the db
+    try {
+      await UserController.addNewUserOrFail(newUser);
+    } catch (error) {
+      log(error);
+      res.status(400).json({
+        status: 400,
+        error: "Bad request",
+        message: "Email already in use or user data incomplete"
+      });
+      return;
+    }
+
+    res.status(201).json({
+      status: 201,
+      message: "Created new user",
+      email: newUser.Email
     });
   }
 
@@ -65,13 +95,14 @@ export default class AuthController {
      */
     let actingUser: User;
     try {
-      actingUser = await new UserController().findUserForEmailOrFail(email);
+      actingUser = await UserController.findUserForEmailOrFail(email);
     } catch (error) {
       res.status(400).json({
         status: 400,
         error: "Bad request",
         message: "Couldn't find email address"
       });
+      return;
     }
 
     // Credential validation, return 401 on invalid credentials
@@ -88,11 +119,13 @@ export default class AuthController {
       console.error(error);
     }
 
-    res.cookie("JWT", jwtBearerToken, { httpOnly: true }).json({
-      // res.cookie("JWT", jwtBearerToken).json({
-      status: "Success",
-      user: actingUser.UserName
-    });
+    res
+      .status(200)
+      .cookie("JWT", jwtBearerToken, { httpOnly: true })
+      .json({
+        status: 200,
+        user: actingUser.UserName
+      });
   }
 
   // TODO password salter & hasher
