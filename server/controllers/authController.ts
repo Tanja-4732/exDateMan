@@ -46,11 +46,18 @@ export default class AuthController {
 
     newUser.UserName = req.body.name;
 
+    // Testing... // TODO remove the following line
+    newUser.SaltedPwdHash = "Hello World";
+
     // Calculate and set the hash
-    hash(req.body.pwd, saltRounds, (err: Error, hashValue: string) => {
-      log(hashValue);
-      newUser.SaltedPwdHash = hashValue;
-    });
+    newUser.SaltedPwdHash = await hash(
+      req.body.pwd,
+      saltRounds,
+      (err: Error, hashValue: string) => {
+        //  hashValue;
+      }
+    );
+    log(newUser.SaltedPwdHash);
 
     // Add the user to the db
     try {
@@ -68,7 +75,8 @@ export default class AuthController {
     res.status(201).json({
       status: 201,
       message: "Created new user",
-      email: newUser.Email
+      email: newUser.Email,
+      id: newUser.UserId
     });
   }
 
