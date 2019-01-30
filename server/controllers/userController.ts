@@ -27,6 +27,23 @@ export default class UserController {
     return user;
   }
 
+  /**
+   * Finds and returns a user form the db
+   * based on the userId or fails
+   *
+   * @param userId The id of the user to be returned
+   */
+  public static async findUserForEmailOrFail(userId: number): Promise<User> {
+    const entityManager: EntityManager = getManager();
+    const user: User = await entityManager.findOneOrFail(User, {
+      where: {
+        UserId: userId
+      }
+    });
+    log("Found user " + user.UserName + " with the email of " + email); // TODO remove log statement
+    return user;
+  }
+
   public static async addNewUserOrFail(user: User): Promise<void> {
     const entityManager: EntityManager = getManager();
     entityManager.save(user);

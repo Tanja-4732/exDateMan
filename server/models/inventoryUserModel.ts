@@ -10,9 +10,11 @@ export enum InventoryUserAccessRightsEnum {
 }
 
 /**
+ * Compare two accessRights to see if it its privilege is sufficient
+ *
  * @returns -1, if the privileges sufficient, 0 if they are, 1 if they exceed the target
  */
-function compareInventoryUserAccessRights(
+export function compareInventoryUserAccessRights(
   compare: InventoryUserAccessRightsEnum,
   against: InventoryUserAccessRightsEnum
 ): number {

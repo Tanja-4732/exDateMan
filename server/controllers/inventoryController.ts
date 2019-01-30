@@ -35,6 +35,20 @@ export default class InventoryController {
   }
 
   /**
+   * Returns one inventory object based on its id or fails
+   */
+  public static async getInventoryOrFail(
+    inventoryId: number
+  ): Promise<Inventory> {
+    const entityManager: EntityManager = getManager();
+    return await entityManager.findOneOrFail(Inventory, {
+      where: {
+        InventoryId: inventoryId
+      }
+    });
+  }
+
+  /**
    * Adds a new inventory to the db based on the received JSON
    *
    * @param {Request} req
@@ -55,7 +69,10 @@ export default class InventoryController {
     const invToAdd: Inventory = new Inventory(req.body.name);
 
     // Find the user who issued this request
-    const owningUser: User = await entityManager.findOne(User, res.locals.userId);
+    const owningUser: User = await entityManager.findOne(
+      User,
+      res.locals.userId
+    );
     log("Owning user: " + owningUser.Email);
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions

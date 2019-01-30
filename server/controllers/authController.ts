@@ -6,31 +6,42 @@ import { User } from "../models/userModel";
 import * as expressJwt from "express-jwt";
 import { log } from "util";
 import { hash, compareSync } from "bcrypt";
-import { InventoryUserAccessRightsEnum } from "server/models/inventoryUserModel";
+import { InventoryUserAccessRightsEnum, InventoryUser, compareInventoryUserAccessRights } from "../models/inventoryUserModel";
+import { Inventory } from "./../models/inventoryModel";
+import InventoryController from "./inventoryController";
+import InventoryUserController from "./inventoryUserController";
 
 /**
  * The private key either as a string or a buffer
  */
 const RSA_PRIVATE_KEY: string | Buffer =
-process.env.EDM_RSA_PRIVATE_KEY_VAL ||
-readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
+  process.env.EDM_RSA_PRIVATE_KEY_VAL ||
+  readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 
 /**
  * The public key either as a string or a buffer
  */
 const PUBLIC_KEY: string | Buffer =
-process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
+  process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
   /**
+   * Checks if a user is allowed to do something in a given inventory
+   *
+   * @param userEmail The email address of the user in question
    * @returns true if the acting user may access a inventory
    */
-  public static mayAccess(
-    userId: number,
+  public static async isAuthorized(
+    userEmail: string,
     inventoryId: number,
     desiredAccess: InventoryUserAccessRightsEnum
-  ): boolean {
+  ): Promise<boolean> {
+    const user: User = await UserController.findUserForEmailOrFail(userEmail);
+    const inventory: Inventory = await InventoryController.getInventoryOrFail(inventoryId);
 
+    const inventoryUser: InventoryUser = await InventoryUserController.getInventoryUserOrFail(user, inventory);
+
+    return -1 < compareInventoryUserAccessRights(inventoryUser.InventoryUserAccessRights, desiredAccess);
   }
 
   /**
@@ -176,5 +187,4 @@ export default class AuthController {
     res.locals.actingUser = decoded.sub;
     next();
   }
-
 }
