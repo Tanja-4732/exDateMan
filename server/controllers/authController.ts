@@ -89,27 +89,25 @@ export default class AuthController {
     newUser.SaltedPwdHash = "Hello World";
 
     // Calculate and set the hash
-    newUser.SaltedPwdHash = await hash(
+    await hash(
       req.body.pwd,
       saltRounds,
-      (err: Error, hashValue: string) => {
-        //  hashValue;
+      async (err: Error, hashValue: string) => {
+        // Add the user to the db
+        try {
+          await UserController.addNewUserOrFail(newUser);
+        } catch (error) {
+          log(error);
+          res.status(400).json({
+            status: 400,
+            error: "Bad request",
+            message: "Email already in use or user data incomplete"
+          });
+          return;
+        }
       }
     );
     log(newUser.SaltedPwdHash);
-
-    // Add the user to the db
-    try {
-      await UserController.addNewUserOrFail(newUser);
-    } catch (error) {
-      log(error);
-      res.status(400).json({
-        status: 400,
-        error: "Bad request",
-        message: "Email already in use or user data incomplete"
-      });
-      return;
-    }
 
     res.status(201).json({
       status: 201,
