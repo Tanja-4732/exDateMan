@@ -17,7 +17,7 @@ export default class InventoryController {
    * @param {Response} res The Response object
    * @param {NextFunction} next The next function
    */
-  public async getInventoryDetails(
+  public static async getInventoryDetails(
     req: Request,
     res: Response,
     next: NextFunction

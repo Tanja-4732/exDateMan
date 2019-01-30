@@ -27,7 +27,7 @@ inventoriesRoutes.use("/:inventoryId/things", thingsRoutes);
 // Give information about a specific inventory, if the user is authorized to do so
 inventoriesRoutes.get(
   "/:inventoryId",
-  new InventoryController().getInventoryDetails
+  InventoryController.getInventoryDetails
 );
 
 // Create new inventory

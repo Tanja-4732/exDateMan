@@ -4,6 +4,7 @@ import { log } from "util";
 const stocksRoutes: Router = Router();
 
 // Return all stocks
+// TODO implement
 stocksRoutes.get("/", (req: Request, res: Response) => {
   res.status(200).json({
     message: "These are all stocks of thingNo " + res.locals.thingNo

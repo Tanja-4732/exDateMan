@@ -6,21 +6,33 @@ import { User } from "../models/userModel";
 import * as expressJwt from "express-jwt";
 import { log } from "util";
 import { hash, compareSync } from "bcrypt";
+import { InventoryUserAccessRightsEnum } from "server/models/inventoryUserModel";
 
 /**
  * The private key either as a string or a buffer
  */
 const RSA_PRIVATE_KEY: string | Buffer =
-  process.env.EDM_RSA_PRIVATE_KEY_VAL ||
-  readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
+process.env.EDM_RSA_PRIVATE_KEY_VAL ||
+readFileSync(process.env.EDM_RSA_PRIVATE_KEY);
 
 /**
  * The public key either as a string or a buffer
  */
 const PUBLIC_KEY: string | Buffer =
-  process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
+process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
+  /**
+   * @returns true if the acting user may access a inventory
+   */
+  public static mayAccess(
+    userId: number,
+    inventoryId: number,
+    desiredAccess: InventoryUserAccessRightsEnum
+  ): boolean {
+
+  }
+
   /**
    * Registers new users
    */
@@ -164,4 +176,5 @@ export default class AuthController {
     res.locals.actingUser = decoded.sub;
     next();
   }
+
 }
