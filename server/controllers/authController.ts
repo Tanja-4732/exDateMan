@@ -6,7 +6,11 @@ import { User } from "../models/userModel";
 import * as expressJwt from "express-jwt";
 import { log } from "util";
 import { hash, compareSync } from "bcrypt";
-import { InventoryUserAccessRightsEnum, InventoryUser, compareInventoryUserAccessRights } from "../models/inventoryUserModel";
+import {
+  InventoryUserAccessRightsEnum,
+  InventoryUser,
+  compareInventoryUserAccessRights
+} from "../models/inventoryUserModel";
 import { Inventory } from "./../models/inventoryModel";
 import InventoryController from "./inventoryController";
 import InventoryUserController from "./inventoryUserController";
@@ -28,20 +32,32 @@ export default class AuthController {
   /**
    * Checks if a user is allowed to do something in a given inventory
    *
-   * @param userEmail The email address of the user in question
+   * @param userId The email address of the user in question
    * @returns true if the acting user may access a inventory
    */
   public static async isAuthorized(
-    userEmail: string,
+    userId: number,
     inventoryId: number,
     desiredAccess: InventoryUserAccessRightsEnum
   ): Promise<boolean> {
-    const user: User = await UserController.findUserForEmailOrFail(userEmail);
-    const inventory: Inventory = await InventoryController.getInventoryOrFail(inventoryId);
+    const user: User = await UserController.getUserByIdOrFail(userId);
+    const inventory: Inventory = await InventoryController.getInventoryOrFail(
+      inventoryId
+    );
 
-    const inventoryUser: InventoryUser = await InventoryUserController.getInventoryUserOrFail(user, inventory);
+    const inventoryUser: InventoryUser = await InventoryUserController.getInventoryUserOrFail(
+      user,
+      inventory
+    );
 
-    return -1 < compareInventoryUserAccessRights(inventoryUser.InventoryUserAccessRights, desiredAccess);
+    // Needs to have the same access level (0) or higher (1)
+    return (
+      -1 <
+      compareInventoryUserAccessRights(
+        inventoryUser.InventoryUserAccessRights,
+        desiredAccess
+      )
+    );
   }
 
   /**
@@ -126,7 +142,7 @@ export default class AuthController {
      */
     let actingUser: User;
     try {
-      actingUser = await UserController.findUserForEmailOrFail(email);
+      actingUser = await UserController.findUserByEmailOrFail(email);
     } catch (error) {
       res.status(400).json({
         status: 400,

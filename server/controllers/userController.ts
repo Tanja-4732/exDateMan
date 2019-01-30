@@ -16,7 +16,7 @@ export default class UserController {
    *
    * @param email The email address of the user to be returned
    */
-  public static async findUserForEmailOrFail(email: string): Promise<User> {
+  public static async findUserByEmailOrFail(email: string): Promise<User> {
     const entityManager: EntityManager = getManager();
     const user: User = await entityManager.findOneOrFail(User, {
       where: {
@@ -33,7 +33,7 @@ export default class UserController {
    *
    * @param userId The id of the user to be returned
    */
-  public static async findUserForEmailOrFail(userId: number): Promise<User> {
+  public static async getUserByIdOrFail(userId: number): Promise<User> {
     const entityManager: EntityManager = getManager();
     const user: User = await entityManager.findOneOrFail(User, {
       where: {

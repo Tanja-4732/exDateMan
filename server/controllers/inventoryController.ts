@@ -7,6 +7,7 @@ import {
   InventoryUser,
   InventoryUserAccessRightsEnum
 } from "../models/inventoryUserModel";
+import AuthController from "./authController";
 
 export default class InventoryController {
   /**
@@ -22,6 +23,21 @@ export default class InventoryController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    // Check for authorization: READ
+    if (!AuthController.isAuthorized(
+      res.locals.actingUser,
+      res.locals.inventoryId,
+      InventoryUserAccessRightsEnum.READ
+    )) {
+      res.status(403).json({
+        status: 403,
+        error: "Forbidden",
+        message: "The requesting user must have " +
+        "at least the READ permission in this inventory."
+      });
+      return;
+    }
+
     const entityManager: EntityManager = getManager();
     const inventory: Inventory = await entityManager.findOne(
       Inventory,
