@@ -95,6 +95,7 @@ export default class AuthController {
       async (err: Error, hashValue: string) => {
         // Add the user to the db
         try {
+          newUser.SaltedPwdHash = hashValue;
           await UserController.addNewUserOrFail(newUser);
         } catch (error) {
           log(error);
