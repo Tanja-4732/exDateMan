@@ -2,14 +2,15 @@ import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
 
 import stocksRoutes from "./stocksRouter";
+import { ThingController } from "../../../controllers/thingController";
 
 const thingsRoutes: Router = Router();
 
 // Set the thingNo
 thingsRoutes.use(
   "/:thingNo",
-  (req: Request, res: Response, next: NextFunction) => {
-    res.locals.thingNo = req.params.thingNo;
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.locals.thing = await ThingController.getThingOrFail(req.params.thingNo, res.locals.inventory);
     next();
   }
 );
@@ -19,48 +20,18 @@ thingsRoutes.use("/:thingNo/stocks", stocksRoutes);
 
 // CRUD
 // Return all things
-thingsRoutes.get("/", (req: Request, res: Response) => {
-  // TODO
-  log("inventoryId=" + req.params.inventoryId);
-  req.res.status(200).json({
-    message: "These are all the things of the inventory with id: " + res.locals.inventoryId
-  });
-});
+thingsRoutes.get("/", ThingController.getAllThings);
 
 // Return one thing
-thingsRoutes.get("/:thingNo", (req: Request, res: Response) => {
-  // TODO
-
-});
+thingsRoutes.get("/:thingNo", ThingController.getThing);
 
 // Create new thing
-thingsRoutes.post("/", (req: Request, res: Response) => {
-  // TODO
-
-});
+thingsRoutes.post("/", ThingController.createNewThing);
 
 // Replace thing
-thingsRoutes.put("/:thingNo", (req: Request, res: Response) => {
-  // TODO
-
-});
+thingsRoutes.put("/:thingNo", ThingController.replaceThing);
 
 // Remove thing
-thingsRoutes.delete("/:thingNo", (req: Request, res: Response) => {
-  // TODO
-
-});
-
-// Set thingNo
-thingsRoutes.use(
-  "/:thingNo",
-   (req: Request, res: Response, next: NextFunction) => {
-       res.locals.thingNo = req.params.thingNo;
-    next();
-  }
-);
-
-// Use stocks routes
-thingsRoutes.use("/:thingNo/stocks", stocksRoutes);
+thingsRoutes.delete("/:thingNo", ThingController.deleteThing);
 
 export default thingsRoutes;

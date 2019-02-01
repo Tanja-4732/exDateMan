@@ -25,7 +25,7 @@ export default class InventoryController {
   ): Promise<void> {
     // Check for authorization: READ
     if (!AuthController.isAuthorized(
-      res.locals.actingUser,
+      res.locals.actingUserId,
       res.locals.inventoryId,
       InventoryUserAccessRightsEnum.READ
     )) {
@@ -72,7 +72,7 @@ export default class InventoryController {
    * @param {NextFunction} next
    * @memberof InventoryController
    */
-  public async addNewInventory(
+  public static async addNewInventory(
     req: Request,
     res: Response,
     next: NextFunction
@@ -87,12 +87,12 @@ export default class InventoryController {
     // Find the user who issued this request
     const owningUser: User = await entityManager.findOne(
       User,
-      res.locals.userId
+      res.locals.actingUserId
     );
     log("Owning user: " + owningUser.Email);
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
-    const invUsers: InventoryUser[] = InventoryUser[1];
+    const invUsers: InventoryUser[] = [];
 
     // Add all of the admins
     // req.body.admins.forEach((adminId: number) => {
@@ -104,6 +104,7 @@ export default class InventoryController {
     // });
 
     // Set inventory owner
+    invUsers[0] = new InventoryUser();
     invUsers[0].user = owningUser;
     invUsers[0].InventoryUserAccessRights = InventoryUserAccessRightsEnum.OWNER;
 
@@ -117,5 +118,79 @@ export default class InventoryController {
 
     // Add the inventory to the db
     entityManager.save(invToAdd);
+
+    res.status(200).json({
+      message: "Added inventory",
+      id: invToAdd.InventoryId,
+      name: invToAdd.InventoryName,
+      owner: owningUser.Email
+    });
+  }
+
+  /**
+   * Replaces an existing inventory on the db based on the received JSON
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof InventoryController
+   */
+  public static async replaceInventory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const entityManager: EntityManager = getManager();
+
+    // Get the inventory object to be replaced on the db
+    log("Requested inv name: " + req.body.name);
+    log("Req admins:" + req.body.admins);
+    const invToEdit: Inventory = res.locals.inventory;
+
+    // Find the user who issued this request
+    // TODO change to handeling code of userController
+    const requestingUser: User = await entityManager.findOne(
+      User,
+      res.locals.actingUserId
+    );
+    log("Requesting user: " + requestingUser.Email);
+
+    // Check for authorization
+    AuthController.isAuthorized()
+
+    // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
+    const invUsers: InventoryUser[] = [];
+
+    // Add all of the admins
+    // req.body.admins.forEach((adminId: number) => {
+    //   const adminToAdd: User = entityManager.findOne(User, adminId);
+    //   const invUser = new InventoryUser();
+    //   invUser.user = adminToAdd;
+    //   invUser.inventory = invToAdd;
+    //   invUsers.push(invUser);
+    // });
+
+    // Set inventory owner
+    invUsers[0] = new InventoryUser();
+    invUsers[0].user = requestingUser;
+    invUsers[0].InventoryUserAccessRights = InventoryUserAccessRightsEnum.OWNER;
+
+    // Set the inventory reference in each inventoryUser
+    invUsers.forEach((invUser: InventoryUser) => {
+      invUser.inventory = invToEdit;
+    });
+
+    // Set the array of users
+    invToEdit.inventoryUsers = invUsers;
+
+    // Add the inventory to the db
+    entityManager.save(invToEdit);
+
+    res.status(200).json({
+      message: "Added inventory",
+      id: invToEdit.InventoryId,
+      name: invToEdit.InventoryName,
+      owner: requestingUser.Email
+    });
   }
 }

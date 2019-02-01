@@ -12,11 +12,13 @@ inventoriesRoutes.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Set inventoryId
+// Set inventory
 inventoriesRoutes.use(
   "/:inventoryId",
-  (req: Request, res: Response, next: NextFunction) => {
-    res.locals.inventoryId = req.params.inventoryId;
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.locals.inventory = await InventoryController.getInventoryOrFail(
+      req.params.inventoryId
+    );
     next();
   }
 );
@@ -31,6 +33,11 @@ inventoriesRoutes.get(
 );
 
 // Create new inventory
-inventoriesRoutes.post("/", new InventoryController().addNewInventory);
+inventoriesRoutes.post("/", InventoryController.addNewInventory);
+
+// Replace existing inventory
+inventoriesRoutes.post("/", InventoryController.replaceInventory);
+
+// TODO delete inventory
 
 export default inventoriesRoutes;

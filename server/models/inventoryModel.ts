@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from "typeorm";
 import { InventoryUser } from "./inventoryUserModel";
+import { Thing } from "./thingModel";
 
 @Entity()
 export class Inventory {
@@ -21,4 +22,7 @@ export class Inventory {
 
   @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.inventory)
   inventoryUsers: InventoryUser[];
+
+  @OneToMany(type => Thing, thing => thing.Inventory)
+  Things: Thing[];
 }

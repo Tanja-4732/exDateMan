@@ -177,7 +177,7 @@ export default class AuthController {
   // TODO password salter & hasher
 
   /**
-   * Authenticates a user's JWT and extracts the userId into res.locals.actingUser
+   * Authenticates a user's JWT and extracts the userId into res.locals.actingUserId
    */
   public async authenticate(
     req: Request,
@@ -199,7 +199,7 @@ export default class AuthController {
       });
     }
 
-    res.locals.actingUser = decoded.sub;
+    res.locals.actingUserId = decoded.sub;
     next();
   }
 }

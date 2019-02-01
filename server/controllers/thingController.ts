@@ -1,8 +1,11 @@
 import { model } from "mongoose";
 import { ThingSchema } from "../models/mongodb/thingModel";
 import { Request, Response } from "express";
-
-const Thing = model("Thing", ThingSchema);
+import { EntityManager, getManager } from "typeorm";
+import { Thing } from "../models/thingModel";
+import { Inventory } from "../models/inventoryModel";
+import AuthController from "./authController";
+import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 
 /**
  * Implements the middleware for the API endpoints for express
@@ -12,61 +15,72 @@ const Thing = model("Thing", ThingSchema);
  */
 export class ThingController {
   /**
+   * Returns one thing object based on its number and inventory or fails
+   */
+  public static async getThingOrFail(
+    thingNo: number,
+    inventory: Inventory
+  ): Promise<Thing> {
+    const entityManager: EntityManager = getManager();
+    return await entityManager.findOneOrFail(Thing, {
+      where: {
+        ThingNo: thingNo,
+        Inventory: inventory
+      }
+    });
+  }
+
+  /**
    * Implements the middleware for adding a new thing
    *
    * @param {Request} req The express request
    * @param {Response} res The express response
    * @memberof ThingController
    */
-  public addThing(req: Request, res: Response): void {
-    let newThing = new Thing(req.body);
-
-    newThing.save((err: any, thing) => {
-      if (err) {
-        res.send(err);
-      }
-      res.json(thing);
-    });
+  public static createNewThing(req: Request, res: Response): void {
+    // TODO
   }
 
-  public getThing(req: Request, res: Response): void {
-    Thing.find({}, (err, contact) => {
-      if (err) {
-        res.send(err);
-      }
-      res.json(contact);
-    });
-  }
-
-  public getContactByID(req: Request, res: Response): void {
-    Thing.findById(req.params.thingId, (err, thing) => {
-      if (err) {
-        res.send(err);
-      }
-      res.json(thing);
-    });
-  }
-
-  public updateThing(req: Request, res: Response): void {
-    Thing.findOneAndUpdate(
-      { _id: req.params.thingId },
-      req.body,
-      { new: true },
-      (err, thing) => {
-        if (err) {
-          res.send(err);
-        }
-        res.json(thing);
-      }
+  public static async getAllThings(req: Request, res: Response): Promise<void> {
+    // Check authorization
+    AuthController.isAuthorized(
+      res.locals.actingUser,
+      res.locals.inventory.InventoryId,
+      InventoryUserAccessRightsEnum.READ
     );
+
+    // Get the things
+    const entityManager: EntityManager = getManager();
+    let things: Thing[];
+    try {
+      things = await entityManager.find(Thing, {
+        where: {
+          Inventory: res.locals.inventory as Inventory
+        }
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: 400,
+        error: "Bad request",
+        message: "Invalid parameters. Couldn't execute request."
+      });
+    }
+    // Send success response with data
+    res.status(200).json({
+      inventoryId: res.locals.inventory.InventoryId,
+      things: things
+    });
   }
 
-  public deleteThing(req: Request, res: Response): void {
-    Thing.remove({ _id: req.params.thingId }, (err, thing) => {
-      if (err) {
-        res.send(err);
-      }
-      res.json({ message: "Successfully deleted thing!" });
-    });
+  public static getThing(req: Request, res: Response): void {
+    // TODO
+  }
+
+  public static replaceThing(req: Request, res: Response): void {
+    // TODO
+  }
+
+  public static deleteThing(req: Request, res: Response): void {
+    // TODO
   }
 }
