@@ -12,14 +12,17 @@ import { Thing } from "./thingModel";
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
-  CategoryId: number;
+  id: number;
 
   @Column()
-  CategoryName: string;
+  name: string;
 
-  @Column()
-  ThingName: string;
-
-  @ManyToOne(type => Thing, thing => thing.Categories)
+  @OneToMany(type => Thing, thing => thing.Categories)
   Things: Thing[];
+
+  @ManyToOne(type => Category, category => category.childCategories)
+  parentCategory: Category;
+
+  @OneToMany(type => Category, category => category.parentCategory)
+  childCategories: Category[];
 }

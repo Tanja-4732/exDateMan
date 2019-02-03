@@ -19,7 +19,7 @@ class App {
   constructor() {
     this.app = express();
 
-    this.dbSetup(1);
+    this.dbSetup(1, 1);
     // this.mongoSetup();
     this.serverConfig();
   }
@@ -43,7 +43,7 @@ class App {
     this.app.use(routes);
   }
 
-  private dbSetup(count: number): Connection {
+  private dbSetup(count: number, attempts: number): Connection {
     createConnection({
       type: "postgres",
       host: process.env.EDM_HOST,
@@ -61,12 +61,20 @@ class App {
         return connection;
       })
       .catch((error: Error) => {
-        if (count < 10) {
-          log("DB connection failed " + count + " times. Retrying...");
+        if (count < attempts) {
+          log(
+            "DB connection failed " +
+              count +
+              (count === 1 ? " time. Retrying..." : " times. Retrying...")
+          );
           count++;
-          this.dbSetup(count);
+          this.dbSetup(count, attempts);
         } else {
-          log("DB connection failed " + count + " times. Giving up.");
+          log(
+            "DB connection failed " +
+              count +
+              (count === 1 ? " time. Giving up." : " times. Giving up.")
+          );
           throw error;
         }
       });

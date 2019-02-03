@@ -20,9 +20,9 @@ export class Inventory {
   // @CreateDateColumn()
   InventoryCreatedOn: Date;
 
-  @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.inventory)
+  @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.inventory, {cascade: true})
   inventoryUsers: InventoryUser[];
 
-  @OneToMany(type => Thing, thing => thing.Inventory)
+  @OneToMany(type => Thing, thing => thing.Inventory, {cascade: true})
   Things: Thing[];
 }

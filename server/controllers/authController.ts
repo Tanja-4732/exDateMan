@@ -99,6 +99,7 @@ export default class AuthController {
           await UserController.addNewUserOrFail(newUser);
         } catch (error) {
           log(error);
+          log("Inform client about duplicate");
           res.status(400).json({
             status: 400,
             error: "Bad request",
@@ -106,16 +107,15 @@ export default class AuthController {
           });
           return;
         }
+        res.status(201).json({
+          status: 201,
+          message: "Created new user",
+          email: newUser.Email,
+          id: newUser.UserId
+        });
       }
     );
     log(newUser.SaltedPwdHash);
-
-    res.status(201).json({
-      status: 201,
-      message: "Created new user",
-      email: newUser.Email,
-      id: newUser.UserId
-    });
   }
 
   /**

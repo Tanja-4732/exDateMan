@@ -24,16 +24,19 @@ export default class InventoryController {
     next: NextFunction
   ): Promise<void> {
     // Check for authorization: READ
-    if (!AuthController.isAuthorized(
-      res.locals.actingUserId,
-      res.locals.inventoryId,
-      InventoryUserAccessRightsEnum.READ
-    )) {
+    if (
+      !AuthController.isAuthorized(
+        res.locals.actingUserId,
+        res.locals.inventoryId,
+        InventoryUserAccessRightsEnum.READ
+      )
+    ) {
       res.status(403).json({
         status: 403,
         error: "Forbidden",
-        message: "The requesting user must have " +
-        "at least the READ permission in this inventory."
+        message:
+          "The requesting user must have " +
+          "at least the READ permission in this inventory."
       });
       return;
     }
@@ -116,8 +119,26 @@ export default class InventoryController {
     // Set the array of users
     invToAdd.inventoryUsers = invUsers;
 
+    log(
+      "invController: " +
+        invToAdd.inventoryUsers[0].inventory.InventoryId +
+        " " +
+        invToAdd.inventoryUsers[0].user.Email +
+        " " +
+        invToAdd.inventoryUsers[0].InventoryUserAccessRights
+    );
+
     // Add the inventory to the db
-    entityManager.save(invToAdd);
+    await entityManager.save(invToAdd);
+
+    log(
+      "invController: " +
+        invToAdd.inventoryUsers[0].inventory.InventoryId +
+        " " +
+        invToAdd.inventoryUsers[0].user.Email +
+        " " +
+        invToAdd.inventoryUsers[0].InventoryUserAccessRights
+    );
 
     res.status(200).json({
       message: "Added inventory",
@@ -156,7 +177,7 @@ export default class InventoryController {
     log("Requesting user: " + requestingUser.Email);
 
     // Check for authorization
-    AuthController.isAuthorized()
+    AuthController.isAuthorized();
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
     const invUsers: InventoryUser[] = [];

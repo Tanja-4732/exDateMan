@@ -9,7 +9,6 @@ import { log } from "util";
  * should be implemented here.
  */
 export default class UserController {
-
   /**
    * Finds and returns a user form the db
    * based on the email or throws an exception
@@ -46,6 +45,14 @@ export default class UserController {
 
   public static async addNewUserOrFail(user: User): Promise<void> {
     const entityManager: EntityManager = getManager();
-    entityManager.save(user);
+    try {
+      await entityManager.find(User, { where: { Email: user.Email } });
+    } catch (error) {
+      log("err");
+      entityManager.save(user);
+      return;
+    }
+    log("ok");
+    throw new Error("duplicate/unique");
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryColumn, ManyToOne, Column } from "typeorm";
 import { Inventory } from "./inventoryModel";
 import { User } from "./userModel";
 
@@ -52,15 +52,15 @@ export function compareInventoryUserAccessRights(
 
 @Entity()
 export class InventoryUser {
-  @PrimaryColumn({
+  @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers, {primary: true})
+  inventory: Inventory;
+
+  @ManyToOne(type => User, user => user.inventoryUsers, {primary: true})
+  user: User;
+
+  @Column({
     type: "enum",
     enum: InventoryUserAccessRightsEnum
   })
   InventoryUserAccessRights: InventoryUserAccessRightsEnum;
-
-  @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers)
-  inventory: Inventory;
-
-  @ManyToOne(type => User, user => user.inventoryUsers)
-  user: User;
 }
