@@ -54,11 +54,15 @@ export default class AuthController {
     // const inventory: Inventory = await InventoryController.getInventoryOrFail(
     //   inventoryId
     // );
-
-    const inventoryUser: InventoryUser = await InventoryUserController.getInventoryUserOrFail(
-      user,
-      inventory
-    );
+    let inventoryUser: InventoryUser;
+    try {
+      inventoryUser = await InventoryUserController.getInventoryUserOrFail(
+        user,
+        inventory
+      );
+    } catch (error) {
+      return false;
+    }
 
     // Needs to have the same access level (0) or higher (1)
     return (

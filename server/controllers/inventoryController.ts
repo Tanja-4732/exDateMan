@@ -15,14 +15,14 @@ export default class InventoryController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    try{
+    try {
         res.locals.inventory = await InventoryController.getInventoryOrFail(
           req.params.inventoryId
         );
     } catch (error) {
       res.status(404).json({
         status: 404,
-        error: "Inventory " + req.params.inventoryId + "couldn't be found."
+        error: "Inventory " + req.params.inventoryId + " couldn't be found."
       });
     }
     log("Parsed inv id: " + res.locals.inventory.InventoryId);
@@ -71,11 +71,11 @@ export default class InventoryController {
     }
 
     if (
-      !AuthController.isAuthorized(
+      await AuthController.isAuthorized(
         res.locals.actingUser,
         res.locals.inventory,
         InventoryUserAccessRightsEnum.READ
-      )
+      ) === false
     ) {
       res.status(403).json({
         status: 403,
