@@ -1,15 +1,11 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import routes from "./routes/routes";
-import * as path from "path";
-import { log } from "util";
-// import * as mongoose from "mongoose"; // useless
-import "reflect-metadata";
+import * as cookieParser from "cookie-parser";
 import { createConnection, Connection } from "typeorm";
-// import * as cookieParser from "cookie-parser";
+import { join } from "path";
+import { log } from "util";
 
-import { Inventory } from "./models/inventoryModel";
-import cookieParser = require("cookie-parser");
+import routes from "./routes/routes";
 
 class App {
   public app: express.Application;
@@ -36,7 +32,7 @@ class App {
 
     // Enable static file serving
     this.app.use(
-      express.static(path.join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
+      express.static(join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
     );
 
     // Load all the routes
