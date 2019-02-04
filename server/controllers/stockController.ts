@@ -1,5 +1,5 @@
 import { EntityManager, getManager } from "typeorm";
-import { User } from "../models/stock";
+import { User } from "../models/userModel";
 import { log } from "util";
 
 /**

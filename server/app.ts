@@ -43,7 +43,7 @@ class App {
     this.app.use(routes);
   }
 
-  private dbSetup(count: number, attempts: number): Connection {
+  private dbSetup(count: number, attempts: number): void {
     createConnection({
       type: "postgres",
       host: process.env.EDM_HOST,
