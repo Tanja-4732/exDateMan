@@ -98,8 +98,6 @@ export default class AuthController {
           newUser.SaltedPwdHash = hashValue;
           await UserController.addNewUserOrFail(newUser);
         } catch (error) {
-          log(error);
-          log("Inform client about duplicate");
           res.status(400).json({
             status: 400,
             error: "Bad request",
@@ -115,7 +113,6 @@ export default class AuthController {
         });
       }
     );
-    log(newUser.SaltedPwdHash);
   }
 
   /**

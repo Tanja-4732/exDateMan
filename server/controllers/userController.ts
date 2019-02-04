@@ -45,14 +45,15 @@ export default class UserController {
 
   public static async addNewUserOrFail(user: User): Promise<void> {
     const entityManager: EntityManager = getManager();
+    // Check if the user already exists
     try {
-      await entityManager.find(User, { where: { Email: user.Email } });
+      await entityManager.findOneOrFail(User, { where: { Email: user.Email } });
     } catch (error) {
-      log("err");
+      // When the user doesn't already exist
       entityManager.save(user);
       return;
     }
-    log("ok");
+    // When the user already exists
     throw new Error("duplicate/unique");
   }
 }
