@@ -45,7 +45,7 @@ export class ThingController {
     // Check authorization
     AuthController.isAuthorized(
       res.locals.actingUser,
-      res.locals.inventory.InventoryId,
+      res.locals.inventory.Inventory,
       InventoryUserAccessRightsEnum.READ
     );
 

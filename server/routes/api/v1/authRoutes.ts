@@ -3,19 +3,14 @@ import { log } from "util";
 import AuthController from "../../../controllers/authController";
 
 const authRoutes: Router = Router();
-const authController: AuthController = new AuthController();
 
 // Return details about the session
-authRoutes.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    message: "You are authenticated."
-  });
-});
+authRoutes.get("/", AuthController.authenticate, AuthController.getAuthDetails);
 
 // Handle login requests
-authRoutes.post("/login", authController.login);
+authRoutes.post("/login", AuthController.login);
 
 // Handle registration requests
-authRoutes.post("/register", authController.register);
+authRoutes.post("/register", AuthController.register);
 
 export default authRoutes;

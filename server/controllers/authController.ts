@@ -29,21 +29,31 @@ const PUBLIC_KEY: string | Buffer =
   process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
+  static getAuthDetails(req: Request, res: Response): any {
+    const actingUser: User = res.locals.actingUser;
+    res.status(200).json({
+      status: "Authenticated",
+      "logged in as": {
+        userId: actingUser.UserId,
+        name: actingUser.UserName,
+        email: actingUser.Email
+      }
+    });
+  }
   /**
    * Checks if a user is allowed to do something in a given inventory
    *
-   * @param userId The email address of the user in question
    * @returns true if the acting user may access a inventory
    */
   public static async isAuthorized(
-    userId: number,
-    inventoryId: number,
+    user: User,
+    inventory: Inventory,
     desiredAccess: InventoryUserAccessRightsEnum
   ): Promise<boolean> {
-    const user: User = await UserController.getUserByIdOrFail(userId);
-    const inventory: Inventory = await InventoryController.getInventoryOrFail(
-      inventoryId
-    );
+    // const user: User = await UserController.getUserByIdOrFail(userId);
+    // const inventory: Inventory = await InventoryController.getInventoryOrFail(
+    //   inventoryId
+    // );
 
     const inventoryUser: InventoryUser = await InventoryUserController.getInventoryUserOrFail(
       user,
@@ -63,7 +73,7 @@ export default class AuthController {
   /**
    * Registers new users
    */
-  public async register(
+  public static async register(
     req: Request,
     res: Response,
     next: NextFunction
@@ -105,12 +115,30 @@ export default class AuthController {
           });
           return;
         }
-        res.status(201).json({
-          status: 201,
-          message: "Created new user",
-          email: newUser.Email,
-          id: newUser.UserId
-        });
+
+        log("stop");
+
+        // Login the new user
+        let jwtBearerToken: string;
+        try {
+          jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+            algorithm: "RS256",
+            expiresIn: "10h",
+            subject: newUser.UserId + ""
+          });
+        } catch (error) {
+          console.error(error);
+        }
+
+        res
+          .status(201)
+          .cookie("JWT", jwtBearerToken, { httpOnly: true })
+          .json({
+            status: 201,
+            message: "Created new user",
+            email: newUser.Email,
+            id: newUser.UserId
+          });
       }
     );
   }
@@ -121,7 +149,7 @@ export default class AuthController {
    * This method handles the login process and
    * provides JWTs for the authenticated users
    */
-  public async login(req: Request, res: Response): Promise<void> {
+  public static async login(req: Request, res: Response): Promise<void> {
     /**
      * The email address provided in the login request
      */
@@ -176,7 +204,7 @@ export default class AuthController {
   /**
    * Authenticates a user's JWT and extracts the userId into res.locals.actingUserId
    */
-  public async authenticate(
+  public static async authenticate(
     req: Request,
     res: Response,
     next: NextFunction
@@ -196,7 +224,8 @@ export default class AuthController {
       });
     }
 
-    res.locals.actingUserId = decoded.sub;
+    log("the integer: " + decoded.sub);
+    res.locals.actingUser = await UserController.getUserByIdOrFail(decoded.sub as number);
     next();
   }
 }
