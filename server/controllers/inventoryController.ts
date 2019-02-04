@@ -8,6 +8,14 @@ import {
   InventoryUserAccessRightsEnum
 } from "../models/inventoryUserModel";
 import AuthController from "./authController";
+import UserController from "./userController";
+
+export interface InventoryRequest {
+  name: string;
+  admins: number[];
+  writeables: number[];
+  readables: number[];
+}
 
 export default class InventoryController {
   public static async setInventoryInResDotLocals(
@@ -16,9 +24,9 @@ export default class InventoryController {
     next: NextFunction
   ): Promise<void> {
     try {
-        res.locals.inventory = await InventoryController.getInventoryOrFail(
-          req.params.inventoryId
-        );
+      res.locals.inventory = await InventoryController.getInventoryOrFail(
+        req.params.inventoryId
+      );
     } catch (error) {
       res.status(404).json({
         status: 404,
@@ -71,11 +79,11 @@ export default class InventoryController {
     }
 
     if (
-      await AuthController.isAuthorized(
+      (await AuthController.isAuthorized(
         res.locals.actingUser,
         res.locals.inventory,
         InventoryUserAccessRightsEnum.READ
-      ) === false
+      )) === false
     ) {
       res.status(403).json({
         status: 403,
@@ -125,68 +133,71 @@ export default class InventoryController {
     const entityManager: EntityManager = getManager();
 
     // Generate the inventory object to later be saved to the db
-    log("Requested inv name: " + req.body.name);
-    log("Req admins:" + req.body.admins);
     const invToAdd: Inventory = new Inventory(req.body.name);
 
-    // Find the user who issued this request
-    const owningUser: User = await entityManager.findOne(
-      User,
-      res.locals.actingUserId
-    );
-    log("Owning user: " + owningUser.Email);
-
-    // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
+    // Make an array of inventoryUser
     const invUsers: InventoryUser[] = [];
 
-    // Add all of the admins
-    // req.body.admins.forEach((adminId: number) => {
-    //   const adminToAdd: User = entityManager.findOne(User, adminId);
-    //   const invUser = new InventoryUser();
-    //   invUser.user = adminToAdd;
-    //   invUser.inventory = invToAdd;
-    //   invUsers.push(invUser);
-    // });
-
     // Set inventory owner
-    invUsers[0] = new InventoryUser();
-    invUsers[0].user = owningUser;
-    invUsers[0].InventoryUserAccessRights = InventoryUserAccessRightsEnum.OWNER;
+    invUsers[0] = new InventoryUser(
+      invToAdd,
+      res.locals.actingUser,
+      InventoryUserAccessRightsEnum.OWNER
+    );
 
-    // Set the inventory reference in each inventoryUser
-    invUsers.forEach((invUser: InventoryUser) => {
-      invUser.inventory = invToAdd;
-    });
+    try {
+      // Admins
+      for (let userId of (req.body as InventoryRequest).admins) {
+        invUsers.push(
+          new InventoryUser(
+            invToAdd,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.ADMIN
+          )
+        );
+      }
+
+      // Writeables
+      for (let userId of (req.body as InventoryRequest).writeables) {
+        invUsers.push(
+          new InventoryUser(
+            invToAdd,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.WRITE
+          )
+        );
+      }
+
+      // Readables
+      for (let userId of (req.body as InventoryRequest).readables) {
+        invUsers.push(
+          new InventoryUser(
+            invToAdd,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.READ
+          )
+        );
+      }
+    } catch (error) {
+      log("OOF");
+      res.status(404).json({
+        status: 404,
+        error: "Couldn't find one or more specified users"
+      });
+      return;
+    }
 
     // Set the array of users
     invToAdd.inventoryUsers = invUsers;
 
-    log(
-      "invController: " +
-        invToAdd.inventoryUsers[0].inventory.InventoryId +
-        " " +
-        invToAdd.inventoryUsers[0].user.Email +
-        " " +
-        invToAdd.inventoryUsers[0].InventoryUserAccessRights
-    );
-
     // Add the inventory to the db
     await entityManager.save(invToAdd);
-
-    log(
-      "invController: " +
-        invToAdd.inventoryUsers[0].inventory.InventoryId +
-        " " +
-        invToAdd.inventoryUsers[0].user.Email +
-        " " +
-        invToAdd.inventoryUsers[0].InventoryUserAccessRights
-    );
 
     res.status(200).json({
       message: "Added inventory",
       id: invToAdd.InventoryId,
       name: invToAdd.InventoryName,
-      owner: owningUser.Email
+      owner: invUsers[0].user.Email
     });
   }
 

@@ -1,3 +1,4 @@
+import * as cors from "cors";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
@@ -21,6 +22,9 @@ class App {
   }
 
   private serverConfig(): void {
+    // Cross origin resource sharing
+    this.app.use(cors());
+
     // cookie-parser is for cookies; and cookies is for JWT
     this.app.use(cookieParser());
 

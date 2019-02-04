@@ -22,7 +22,6 @@ export default class UserController {
         Email: email
       }
     });
-    log("Found user " + user.UserName + " with the email of " + email); // TODO remove log statement
     return user;
   }
 
@@ -39,7 +38,6 @@ export default class UserController {
         UserId: userId
       }
     });
-    log("Found user " + user.UserName + " with the email of " + user.Email); // TODO remove log statement
     return user;
   }
 

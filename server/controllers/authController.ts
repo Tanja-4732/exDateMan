@@ -206,30 +206,46 @@ export default class AuthController {
   // TODO password salter & hasher
 
   /**
-   * Authenticates a user's JWT and extracts the userId into res.locals.actingUserId
+   * Authenticates a user's JWT and extracts the userId into res.locals.actingUser
    */
   public static async authenticate(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    log("Authentication stared"); // TODO remove log
-
+    // Decode and verify the JWT
     let decoded: any;
     try {
-      log("All cookies: " + req.cookies);
       decoded = jwt.verify(req.cookies["JWT"], PUBLIC_KEY);
     } catch (e) {
-      // log(e);
+      // If the token is invalid
       res.status(401).json({
         status: 401,
         error: "Unauthorized",
         message: "Invalid credentials (need valid JWT as cookie)"
       });
+      return;
     }
 
-    log("the integer: " + decoded.sub);
-    res.locals.actingUser = await UserController.getUserByIdOrFail(decoded.sub as number);
+    // Load the user form the db
+    try {
+      res.locals.actingUser = await UserController.getUserByIdOrFail(
+        decoded.sub as number
+      );
+    } catch (error) {
+      // If the user couldn't be found
+      res
+        .status(401)
+        .clearCookie("JWT")
+        .json({
+          status: 401,
+          error: "Unauthorized",
+          message: "Account doesn't exist; token invalid"
+        });
+      return;
+    }
+
+    // If the token is valid and the user was loaded
     next();
   }
 }

@@ -52,10 +52,26 @@ export function compareInventoryUserAccessRights(
 
 @Entity()
 export class InventoryUser {
-  @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers, {primary: true})
+  constructor(
+    inventory: Inventory,
+    user: User,
+    accessRights: InventoryUserAccessRightsEnum
+  ) {
+    this.inventory = inventory;
+    this.user = user;
+    this.InventoryUserAccessRights = accessRights;
+  }
+
+  @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers, {
+    primary: true,
+    cascade: ["insert", "update"]
+  })
   inventory: Inventory;
 
-  @ManyToOne(type => User, user => user.inventoryUsers, {primary: true})
+  @ManyToOne(type => User, user => user.inventoryUsers, {
+    primary: true,
+    cascade: ["insert", "update"]
+  })
   user: User;
 
   @Column({

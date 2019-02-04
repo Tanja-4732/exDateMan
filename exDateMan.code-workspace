@@ -8,7 +8,10 @@
     "cSpell.words": [
       "Bernd's",
       "hasher",
-      "typeorm"
+      "postgres",
+      "readables",
+      "typeorm",
+      "writeables"
     ]
   }
 }
