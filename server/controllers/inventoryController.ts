@@ -10,6 +10,35 @@ import {
 import AuthController from "./authController";
 
 export default class InventoryController {
+  public static async setInventoryInResDotLocals(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try{
+        res.locals.inventory = await InventoryController.getInventoryOrFail(
+          req.params.inventoryId
+        );
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        error: "Inventory " + req.params.inventoryId + "couldn't be found."
+      });
+    }
+    log("Parsed inv id: " + res.locals.inventory.InventoryId);
+    next();
+  }
+
+  public static async disallowInventoryEnumeration(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    res.status(403).json({
+      message: "The enumeration of all inventories is not permitted."
+    });
+  }
+
   /**
    * Handles queries about general inventory information.
    *
@@ -30,7 +59,7 @@ export default class InventoryController {
     try {
       inventory = await entityManager.findOneOrFail(
         Inventory,
-        res.locals.inventoryId
+        res.locals.inventory.InventoryId
       );
     } catch (error) {
       res.status(404).json({
@@ -38,6 +67,7 @@ export default class InventoryController {
         error: "Not found",
         message: "The requested inventory couldn't be found"
       });
+      return;
     }
 
     if (
@@ -168,7 +198,8 @@ export default class InventoryController {
    * @param {NextFunction} next
    * @memberof InventoryController
    */
-  public static async replaceInventory( // TODO implement this
+  public static async replaceInventory(
+    // TODO implement this
     req: Request,
     res: Response,
     next: NextFunction
@@ -181,9 +212,11 @@ export default class InventoryController {
     const invToEdit: Inventory = res.locals.inventory;
 
     // Check for authorization
-    AuthController.isAuthorized(res.locals.actingUser,
+    AuthController.isAuthorized(
+      res.locals.actingUser,
       res.locals.inventory,
-      InventoryUserAccessRightsEnum.ADMIN);
+      InventoryUserAccessRightsEnum.ADMIN
+    );
 
     // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
     const invUsers: InventoryUser[] = [];
@@ -202,7 +235,7 @@ export default class InventoryController {
     res.status(200).json({
       message: "Replaced inventory",
       id: invToEdit.InventoryId,
-      name: invToEdit.InventoryName,
+      name: invToEdit.InventoryName
       // owner: requestingUser.Email
     });
   }
