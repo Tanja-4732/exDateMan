@@ -179,7 +179,6 @@ export default class InventoryController {
         );
       }
     } catch (error) {
-      log("OOF");
       res.status(404).json({
         status: 404,
         error: "Couldn't find one or more specified users"
@@ -190,14 +189,23 @@ export default class InventoryController {
     // Set the array of users
     invToAdd.inventoryUsers = invUsers;
 
-    // Add the inventory to the db
-    await entityManager.save(invToAdd);
-
+    try {
+      // Add the inventory to the db
+      await entityManager.save(invToAdd);
+    } catch (err) {
+      res.status(400).json({
+        status: 400,
+        error: "Can't assign a user multiple roles for one inventory"
+      });
+      return;
+    }
     res.status(200).json({
       message: "Added inventory",
-      id: invToAdd.InventoryId,
-      name: invToAdd.InventoryName,
-      owner: invUsers[0].user.Email
+      inventory: {
+        id: invToAdd.InventoryId,
+        name: invToAdd.InventoryName,
+        owner: invUsers[0].user.Email
+      }
     });
   }
 
