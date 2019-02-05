@@ -54,7 +54,7 @@ class App {
       ssl: true,
       entities: [__dirname + "/models/*"],
       synchronize: true,
-      logging: true
+      logging: ["error", "warn"]
     })
       .then((connection: Connection) => {
         log("Connected to DB");
