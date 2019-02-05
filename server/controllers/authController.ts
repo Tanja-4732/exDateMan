@@ -60,6 +60,9 @@ export default class AuthController {
         user,
         inventory
       );
+      log("Checking inv: " + inventory.InventoryId);
+      log("Checking user: " + user.UserId);
+      log("InventoryUser has: " + inventoryUser.InventoryUserAccessRights);
     } catch (error) {
       return false;
     }
@@ -119,8 +122,6 @@ export default class AuthController {
           });
           return;
         }
-
-        log("stop");
 
         // Login the new user
         let jwtBearerToken: string;
@@ -182,6 +183,7 @@ export default class AuthController {
 
     // Credential validation, return 401 on invalid credentials
     log(compareSync(password, actingUser.SaltedPwdHash) + "");
+    // TODO Implement PWD check
 
     let jwtBearerToken: string;
     try {
@@ -202,8 +204,6 @@ export default class AuthController {
         user: actingUser.UserName
       });
   }
-
-  // TODO password salter & hasher
 
   /**
    * Authenticates a user's JWT and extracts the userId into res.locals.actingUser

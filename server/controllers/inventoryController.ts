@@ -10,8 +10,9 @@ import {
 import AuthController from "./authController";
 import UserController from "./userController";
 
-export interface InventoryRequest {
+interface InventoryRequest {
   name: string;
+  owner: User;
   admins: number[];
   writeables: number[];
   readables: number[];
@@ -127,86 +128,40 @@ export default class InventoryController {
    */
   public static async addNewInventory(
     req: Request,
-    res: Response,
-    next: NextFunction
+    res: Response
   ): Promise<void> {
-    const entityManager: EntityManager = getManager();
-
     // Generate the inventory object to later be saved to the db
     const invToAdd: Inventory = new Inventory(req.body.name);
 
-    // Make an array of inventoryUser
-    const invUsers: InventoryUser[] = [];
+    // Set the owner to the acting user
+    req.body.owner = res.locals.actingUser;
 
-    // Set inventory owner
-    invUsers[0] = new InventoryUser(
-      invToAdd,
-      res.locals.actingUser,
-      InventoryUserAccessRightsEnum.OWNER
-    );
-
-    try {
-      // Admins
-      for (let userId of (req.body as InventoryRequest).admins) {
-        invUsers.push(
-          new InventoryUser(
-            invToAdd,
-            await UserController.getUserByIdOrFail(userId),
-            InventoryUserAccessRightsEnum.ADMIN
-          )
-        );
-      }
-
-      // Writeables
-      for (let userId of (req.body as InventoryRequest).writeables) {
-        invUsers.push(
-          new InventoryUser(
-            invToAdd,
-            await UserController.getUserByIdOrFail(userId),
-            InventoryUserAccessRightsEnum.WRITE
-          )
-        );
-      }
-
-      // Readables
-      for (let userId of (req.body as InventoryRequest).readables) {
-        invUsers.push(
-          new InventoryUser(
-            invToAdd,
-            await UserController.getUserByIdOrFail(userId),
-            InventoryUserAccessRightsEnum.READ
-          )
-        );
-      }
-    } catch (error) {
-      res.status(404).json({
-        status: 404,
-        error: "Couldn't find one or more specified users"
-      });
-      return;
+    // Try to write changes to the db
+    switch (
+      (await InventoryController.setInventory(invToAdd, req.body)) as number
+    ) {
+      case 200:
+        res.status(200).json({
+          message: "Added inventory",
+          inventory: {
+            id: invToAdd.InventoryId,
+            name: invToAdd.InventoryName
+          }
+        });
+        break;
+      case 400:
+        res.status(400).json({
+          status: 400,
+          error: "Can't assign a user multiple roles for one inventory"
+        });
+        break;
+      case 404:
+        res.status(404).json({
+          status: 404,
+          error: "Couldn't find one or more specified users"
+        });
+        break;
     }
-
-    // Set the array of users
-    invToAdd.inventoryUsers = invUsers;
-
-    try {
-      // Add the inventory to the db
-      await entityManager.save(invToAdd);
-    } catch (err) {
-      res.status(400).json({
-        status: 400,
-        error: "Can't assign a user multiple roles for one inventory"
-      });
-      return;
-    }
-    res.status(200).json({
-      message: "Added inventory",
-      inventory: {
-        id: invToAdd.InventoryId,
-        name: invToAdd.InventoryName,
-        owner: invUsers[0].user.Email
-      }
-    });
   }
 
   /**
@@ -218,44 +173,133 @@ export default class InventoryController {
    * @memberof InventoryController
    */
   public static async replaceInventory(
-    // TODO implement this
     req: Request,
-    res: Response,
-    next: NextFunction
+    res: Response
   ): Promise<void> {
-    const entityManager: EntityManager = getManager();
-
-    // Get the inventory object to be replaced on the db
-    log("Requested inv name: " + req.body.name);
-    log("Req admins:" + req.body.admins);
+    // Get the inventory object to later be updated on the db
     const invToEdit: Inventory = res.locals.inventory;
 
-    // Check for authorization
-    AuthController.isAuthorized(
-      res.locals.actingUser,
-      res.locals.inventory,
-      InventoryUserAccessRightsEnum.ADMIN
-    );
+    // Check authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        invToEdit,
+        InventoryUserAccessRightsEnum.ADMIN
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the ADMIN or OWNER role for this inventory."
+      });
+      return;
+    }
 
-    // Make an array of inventoryUser // TODO Implement loops to add multiple with permissions
+    try {
+      // Read the requested owners userId from the request
+      // and replace it with its corresponding user object
+      req.body.owner = await UserController.getUserByIdOrFail(req.body
+        .owner as number);
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        error: "Couldn't find one or more specified users"
+      });
+    }
+
+    // Try to write changes to the db
+    switch (
+      (await InventoryController.setInventory(invToEdit, req.body)) as number
+    ) {
+      case 200:
+        res.status(200).json({
+          message: "Updated inventory",
+          inventory: {
+            id: invToEdit.InventoryId,
+            name: invToEdit.InventoryName
+          }
+        });
+        break;
+      case 400:
+        res.status(400).json({
+          status: 400,
+          error: "Can't assign a user multiple roles for one inventory"
+        });
+        break;
+      case 404:
+        res.status(404).json({
+          status: 404,
+          error: "Couldn't find one or more specified users"
+        });
+        break;
+    }
+  }
+
+  /**
+   * Business logic method; doesn't do http requests
+   */
+  private static async setInventory(
+    invToSet: Inventory,
+    invReq: InventoryRequest
+  ): Promise<number> {
+    const entityManager: EntityManager = getManager();
+
+    // Make an array of inventoryUser
     const invUsers: InventoryUser[] = [];
 
-    // Set the inventory reference in each inventoryUser
-    invUsers.forEach((invUser: InventoryUser) => {
-      invUser.inventory = invToEdit;
-    });
+    try {
+      // Set inventory owner
+      invUsers[0] = new InventoryUser(
+        invToSet,
+        invReq.owner,
+        InventoryUserAccessRightsEnum.OWNER
+      );
+
+      // Admins
+      for (let userId of invReq.admins) {
+        invUsers.push(
+          new InventoryUser(
+            invToSet,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.ADMIN
+          )
+        );
+      }
+
+      // Writeables
+      for (let userId of invReq.writeables) {
+        invUsers.push(
+          new InventoryUser(
+            invToSet,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.WRITE
+          )
+        );
+      }
+
+      // Readables
+      for (let userId of invReq.readables) {
+        invUsers.push(
+          new InventoryUser(
+            invToSet,
+            await UserController.getUserByIdOrFail(userId),
+            InventoryUserAccessRightsEnum.READ
+          )
+        );
+      }
+    } catch (error) {
+      return 404;
+    }
 
     // Set the array of users
-    invToEdit.inventoryUsers = invUsers;
+    invToSet.inventoryUsers = invUsers;
 
-    // Add the inventory to the db
-    entityManager.save(invToEdit);
-
-    res.status(200).json({
-      message: "Replaced inventory",
-      id: invToEdit.InventoryId,
-      name: invToEdit.InventoryName
-      // owner: requestingUser.Email
-    });
+    try {
+      // Add the inventory to the db
+      await entityManager.save(invToSet);
+    } catch (err) {
+      return 400;
+    }
+    return 200;
   }
 }

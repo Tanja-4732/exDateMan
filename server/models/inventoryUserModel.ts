@@ -64,19 +64,20 @@ export class InventoryUser {
 
   @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers, {
     primary: true,
-    cascade: ["insert", "update"]
+    cascade: ["insert", "update", "remove"]
   })
   inventory: Inventory;
 
   @ManyToOne(type => User, user => user.inventoryUsers, {
     primary: true,
-    cascade: ["insert", "update"]
+    cascade: ["insert", "update", "remove"]
   })
   user: User;
 
   @Column({
     type: "enum",
-    enum: InventoryUserAccessRightsEnum
+    enum: InventoryUserAccessRightsEnum,
+    nullable: false
   })
   InventoryUserAccessRights: InventoryUserAccessRightsEnum;
 }
