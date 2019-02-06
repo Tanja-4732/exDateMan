@@ -7,11 +7,11 @@ import { Inventory } from "../models/inventoryModel";
 import AuthController from "./authController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { Category } from "../models/categoryModel";
+import { User } from "../models/userModel";
 
 interface ThingRequest {
   number: number;
   name: string;
-  inventory: Inventory; // Not set in request
   categories: Category[]; // originally number[]
 }
 
@@ -45,11 +45,51 @@ export class ThingController {
    * @param {Response} res The express response
    * @memberof ThingController
    */
-  public static createNewThing(req: Request, res: Response): void {
+  public static async createNewThing(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    if (
+      ! await AuthController.isAuthorized(
+        res.locals.actingUser as User,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.WRITE
+      )
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the WRITE role or higher for this inventory."
+      });
+      return;
+    }
+
+    // Get the entity manager
     const entityManager: EntityManager = getManager();
 
+    // Create and set thing // TODO implement thing constructor
     const thingToAdd: Thing = new Thing();
-    thingToAdd.Inventory = res.locals.inventory;
+    thingToAdd.Inventory = res.locals.inventory as Inventory;
+    thingToAdd.ThingName = (req.body as ThingRequest).name;
+    thingToAdd.ThingNo = (req.body as ThingRequest).number;
+
+    try {
+      entityManager.save(thingToAdd);
+    } catch (error) {
+      res.status(400).json({
+        status: 400,
+        error: "Bad request"
+      });
+      return;
+    }
+    res.status(201).json({
+      status: 201,
+      message: "Created thing",
+      thing: {
+        inventoryId: thingToAdd.Inventory.InventoryId,
+        name: thingToAdd.ThingName,
+        number: thingToAdd.ThingNo,
+        categories: thingToAdd.Categories
+      }
+    });
   }
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {

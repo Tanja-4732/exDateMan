@@ -15,14 +15,14 @@ export class Thing {
   @PrimaryGeneratedColumn()
   ThingId: number;
 
-  @Column()
+  @Column({unique: false})
   ThingNo: number;
 
   @Column()
   ThingName: string;
 
   @ManyToOne(type => Inventory, inventory => inventory.Things)
-  Inventory: InventoryUser[];
+  Inventory: Inventory;
 
   @OneToMany(type => Category, category => category.Things)
   Categories: Category[];
