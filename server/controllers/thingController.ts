@@ -6,6 +6,14 @@ import { Thing } from "../models/thingModel";
 import { Inventory } from "../models/inventoryModel";
 import AuthController from "./authController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
+import { Category } from "../models/categoryModel";
+
+interface ThingRequest {
+  number: number;
+  name: string;
+  inventory: Inventory; // Not set in request
+  categories: Category[]; // originally number[]
+}
 
 /**
  * Implements the middleware for the API endpoints for express
@@ -38,7 +46,10 @@ export class ThingController {
    * @memberof ThingController
    */
   public static createNewThing(req: Request, res: Response): void {
-    // TODO
+    const entityManager: EntityManager = getManager();
+
+    const thingToAdd: Thing = new Thing();
+    thingToAdd.Inventory = res.locals.inventory;
   }
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {
