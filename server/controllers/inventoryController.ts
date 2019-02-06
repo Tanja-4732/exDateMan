@@ -256,7 +256,7 @@ export default class InventoryController {
       );
 
       // Admins
-      for (let userId of invReq.admins) {
+      for (const userId of invReq.admins) {
         invUsers.push(
           new InventoryUser(
             invToSet,
@@ -267,7 +267,7 @@ export default class InventoryController {
       }
 
       // Writeables
-      for (let userId of invReq.writeables) {
+      for (const userId of invReq.writeables) {
         invUsers.push(
           new InventoryUser(
             invToSet,
@@ -278,7 +278,7 @@ export default class InventoryController {
       }
 
       // Readables
-      for (let userId of invReq.readables) {
+      for (const userId of invReq.readables) {
         invUsers.push(
           new InventoryUser(
             invToSet,
@@ -291,12 +291,39 @@ export default class InventoryController {
       return 404;
     }
 
+    // Validate for unique
+    const userSet: Set<number> = new Set<number>([]);
+    for (const iu of invUsers as InventoryUser[]) {
+      log("User: " + JSON.stringify(iu.user.UserId, null, 2));
+      if (userSet.has(iu.user.UserId)) {
+        return 400;
+      } else {
+        userSet.add(iu.user.UserId);
+      }
+    }
+
     // Set the array of users
     invToSet.inventoryUsers = invUsers;
 
     try {
-      // Add the inventory to the db
-      await entityManager.save(invToSet);
+      /* @Transaction({ isolation: "SERIALIZABLE" })
+      save(@TransactionManager() manager: EntityManager, user: User) {
+
+      } */
+
+      // Use a transaction to roll back a delete if the inserting process fails
+      await getManager().transaction(
+        "SERIALIZABLE",
+        async (transactionalEntityManager: EntityManager) => {
+          // Remove the InventoryUsers form the inventory
+          await transactionalEntityManager.delete(InventoryUser, {
+            inventory: invToSet.InventoryId
+          });
+
+          // Add the inventory to the db
+          await transactionalEntityManager.save(invToSet);
+        }
+      );
     } catch (err) {
       return 400;
     }

@@ -5,9 +5,10 @@ const PORT: string = process.env.PORT || 420 + "";
 // Set EDM_ROOT_PATH (the root path of the server)
 process.env.EDM_ROOT_PATH = __dirname;
 
+log("Starting server...");
 import app from "./server/app";
 app.listen(PORT, () => {
-  log("server.ts: Express server listening on port " + PORT);
+  log("Server listening on port " + PORT);
 });
 
 /*

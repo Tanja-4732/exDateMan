@@ -60,9 +60,6 @@ export default class AuthController {
         user,
         inventory
       );
-      log("Checking inv: " + inventory.InventoryId);
-      log("Checking user: " + user.UserId);
-      log("InventoryUser has: " + inventoryUser.InventoryUserAccessRights);
     } catch (error) {
       return false;
     }
