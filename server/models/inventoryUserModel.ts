@@ -64,13 +64,13 @@ export class InventoryUser {
 
   @ManyToOne(type => Inventory, inventory => inventory.inventoryUsers, {
     primary: true,
-    cascade: ["insert", "update", "remove"]
+    cascade: ["insert", "update"]
   })
   inventory: Inventory;
 
   @ManyToOne(type => User, user => user.inventoryUsers, {
     primary: true,
-    cascade: ["insert", "update", "remove"]
+    cascade: ["insert", "update"]
   })
   user: User;
 

@@ -26,6 +26,7 @@ inventoriesRoutes.post("/", InventoryController.addNewInventory);
 // Replace existing inventory
 inventoriesRoutes.put("/:inventoryId", InventoryController.replaceInventory);
 
-// TODO delete inventory
+// Delete inventory
+inventoriesRoutes.delete("/:inventoryId", InventoryController.deleteInventory);
 
 export default inventoriesRoutes;

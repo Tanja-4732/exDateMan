@@ -9,6 +9,7 @@ import {
 } from "../models/inventoryUserModel";
 import AuthController from "./authController";
 import UserController from "./userController";
+import { Thing } from "../models/thingModel";
 
 interface InventoryRequest {
   name: string;
@@ -38,6 +39,7 @@ export default class InventoryController {
     next();
   }
 
+  // TODO implement listing of all accessible inventories
   public static async disallowInventoryEnumeration(
     req: Request,
     res: Response,
@@ -233,6 +235,60 @@ export default class InventoryController {
         });
         break;
     }
+  }
+
+  public static async deleteInventory(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    // Get the inventory object to later be updated on the db
+    const invToDelete: Inventory = res.locals.inventory;
+
+    // Get the entity manager
+    const entityManager: EntityManager = getManager();
+
+    // Check authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        invToDelete,
+        InventoryUserAccessRightsEnum.ADMIN
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the ADMIN or OWNER role for this inventory."
+      });
+      return;
+    }
+
+    try {
+      // Delete all InventoryUsers
+      await entityManager.delete(InventoryUser, {
+        inventory: invToDelete.InventoryId
+      });
+
+      // Delete all things
+      await entityManager.delete(Thing, {
+        Inventory: invToDelete.InventoryId
+      });
+
+      // Remove the inventory
+      entityManager.remove(invToDelete);
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error:
+          "Something went wrong server-side."
+      });
+      return;
+    }
+    res.status(200).json({
+      status: 200,
+      error:
+        "The inventory was deleted."
+    });
   }
 
   /**
