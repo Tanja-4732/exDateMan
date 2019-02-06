@@ -1,6 +1,6 @@
-import { Request, Response, Router, NextFunction } from "express";
-import { log } from "util";
+import { Router } from "express";
 import thingsRoutes from "./thingsRouter";
+import categoriesRoutes from "./categoriesRoutes";
 import InventoryController from "../../../controllers/inventoryController";
 
 const inventoriesRoutes: Router = Router();
@@ -16,6 +16,9 @@ inventoriesRoutes.use(
 
 // Use things routes
 inventoriesRoutes.use("/:inventoryId/things", thingsRoutes);
+
+// Use categories routes
+inventoriesRoutes.use("/:inventoryId/categories", categoriesRoutes);
 
 // Return one inventory
 inventoriesRoutes.get("/:inventoryId", InventoryController.getInventoryDetails);
