@@ -3,6 +3,12 @@ import CategoryController from '../../../controllers/categoryController';
 
 const categoriesRoutes: Router = Router();
 
+// Set category
+categoriesRoutes.use(
+  "/:categoryId",
+  CategoryController.setCategoryInResDotLocals
+);
+
 // Get all categories
 categoriesRoutes.get("/", CategoryController.getAllCategories);
 

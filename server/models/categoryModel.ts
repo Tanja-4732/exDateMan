@@ -14,6 +14,9 @@ export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({unique: false})
+  number: number;
+
   @Column()
   name: string;
 
