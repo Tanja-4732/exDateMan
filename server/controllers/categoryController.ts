@@ -22,8 +22,8 @@ export default class CategoryController {
     next: NextFunction
   ): Promise<any> {
     try {
-      res.locals.inventory = await this.getCategoryByIdOrFail(
-        req.params.categoryNo
+      res.locals.inventory = await this.getCategoryByNoAndInvOrFail(
+        req.params.categoryNo, res.locals.inventory
       );
     } catch (error) {
       res.status(404).json({
@@ -182,11 +182,11 @@ export default class CategoryController {
     let parent: Category;
     const children: Category[] = [];
     try {
-      parent = await this.getCategoryByIdOrFail(
-        (req.body as CategoryRequest).parent
+      parent = await this.getCategoryByNoAndInvOrFail(
+        (req.body as CategoryRequest).parent, res.locals.inventory
       );
       for (const catId of req.body.children) {
-        children.push(await this.getCategoryByIdOrFail(catId));
+        children.push(await this.getCategoryByNoAndInvOrFail(catId, res.locals.inventory));
       }
     } catch (err) {
       res.status(404).json({
@@ -257,14 +257,20 @@ export default class CategoryController {
     category.number = req.params.categoryNo;
     category.childCategories = [];
     try {
-      for (const categoryId of (req.body as CategoryRequest).children) {
-        category.childCategories.push(
-          await this.getCategoryByIdOrFail(categoryId)
-        );
+      if((req.body as CategoryRequest).children.length !== 0) {
+        for (const categoryNo of (req.body as CategoryRequest).children) {
+          category.childCategories.push(
+            await this.getCategoryByNoAndInvOrFail(categoryNo, res.locals.inventory)
+          );
+        }
       }
-      category.parentCategory = await this.getCategoryByIdOrFail(
-        (req.body as CategoryRequest).parent
-      );
+      log("After first if");
+      category.parentCategory = ((req.body as CategoryRequest).parent === null) ?
+       req.params.categoryNo :
+       await this.getCategoryByNoAndInvOrFail(
+        (req.body as CategoryRequest).parent, res.locals.inventory
+        );
+      log("Right before save");
       await entityManager.save(category);
     } catch (error) {
       res.status(404).json({
