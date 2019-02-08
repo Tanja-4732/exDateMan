@@ -35,7 +35,6 @@ export default class InventoryController {
         error: "Inventory " + req.params.inventoryId + " couldn't be found."
       });
     }
-    log("Parsed inv id: " + res.locals.inventory.InventoryId);
     next();
   }
 

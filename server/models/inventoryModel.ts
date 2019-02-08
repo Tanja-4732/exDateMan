@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { InventoryUser } from "./inventoryUserModel";
 import { Thing } from "./thingModel";
+import { Category } from "./categoryModel";
 
 @Entity()
 export class Inventory {
@@ -34,4 +35,7 @@ export class Inventory {
     cascade: true
   })
   Things: Thing[];
+
+  @OneToMany(type => Category, category => category.Inventory)
+  categories: Category[];
 }

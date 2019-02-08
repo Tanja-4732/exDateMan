@@ -3,9 +3,12 @@ import CategoryController from '../../../controllers/categoryController';
 
 const categoriesRoutes: Router = Router();
 
+// Create category
+categoriesRoutes.post("/:categoryNo", CategoryController.createCategory);
+
 // Set category
 categoriesRoutes.use(
-  "/:categoryId",
+  "/:categoryNo",
   CategoryController.setCategoryInResDotLocals
 );
 
@@ -13,15 +16,12 @@ categoriesRoutes.use(
 categoriesRoutes.get("/", CategoryController.getAllCategories);
 
 // Get one category
-categoriesRoutes.get("/:categoryId", CategoryController.getCategory);
-
-// Create category
-categoriesRoutes.post("/", CategoryController.createCategory);
+categoriesRoutes.get("/:categoryNo", CategoryController.getCategory);
 
 // Update category
-categoriesRoutes.put("/:categoryId", CategoryController.updateCategory);
+categoriesRoutes.put("/:categoryNo", CategoryController.updateCategory);
 
 // Delete Category
-categoriesRoutes.delete("/:categoryId", CategoryController.deleteCategory)
+categoriesRoutes.delete("/:categoryNo", CategoryController.deleteCategory);
 
 export default categoriesRoutes;

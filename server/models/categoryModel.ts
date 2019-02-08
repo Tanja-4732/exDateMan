@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { InventoryUser } from "./inventoryUserModel";
 import { Thing } from "./thingModel";
+import { Inventory } from "./inventoryModel";
 
 @Entity()
 export class Category {
@@ -19,6 +20,9 @@ export class Category {
 
   @Column()
   name: string;
+
+  @ManyToOne(type => Inventory, inventory => inventory.categories)
+  Inventory: Inventory;
 
   @OneToMany(type => Thing, thing => thing.Categories)
   Things: Thing[];

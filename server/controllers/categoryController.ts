@@ -16,10 +16,14 @@ export default class CategoryController {
   /**
    * Sets the category in the res.locals.category field
    */
-  static async setCategoryInResDotLocals(req: Request, res: Response, next: NextFunction): Promise<any> {
+  static async setCategoryInResDotLocals(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     try {
       res.locals.inventory = await this.getCategoryByIdOrFail(
-        req.params.categoryId
+        req.params.categoryNo
       );
     } catch (error) {
       res.status(404).json({
@@ -27,12 +31,11 @@ export default class CategoryController {
         error: "Inventory " + req.params.inventoryId + " couldn't be found."
       });
     }
-    log("Parsed inv id: " + res.locals.inventory.InventoryId);
     next();
   }
 
   static async getCategory(req: Request, res: Response): Promise<any> {
-    const entityManager: EntityManager = getManager();
+    // const entityManager: EntityManager = getManager();
 
     // Check for authorization
     if (
@@ -77,8 +80,46 @@ export default class CategoryController {
     });
   }
 
-  static getAllCategories(req: Request, res: Response): any {
-    // TODO
+  static async getAllCategories(req: Request, res: Response): Promise<any> {
+    const entityManager: EntityManager = getManager();
+
+    // Check for authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.READ
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the READ role or higher for this inventory."
+      });
+      return;
+    }
+
+    let cats: Category[] = [];
+    try {
+      cats = await entityManager.find(Category, {
+        where: {
+          Inventory: res.locals.inventory as Inventory
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        error: "Something went wrong server-side."
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "Retrieved all categories for this inventory",
+      // inventoryId: (res.locals.inventory as Inventory).InventoryId,
+      categories: cats
+    });
   }
 
   static async deleteCategory(req: Request, res: Response): Promise<any> {
@@ -124,15 +165,15 @@ export default class CategoryController {
         res.locals.actingUser,
         res.locals.inventory as Inventory,
         InventoryUserAccessRightsEnum.WRITE
-        ))
-        ) {
-          res.status(403).json({
-            status: 403,
-            error:
-            "Requestor doesn't have the WRITE role or higher for this inventory."
-          });
-          return;
-        }
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the WRITE role or higher for this inventory."
+      });
+      return;
+    }
 
     // Get the category to be updated
     const catToUpdate: Category = res.locals.category;
@@ -141,7 +182,9 @@ export default class CategoryController {
     let parent: Category;
     const children: Category[] = [];
     try {
-      parent = await this.getCategoryByIdOrFail((req.body as CategoryRequest).parent);
+      parent = await this.getCategoryByIdOrFail(
+        (req.body as CategoryRequest).parent
+      );
       for (const catId of req.body.children) {
         children.push(await this.getCategoryByIdOrFail(catId));
       }
@@ -192,16 +235,64 @@ export default class CategoryController {
       });
       return;
     }
+
+    // Check if already present
+    let goAhead: boolean = false as boolean;
+    try {
+       await this.getCategoryByNoAndInvOrFail(req.params.categoryNo as number, res.locals.inventory);
+    } catch (error) {
+      goAhead = true;
+    }
+
+    if (!goAhead) {
+      res.status(409).json({
+        status: 409,
+        error: "Category with specified number already exists."
+      });
+    }
+
+    const category: Category = new Category();
+    category.Inventory = res.locals.inventory as Inventory;
+    category.name = (req.body as CategoryRequest).name;
+    category.number = req.params.categoryNo;
+    category.childCategories = [];
+    try {
+      for (const categoryId of (req.body as CategoryRequest).children) {
+        category.childCategories.push(
+          await this.getCategoryByIdOrFail(categoryId)
+        );
+      }
+      category.parentCategory = await this.getCategoryByIdOrFail(
+        (req.body as CategoryRequest).parent
+      );
+      await entityManager.save(category);
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        error: "Can't find specified categories"
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "Inventory created"
+    });
   }
 
-  public static async getCategoryByIdOrFail(
-    categoryId: number
+  public static async getCategoryByNoAndInvOrFail(
+    categoryNo: number,
+    inventory: Inventory
   ): Promise<Category> {
     // Get the entity manager
-    const entityManager: EntityManager = getManager();
+    // const entityManager: EntityManager = getManager();
 
     try {
-      await entityManager.findOneOrFail(Category, categoryId);
+      return await getManager().findOneOrFail(Category, {
+        where: {
+          number: categoryNo,
+          Inventory: inventory
+      }});
     } catch (error) {
       throw new Error("Can't find category");
     }
