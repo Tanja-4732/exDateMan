@@ -141,7 +141,7 @@ export default class CategoryController {
       });
       return;
     }
-
+    // TODO check if category is form this inventory
     try {
       entityManager.remove(res.locals.category);
     } catch (err) {
@@ -286,6 +286,7 @@ export default class CategoryController {
       log("After first if"); // TODO remove debug
       // Check if a parent is specified
       if ((req.body as CategoryRequest).parent == null) {
+        log("No parent specified.");
         // // Set parent to self
         // category.parentCategory = req.params.categoryNo;
         // Set parent to null

@@ -34,6 +34,7 @@ export default class InventoryController {
         status: 404,
         error: "Inventory " + req.params.inventoryId + " couldn't be found."
       });
+      return;
     }
     next();
   }
@@ -278,15 +279,13 @@ export default class InventoryController {
     } catch (error) {
       res.status(500).json({
         status: 500,
-        error:
-          "Something went wrong server-side."
+        error: "Something went wrong server-side."
       });
       return;
     }
     res.status(200).json({
       status: 200,
-      error:
-        "The inventory was deleted."
+      error: "The inventory was deleted."
     });
   }
 
