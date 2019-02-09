@@ -24,6 +24,6 @@ export class Thing {
   @ManyToOne(type => Inventory, inventory => inventory.Things)
   Inventory: Inventory;
 
-  @OneToMany(type => Category, category => category.Things)
+  @OneToMany(type => Category, category => category.things)
   Categories: Category[];
 }

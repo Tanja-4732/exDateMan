@@ -23,7 +23,8 @@ export default class CategoryController {
   ): Promise<any> {
     try {
       res.locals.inventory = await this.getCategoryByNoAndInvOrFail(
-        req.params.categoryNo, res.locals.inventory
+        req.params.categoryNo,
+        res.locals.inventory
       );
     } catch (error) {
       res.status(404).json({
@@ -183,10 +184,13 @@ export default class CategoryController {
     const children: Category[] = [];
     try {
       parent = await this.getCategoryByNoAndInvOrFail(
-        (req.body as CategoryRequest).parent, res.locals.inventory
+        (req.body as CategoryRequest).parent,
+        res.locals.inventory
       );
       for (const catId of req.body.children) {
-        children.push(await this.getCategoryByNoAndInvOrFail(catId, res.locals.inventory));
+        children.push(
+          await this.getCategoryByNoAndInvOrFail(catId, res.locals.inventory)
+        );
       }
     } catch (err) {
       res.status(404).json({
@@ -237,11 +241,18 @@ export default class CategoryController {
     }
 
     // Check if already present
-    let goAhead: boolean = false as boolean;
+    let goAhead: boolean = true as boolean;
+    let temp: Category;
     try {
-       await this.getCategoryByNoAndInvOrFail(req.params.categoryNo as number, res.locals.inventory);
+      temp = await CategoryController.getCategoryByNoAndInvOrFail(
+        req.params.categoryNo as number,
+        res.locals.inventory as Inventory
+      );
     } catch (error) {
-      goAhead = true;
+      log(error);
+    }
+    if (temp != null) {
+      goAhead = false;
     }
 
     if (!goAhead) {
@@ -249,30 +260,47 @@ export default class CategoryController {
         status: 409,
         error: "Category with specified number already exists."
       });
+      return;
     }
 
+    // Create category object and set values
     const category: Category = new Category();
     category.Inventory = res.locals.inventory as Inventory;
     category.name = (req.body as CategoryRequest).name;
     category.number = req.params.categoryNo;
     category.childCategories = [];
     try {
-      if((req.body as CategoryRequest).children.length !== 0) {
+      log("Entered try block");
+      // Check if children are specified
+      if ((req.body as CategoryRequest).children != null) {
+        // Iterate over the specified children and add them to the new object
         for (const categoryNo of (req.body as CategoryRequest).children) {
           category.childCategories.push(
-            await this.getCategoryByNoAndInvOrFail(categoryNo, res.locals.inventory)
+            await CategoryController.getCategoryByNoAndInvOrFail(
+              categoryNo,
+              res.locals.inventory
+            )
           );
         }
       }
-      log("After first if");
-      category.parentCategory = ((req.body as CategoryRequest).parent === null) ?
-       req.params.categoryNo :
-       await this.getCategoryByNoAndInvOrFail(
-        (req.body as CategoryRequest).parent, res.locals.inventory
+      log("After first if"); // TODO remove debug
+      // Check if a parent is specified
+      if ((req.body as CategoryRequest).parent == null) {
+        // // Set parent to self
+        // category.parentCategory = req.params.categoryNo;
+        // Set parent to null
+        category.parentCategory = null;
+      } else {
+        // Set the specified parent
+        category.parentCategory = await CategoryController.getCategoryByNoAndInvOrFail(
+          (req.body as CategoryRequest).parent,
+          res.locals.inventory
         );
+      }
       log("Right before save");
       await entityManager.save(category);
     } catch (error) {
+      log(error);
       res.status(404).json({
         status: 404,
         error: "Can't find specified categories"
@@ -298,7 +326,8 @@ export default class CategoryController {
         where: {
           number: categoryNo,
           Inventory: inventory
-      }});
+        }
+      });
     } catch (error) {
       throw new Error("Can't find category");
     }
