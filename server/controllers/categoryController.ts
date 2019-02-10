@@ -148,11 +148,26 @@ export default class CategoryController {
     // Attempt deletion
     try {
       log("Removing...");
-      await entityManager.remove(Category, res.locals.category);
       log(res.locals.category.name);
+      // await entityManager.remove(Category, res.locals.category);
+      log(
+        "Object to remove:\n" +
+          JSON.stringify(
+            {
+              Inventory: (res.locals.category as Category).Inventory.InventoryId, // TODO // FIXME check for null
+              number: (res.locals.category as Category).number
+            },
+            null,
+            2
+          )
+      );
+      await entityManager.delete(Category, {
+        Inventory: (res.locals.category as Category).Inventory,
+        number: (res.locals.category as Category).number
+      });
       log("Removed");
     } catch (err) {
-      log("Internal error in deleteCategory: \n" + err);
+      log("Error in deleteCategory: \n" + err);
       // Report failure
       res.status(500).json({
         status: 500,
