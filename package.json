@@ -54,7 +54,7 @@
     "rxjs": "^6.3.3",
     "sequelize-typescript": "^0.6.6",
     "ts-node": "^5.0.1",
-    "typeorm": "^0.2.11",
+    "typeorm": "^0.2.13",
     "typescript": "~3.2.2",
     "zone.js": "~0.8.27"
   },

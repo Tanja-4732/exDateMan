@@ -22,7 +22,7 @@ export default class CategoryController {
     next: NextFunction
   ): Promise<any> {
     try {
-      res.locals.inventory = await CategoryController.getCategoryByNoAndInvOrFail(
+      res.locals.category = await CategoryController.getCategoryByNoAndInvOrFail(
         req.params.categoryNo,
         res.locals.inventory
       );
@@ -147,11 +147,12 @@ export default class CategoryController {
 
     // Attempt deletion
     try {
-      log("Removing");
-      entityManager.remove(res.locals.category);
+      log("Removing...");
+      await entityManager.remove(Category, res.locals.category);
       log(res.locals.category.name);
       log("Removed");
     } catch (err) {
+      log("Internal error in deleteCategory: \n" + err);
       // Report failure
       res.status(500).json({
         status: 500,
@@ -339,6 +340,7 @@ export default class CategoryController {
         }
       });
     } catch (error) {
+      // log("Error in getCategoryByNoAndInvOrFail: " + error);
       throw new Error("Can't find category");
     }
   }

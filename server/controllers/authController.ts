@@ -62,7 +62,7 @@ export default class AuthController {
         inventory
       );
     } catch (error) {
-      log(error);
+      log("Error in isAuthorized: " + error);
       return false;
     }
 
