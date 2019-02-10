@@ -3,7 +3,7 @@ import { User } from "../models/userModel";
 import { log } from "util";
 
 /**
- * Contains db handeling code for User-class operations
+ * Contains db handling code for User-class operations
  *
  * All operations involving the User-class and a db connection
  * should be implemented here.

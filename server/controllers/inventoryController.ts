@@ -75,8 +75,7 @@ export default class InventoryController {
     } catch (error) {
       res.status(404).json({
         status: 404,
-        error: "Not found",
-        message: "The requested inventory couldn't be found"
+        error: "The requested inventory couldn't be found"
       });
       return;
     }
@@ -90,8 +89,7 @@ export default class InventoryController {
     ) {
       res.status(403).json({
         status: 403,
-        error: "Forbidden",
-        message:
+        error:
           "The requesting user must have " +
           "at least the READ permission in this inventory."
       });

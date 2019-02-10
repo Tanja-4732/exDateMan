@@ -1,6 +1,7 @@
 import { Entity, PrimaryColumn, ManyToOne, Column } from "typeorm";
 import { Inventory } from "./inventoryModel";
 import { User } from "./userModel";
+import { log } from "util";
 
 export enum InventoryUserAccessRightsEnum {
   OWNER = "owner",

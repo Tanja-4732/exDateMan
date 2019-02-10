@@ -76,7 +76,7 @@ export class ThingController {
     } catch (error) {
       res.status(400).json({
         status: 400,
-        error: "Bad request"
+        error: "Invalid request syntax or parameters"
       });
       return;
     }
@@ -112,8 +112,7 @@ export class ThingController {
     } catch (error) {
       res.status(400).json({
         status: 400,
-        error: "Bad request",
-        message: "Invalid parameters. Couldn't execute request."
+        error: "Invalid parameters. Couldn't execute request."
       });
     }
     // Send success response with data

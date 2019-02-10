@@ -54,6 +54,7 @@ export default class AuthController {
     // const inventory: Inventory = await InventoryController.getInventoryOrFail(
     //   inventoryId
     // );
+    log("Checking for inventory: " + inventory.InventoryId);
     let inventoryUser: InventoryUser;
     try {
       inventoryUser = await InventoryUserController.getInventoryUserOrFail(
@@ -61,6 +62,7 @@ export default class AuthController {
         inventory
       );
     } catch (error) {
+      log(error);
       return false;
     }
 
@@ -114,8 +116,7 @@ export default class AuthController {
         } catch (error) {
           res.status(400).json({
             status: 400,
-            error: "Bad request",
-            message: "Email already in use or user data incomplete"
+            error: "Email already in use or user data incomplete"
           });
           return;
         }
@@ -172,8 +173,7 @@ export default class AuthController {
     } catch (error) {
       res.status(400).json({
         status: 400,
-        error: "Bad request",
-        message: "Couldn't find email address"
+        error: "Couldn't find email address"
       });
       return;
     }
@@ -218,8 +218,7 @@ export default class AuthController {
       // If the token is invalid
       res.status(401).json({
         status: 401,
-        error: "Unauthorized",
-        message: "Invalid credentials (need valid JWT as cookie)"
+        error: "Invalid credentials (need valid JWT as cookie)"
       });
       return;
     }
@@ -236,8 +235,7 @@ export default class AuthController {
         .clearCookie("JWT")
         .json({
           status: 401,
-          error: "Unauthorized",
-          message: "Account doesn't exist; token invalid"
+          error: "Account doesn't exist; token invalid"
         });
       return;
     }

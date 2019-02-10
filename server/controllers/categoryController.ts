@@ -22,15 +22,17 @@ export default class CategoryController {
     next: NextFunction
   ): Promise<any> {
     try {
-      res.locals.inventory = await this.getCategoryByNoAndInvOrFail(
+      res.locals.inventory = await CategoryController.getCategoryByNoAndInvOrFail(
         req.params.categoryNo,
         res.locals.inventory
       );
     } catch (error) {
+      log(error);
       res.status(404).json({
         status: 404,
-        error: "Inventory " + req.params.inventoryId + " couldn't be found."
+        error: "Specified category couldn't be found."
       });
+      return;
     }
     next();
   }
@@ -142,15 +144,22 @@ export default class CategoryController {
       return;
     }
     // TODO check if category is form this inventory
+
+    // Attempt deletion
     try {
+      log("Removing");
       entityManager.remove(res.locals.category);
+      log(res.locals.category.name);
+      log("Removed");
     } catch (err) {
+      // Report failure
       res.status(500).json({
         status: 500,
         error: "Something went wrong server-side."
       });
       return;
     }
+    // Report success
     res.status(200).json({
       status: 200,
       message: "Deleted category"
@@ -321,7 +330,7 @@ export default class CategoryController {
   ): Promise<Category> {
     // Get the entity manager
     // const entityManager: EntityManager = getManager();
-
+    log("Get category: " + categoryNo);
     try {
       return await getManager().findOneOrFail(Category, {
         where: {
