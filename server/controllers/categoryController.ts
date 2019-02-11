@@ -28,7 +28,9 @@ export default class CategoryController {
       );
       // TODO maybe remove this; this may cause bugs
       res.locals.category.Inventory = res.locals.inventory;
-      log("The inventory id is:" + (res.locals.inventory as Inventory).InventoryId);
+      log(
+        "The inventory id is:" + (res.locals.inventory as Inventory).InventoryId
+      );
     } catch (error) {
       log(error);
       res.status(404).json({
@@ -157,7 +159,7 @@ export default class CategoryController {
         "Object to remove:\n" +
           JSON.stringify(
             {
-              category: (res.locals.category as Category),
+              category: res.locals.category as Category
               // number: (res.locals.category as Category).number,
               // Inventory: (res.locals.category as Category).Inventory.InventoryId, // TODO // FIXME check for null
             },
@@ -311,12 +313,11 @@ export default class CategoryController {
             )
           );
         }
-      }
+      } // TODO implement parent insertion
       log("After first if"); // TODO remove debug
       // Check if a parent is specified
       if ((req.body as CategoryRequest).parent == null) {
         log("No parent specified.");
-        // // Set parent to self
         // category.parentCategory = req.params.categoryNo;
         // Set parent to null
         category.parentCategory = null;
@@ -324,14 +325,14 @@ export default class CategoryController {
         // Set the specified parent
         log("Get parent category");
         category.parentCategory = await CategoryController.getCategoryByNoAndInvOrFail(
-          (req.body as CategoryRequest).parent,
-          res.locals.inventory
+          (req.body as CategoryRequest).parent, // The parent categoryNo
+          res.locals.inventory // The inventory of both categories
         );
         // Set this as the child of the parent
-        category.parentCategory.childCategories.push(category);
+        // category.parentCategory.childCategories.push(category); // TODO remove line
         log("Got parent category: " + category.parentCategory.name);
       }
-      log("Right before save");
+      log("Category right before save:\n" + JSON.stringify(category, null, 2));
       await entityManager.save(category);
     } catch (error) {
       log("Error in createCategory:\n" + error);
@@ -363,9 +364,13 @@ export default class CategoryController {
         }
       });
     } catch (error) {
-      // log("Error in getCategoryByNoAndInvOrFail: " + error);
-      throw new Error("Can't find category where number=" + categoryNo
-      + " and inventoryId=" + inventory.InventoryId);
+      log("Error in getCategoryByNoAndInvOrFail: " + error);
+      throw new Error(
+        "Can't find category where number=" +
+          categoryNo +
+          " and inventoryId=" +
+          inventory.InventoryId
+      );
     }
   }
 }

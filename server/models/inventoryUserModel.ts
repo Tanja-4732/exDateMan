@@ -15,7 +15,7 @@ export enum InventoryUserAccessRightsEnum {
  *
  * @returns -1, if the privileges sufficient, 0 if they are, 1 if they exceed the target
  */
-export function compareInventoryUserAccessRights(
+export function compareInventoryUserAccessRights( // TODO move to inventoryUserController
   compare: InventoryUserAccessRightsEnum,
   against: InventoryUserAccessRightsEnum
 ): number {
