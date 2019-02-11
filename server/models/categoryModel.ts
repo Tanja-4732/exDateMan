@@ -13,6 +13,7 @@ import { Inventory } from "./inventoryModel";
 
 @Entity()
 export class Category {
+
   @PrimaryColumn()
   number: number;
 

@@ -326,10 +326,11 @@ export default class CategoryController {
         category.parentCategory = await CategoryController.getCategoryByNoAndInvOrFail(
           (req.body as CategoryRequest).parent,
           res.locals.inventory
-        );
+          );
+        category.parentCategory.childCategories = [];
+        log("Got parent category: " + category.parentCategory.name);
         // Set this as the child of the parent
         category.parentCategory.childCategories.push(category);
-        log("Got parent category: " + category.parentCategory.name);
       }
       log("Right before save");
       await entityManager.save(category);
