@@ -26,6 +26,9 @@ export default class CategoryController {
         req.params.categoryNo,
         res.locals.inventory
       );
+      // TODO maybe remove this; this may cause bugs
+      res.locals.category.Inventory = res.locals.inventory;
+      log("The inventory id is:" + (res.locals.inventory as Inventory).InventoryId);
     } catch (error) {
       log(error);
       res.status(404).json({
@@ -154,8 +157,9 @@ export default class CategoryController {
         "Object to remove:\n" +
           JSON.stringify(
             {
-              Inventory: (res.locals.category as Category).Inventory.InventoryId, // TODO // FIXME check for null
-              number: (res.locals.category as Category).number
+              category: (res.locals.category as Category),
+              // number: (res.locals.category as Category).number,
+              // Inventory: (res.locals.category as Category).Inventory.InventoryId, // TODO // FIXME check for null
             },
             null,
             2
@@ -318,15 +322,19 @@ export default class CategoryController {
         category.parentCategory = null;
       } else {
         // Set the specified parent
+        log("Get parent category");
         category.parentCategory = await CategoryController.getCategoryByNoAndInvOrFail(
           (req.body as CategoryRequest).parent,
           res.locals.inventory
         );
+        // Set this as the child of the parent
+        category.parentCategory.childCategories.push(category);
+        log("Got parent category: " + category.parentCategory.name);
       }
       log("Right before save");
       await entityManager.save(category);
     } catch (error) {
-      log(error);
+      log("Error in createCategory:\n" + error);
       res.status(404).json({
         status: 404,
         error: "Can't find specified categories"
@@ -336,7 +344,7 @@ export default class CategoryController {
 
     res.status(200).json({
       status: 200,
-      message: "Inventory created"
+      message: "Category created"
     });
   }
 
@@ -356,7 +364,8 @@ export default class CategoryController {
       });
     } catch (error) {
       // log("Error in getCategoryByNoAndInvOrFail: " + error);
-      throw new Error("Can't find category");
+      throw new Error("Can't find category where number=" + categoryNo
+      + " and inventoryId=" + inventory.InventoryId);
     }
   }
 }

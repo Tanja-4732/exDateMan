@@ -25,6 +25,7 @@ export default class InventoryController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    // log("setting inv");
     try {
       res.locals.inventory = await InventoryController.getInventoryOrFail(
         req.params.inventoryId
@@ -36,6 +37,7 @@ export default class InventoryController {
       });
       return;
     }
+    // log("Set inv to:\n" + JSON.stringify(res.locals.))
     next();
   }
 

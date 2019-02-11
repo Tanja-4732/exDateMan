@@ -25,11 +25,13 @@ export class Category {
   name: string;
 
   @ManyToOne(type => Category, category => category.childCategories, {
-    nullable: true
+    nullable: true,
   })
   parentCategory: Category;
 
-  @OneToMany(type => Category, category => category.parentCategory)
+  @OneToMany(type => Category, category => category.parentCategory, {
+    cascade: ["remove"]
+  })
   childCategories: Category[];
 
   @OneToMany(type => Thing, thing => thing.Categories)
