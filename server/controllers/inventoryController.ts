@@ -47,9 +47,31 @@ export default class InventoryController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    res.status(403).json({
-      message: "The enumeration of all inventories is not permitted."
+    const entityManager: EntityManager = getManager();
+    let inventories: Inventory[];
+    /* http://typeorm.io/#/find-options */
+    try {
+      inventories = await entityManager.find(Inventory, {
+        where: {
+          inventoryUsers: await entityManager.find(InventoryUser, {
+            where: {
+              user: res.locals.actingUser
+            }
+          })
+        }
+      });
+    } catch (error) {}
+
+    res.status(200).json({
+      status: 200,
+      message: "All accessible inventories have been enumerated.",
+      inventories: inventories
     });
+
+    // TODO remove dead code
+    /* res.status(403).json({
+      message: "The enumeration of all inventories is not permitted."
+    }); */
   }
 
   /**
