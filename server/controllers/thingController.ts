@@ -126,7 +126,7 @@ export class ThingController {
   }
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {
-    /// Check for authorization
+    // Check for authorization
     if (
       !(await AuthController.isAuthorized(
         res.locals.actingUser,
@@ -164,15 +164,82 @@ export class ThingController {
     });
   }
 
-  public static getThing(req: Request, res: Response): void {
+  public static async getThing(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.READ
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the READ role or higher for this inventory."
+      });
+      return;
+    }
+    res.status(200).json({
+      status: 200,
+      message: "Returned thing",
+      thing: res.locals.thing as Thing
+    });
+  }
+
+  public static async replaceThing(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser as User,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.WRITE
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the WRITE role or higher for this inventory."
+      });
+      return;
+    }
+
     // TODO
   }
 
-  public static replaceThing(req: Request, res: Response): void {
-    // TODO
-  }
+  public static async deleteThing(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser as User,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.WRITE
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the WRITE role or higher for this inventory."
+      });
+      return;
+    }
 
-  public static deleteThing(req: Request, res: Response): void {
-    // TODO
+    // Get entityManager
+    const entityManager: EntityManager = getManager();
+    try {
+      // Delete thing
+      entityManager.remove(res.locals.thing as Thing);
+    } catch (err) {
+      res.status(500).json({
+        status: 500,
+        error: "Something went wrong server-side."
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "Thing deleted"
+    });
   }
 }
