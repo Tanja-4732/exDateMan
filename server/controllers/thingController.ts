@@ -1,6 +1,6 @@
 import { model } from "mongoose";
 import { ThingSchema } from "../models/mongodb/thingModel";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { EntityManager, getManager } from "typeorm";
 import { Thing } from "../models/thingModel";
 import { Inventory } from "../models/inventoryModel";
@@ -39,20 +39,53 @@ export class ThingController {
   }
 
   /**
+   * Sets the thing variable in res.locals or responds with 404
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<void>}
+   * @memberof ThingController
+   */
+  public static async setThingInDotLocals(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      res.locals.thing = await ThingController.getThingOrFail(
+        req.params.thingNo,
+        res.locals.inventory
+      );
+    } catch (err) {
+      res.status(404).json({
+        status: 404,
+        error: "The requested thing could not be found."
+      });
+      return;
+    }
+    next();
+  }
+
+  /**
    * Implements the middleware for adding a new thing
    *
    * @param {Request} req The express request
    * @param {Response} res The express response
    * @memberof ThingController
    */
-  public static async createNewThing(req: Request, res: Response): Promise<void> {
+  public static async createNewThing(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     // Check for authorization
     if (
-      ! await AuthController.isAuthorized(
+      !(await AuthController.isAuthorized(
         res.locals.actingUser as User,
         res.locals.inventory as Inventory,
         InventoryUserAccessRightsEnum.WRITE
-      )
+      ))
     ) {
       res.status(403).json({
         status: 403,
@@ -93,12 +126,21 @@ export class ThingController {
   }
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {
-    // Check authorization
-    AuthController.isAuthorized(
-      res.locals.actingUser,
-      res.locals.inventory.Inventory,
-      InventoryUserAccessRightsEnum.READ
-    );
+    /// Check for authorization
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        res.locals.inventory as Inventory,
+        InventoryUserAccessRightsEnum.READ
+      )) // TODO implement one unified pass or denied method; preferably with fake-404 toggle
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the READ role or higher for this inventory."
+      });
+      return;
+    }
 
     // Get the things
     const entityManager: EntityManager = getManager();
