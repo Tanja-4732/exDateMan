@@ -98,22 +98,6 @@ export default class InventoryController {
     next: NextFunction
   ): Promise<void> {
     // Check for authorization: READ
-
-    const entityManager: EntityManager = getManager();
-    let inventory: Inventory;
-    try {
-      inventory = await entityManager.findOneOrFail(
-        Inventory,
-        res.locals.inventory.InventoryId
-      );
-    } catch (error) {
-      res.status(404).json({
-        status: 404,
-        error: "The requested inventory couldn't be found"
-      });
-      return;
-    }
-
     if (
       (await AuthController.isAuthorized(
         res.locals.actingUser,
@@ -130,11 +114,32 @@ export default class InventoryController {
       return;
     }
 
+    const entityManager: EntityManager = getManager();
+    let inventory: Inventory;
+    try {
+      inventory = await entityManager.findOneOrFail(
+        Inventory,
+        res.locals.inventory.InventoryId,
+        { relations: ["inventoryUsers", "inventoryUsers.user"] }
+      );
+    } catch (error) {
+      res.status(404).json({
+        status: 404,
+        error: "The requested inventory couldn't be found"
+      });
+      return;
+    }
+
+    // Hide pwd hash user creation date
+    for (const inventoryUser of inventory.inventoryUsers) {
+      delete inventoryUser.user.SaltedPwdHash;
+      delete inventoryUser.user.UserCreatedOn;
+    }
+
     // Return requested info with 200
     res.status(200).json({
-      id: inventory.InventoryId,
-      name: inventory.InventoryName,
-      users: inventory.inventoryUsers
+      message: "Got inventory",
+      inventory: inventory
     });
   }
 
@@ -307,7 +312,7 @@ export default class InventoryController {
         Inventory: invToDelete.InventoryId
       }); */
 
-    /*Remove the inventory.
+      /*Remove the inventory.
       This should be sufficient because of
       the CASCADE option set in the inventoryModel. */
       entityManager.remove(invToDelete);
