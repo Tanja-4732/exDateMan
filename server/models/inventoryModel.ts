@@ -32,10 +32,12 @@ export class Inventory {
   inventoryUsers: InventoryUser[];
 
   @OneToMany(type => Thing, thing => thing.Inventory, {
-    cascade: true
+    cascade: true, onDelete: "CASCADE"
   })
   Things: Thing[];
 
-  @OneToMany(type => Category, category => category.Inventory)
+  @OneToMany(type => Category, category => category.Inventory, {
+    onDelete: "CASCADE"
+  })
   categories: Category[];
 }

@@ -296,6 +296,7 @@ export default class InventoryController {
     }
 
     try {
+      /*  Old code // TODO delete when ready
       // Delete all InventoryUsers
       await entityManager.delete(InventoryUser, {
         inventory: invToDelete
@@ -304,9 +305,11 @@ export default class InventoryController {
       // Delete all things
       await entityManager.delete(Thing, {
         Inventory: invToDelete.InventoryId
-      });
+      }); */
 
-      // Remove the inventory
+    /*Remove the inventory.
+      This should be sufficient because of
+      the CASCADE option set in the inventoryModel. */
       entityManager.remove(invToDelete);
     } catch (error) {
       res.status(500).json({
