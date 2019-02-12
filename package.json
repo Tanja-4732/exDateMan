@@ -7,11 +7,10 @@
     "ng": "ng",
     "start": "ts-node server.ts",
     "start-js": "ts-node server.js",
-    "build": "ng build",
+    "build": "ng build --aot",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "ng build --aot"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -97,5 +96,6 @@
   "bugs": {
     "url": "https://github.com/Bernd-L/exDateMan/issues"
   },
-  "homepage": "https://github.com/Bernd-L/exDateMan#readme"
+  "homepage": "https://github.com/Bernd-L/exDateMan#readme",
+  "heroku-run-build-script": true
 }
