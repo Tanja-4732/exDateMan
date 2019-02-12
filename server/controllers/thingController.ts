@@ -22,22 +22,6 @@ interface ThingRequest {
  */
 export class ThingController {
   /**
-   * Returns one thing object based on its number and inventory or fails
-   */
-  public static async getThingOrFail(
-    thingNo: number,
-    inventory: Inventory
-  ): Promise<Thing> {
-    const entityManager: EntityManager = getManager();
-    return await entityManager.findOneOrFail(Thing, {
-      where: {
-        ThingNo: thingNo,
-        Inventory: inventory
-      }
-    });
-  }
-
-  /**
    * Sets the thing variable in res.locals or responds with 404
    *
    * @static
@@ -53,10 +37,14 @@ export class ThingController {
     next: NextFunction
   ): Promise<void> {
     try {
-      res.locals.thing = await ThingController.getThingOrFail(
-        req.params.thingNo,
-        res.locals.inventory
-      );
+      const entityManager: EntityManager = getManager();
+      res.locals.thing = await entityManager.findOneOrFail(Thing, {
+        // relations: ["Inventory", "Categories"],
+        where: {
+          ThingNo: req.params.thingNo,
+          Inventory: res.locals.inventory
+        }
+      });
     } catch (err) {
       res.status(404).json({
         status: 404,
@@ -101,7 +89,47 @@ export class ThingController {
     const thingToAdd: Thing = new Thing();
     thingToAdd.Inventory = res.locals.inventory as Inventory;
     thingToAdd.ThingName = (req.body as ThingRequest).name;
-    thingToAdd.ThingNo = req.params.thingNo || (await entityManager.qu);
+
+    // Query collection
+    const queries: string[] = [
+      // Doesn't work
+      `
+      SELECT previd
+        FROM (
+          SELECT ThingNo,
+                    LAG(ThingNo) OVER (ORDER BY ThingNo) previd
+          FROM    thing
+            WHERE inventoryInventoryId = $1
+          ) q
+      WHERE   previd <> ThingNo - 1
+        ORDER BY
+              ThingNo
+      LIMIT 1;
+      `,
+
+      // Second attempt
+      `
+      SELECT  "ThingNo" + 1 AS "THE_NUMBER"
+      FROM    thing mo
+      WHERE   NOT EXISTS
+              (
+              SELECT  NULL
+              FROM    thing mi
+              WHERE   mi."ThingNo" = mo."ThingNo" + 1
+                AND mi."inventoryInventoryId" = $1
+                AND mo."inventoryInventoryId" = $1
+              )
+      ORDER BY
+              "ThingNo"
+      LIMIT 1;
+      `
+    ];
+
+    thingToAdd.ThingNo = // req.params.thingNo ||
+      // Find the first gap
+      (await entityManager.query(queries[1], [
+        (res.locals.inventory as Inventory).InventoryId
+      ]))[0].THE_NUMBER;
 
     // Check for duplicates
 
@@ -226,7 +254,54 @@ export class ThingController {
       return;
     }
 
-    // TODO
+    // Get the entity manager
+    const entityManager: EntityManager = getManager();
+
+    // Get and set thing
+    const thingToEdit: Thing = res.locals.thing; // TODO implement moveToOtherInv
+    thingToEdit.ThingName = (req.body as ThingRequest).name;
+    thingToEdit.Categories = [];
+
+    try {
+      if ((req.body as ThingRequest).categories != null) {
+        // Set the categories
+        for (const category of await entityManager.find(Category, {
+          where: {
+            // Only the categories from this inventory
+            Inventory: res.locals.inventory as Inventory,
+
+            // Only the specified ones
+            number: In((req.body as ThingRequest).categories)
+          }
+        })) {
+          // Add the category to the array
+          thingToEdit.Categories.push(category);
+        }
+      }
+
+      // Write changes to the db
+      entityManager.save(thingToEdit);
+    } catch (error) {
+      log("Error in replaceThing:\n" + error);
+      // On error, respond with error
+      res.status(400).json({
+        status: 400,
+        error: "Invalid request syntax or parameters"
+      });
+      return;
+    }
+
+    // On success respond with OK and the data
+    res.status(201).json({
+      status: 201,
+      message: "Created thing",
+      thing: {
+        inventoryId: thingToEdit.Inventory.InventoryId,
+        name: thingToEdit.ThingName,
+        number: thingToEdit.ThingNo,
+        categories: thingToEdit.Categories
+      }
+    });
   }
 
   public static async deleteThing(req: Request, res: Response): Promise<void> {
