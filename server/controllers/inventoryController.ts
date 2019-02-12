@@ -42,30 +42,40 @@ export default class InventoryController {
   }
 
   // TODO implement listing of all accessible inventories
-  public static async disallowInventoryEnumeration(
+  public static async getInventories(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     const entityManager: EntityManager = getManager();
-    let inventories: Inventory[];
-    /* http://typeorm.io/#/find-options */
+    const inventories: Inventory[] = [];
+    let inventoryUsers: InventoryUser[] = [];
+
     try {
-      inventories = await entityManager.find(Inventory, {
+      // Get the inventoryUsers associated with the acting user
+      inventoryUsers = await entityManager.find(InventoryUser, {
+        relations: ["inventory"],
         where: {
-          inventoryUsers: await entityManager.find(InventoryUser, {
-            where: {
-              user: res.locals.actingUser
-            }
-          })
+          user: res.locals.actingUser
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      // Return server error
+      log("Error in getInventories:\n" + error);
+      res.status(500).json({
+        status: 500,
+        error: "Something went wrong server-side."
+      });
+    }
+
+    for (const inventory of inventoryUsers) {
+      inventories.push(inventory.inventory);
+    }
 
     res.status(200).json({
       status: 200,
-      message: "All accessible inventories have been enumerated.",
-      inventories: inventories
+      message: "All accessible inventories have been retrieved.",
+      inventories: inventories,
     });
 
     // TODO remove dead code

@@ -6,7 +6,7 @@ import InventoryController from "../../../controllers/inventoryController";
 const inventoriesRoutes: Router = Router();
 
 // Don't return all inventories
-inventoriesRoutes.get("/", InventoryController.disallowInventoryEnumeration);
+inventoriesRoutes.get("/", InventoryController.getInventories);
 
 // Set inventory
 inventoriesRoutes.use(
