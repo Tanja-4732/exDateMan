@@ -75,7 +75,7 @@ export default class InventoryController {
     res.status(200).json({
       status: 200,
       message: "All accessible inventories have been retrieved.",
-      inventories: inventories,
+      inventories: inventories
     });
 
     // TODO remove dead code
@@ -298,7 +298,7 @@ export default class InventoryController {
     try {
       // Delete all InventoryUsers
       await entityManager.delete(InventoryUser, {
-        inventory: invToDelete.InventoryId
+        inventory: invToDelete
       });
 
       // Delete all things
@@ -322,6 +322,8 @@ export default class InventoryController {
   }
 
   /**
+   * Writes inventory-related data to the db
+   *
    * Business logic method; doesn't do http requests
    */
   private static async setInventory(
@@ -392,18 +394,13 @@ export default class InventoryController {
     invToSet.inventoryUsers = invUsers;
 
     try {
-      /* @Transaction({ isolation: "SERIALIZABLE" })
-      save(@TransactionManager() manager: EntityManager, user: User) {
-
-      } */
-
       // Use a transaction to roll back a delete if the inserting process fails
       await getManager().transaction(
         "SERIALIZABLE",
         async (transactionalEntityManager: EntityManager) => {
           // Remove the InventoryUsers form the inventory
           await transactionalEntityManager.delete(InventoryUser, {
-            inventory: invToSet.InventoryId
+            inventory: invToSet
           });
 
           // Add the inventory to the db
