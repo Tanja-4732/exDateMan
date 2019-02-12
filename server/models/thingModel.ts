@@ -12,16 +12,18 @@ import { Inventory } from "./inventoryModel";
 
 @Entity()
 export class Thing {
-  @PrimaryGeneratedColumn()
-  ThingId: number;
-
-  @Column({unique: false})
+  @Column({
+    primary: true,
+    unique: false
+  })
   ThingNo: number;
 
   @Column()
   ThingName: string;
 
-  @ManyToOne(type => Inventory, inventory => inventory.Things)
+  @ManyToOne(type => Inventory, inventory => inventory.Things, {
+    primary: true
+  })
   Inventory: Inventory;
 
   @OneToMany(type => Category, category => category.things)

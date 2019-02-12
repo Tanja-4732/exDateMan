@@ -1,18 +1,17 @@
 import { model } from "mongoose";
-import { ThingSchema } from "../models/mongodb/thingModel";
 import { Request, Response, NextFunction } from "express";
-import { EntityManager, getManager } from "typeorm";
+import { EntityManager, getManager, In } from "typeorm";
 import { Thing } from "../models/thingModel";
 import { Inventory } from "../models/inventoryModel";
 import AuthController from "./authController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { Category } from "../models/categoryModel";
 import { User } from "../models/userModel";
+import { log, debug } from "util";
 
 interface ThingRequest {
-  number: number;
   name: string;
-  categories: Category[]; // originally number[]
+  categories: number[];
 }
 
 /**
@@ -102,17 +101,40 @@ export class ThingController {
     const thingToAdd: Thing = new Thing();
     thingToAdd.Inventory = res.locals.inventory as Inventory;
     thingToAdd.ThingName = (req.body as ThingRequest).name;
-    thingToAdd.ThingNo = (req.body as ThingRequest).number;
+    thingToAdd.ThingNo = req.params.thingNo || (await entityManager.qu);
+
+    // Check for duplicates
 
     try {
+      if ((req.body as ThingRequest).categories != null) {
+        // Set the categories
+        for (const category of await entityManager.find(Category, {
+          where: {
+            // Only the categories from this inventory
+            Inventory: res.locals.inventory as Inventory,
+
+            // Only the specified ones
+            number: In((req.body as ThingRequest).categories)
+          }
+        })) {
+          // Add the category to the array
+          thingToAdd.Categories.push(category);
+        }
+      }
+
+      // Write changes to the db
       entityManager.save(thingToAdd);
     } catch (error) {
+      log("Error in createNewThing:\n" + error);
+      // On error, respond with error
       res.status(400).json({
         status: 400,
         error: "Invalid request syntax or parameters"
       });
       return;
     }
+
+    // On success respond with OK and the data
     res.status(201).json({
       status: 201,
       message: "Created thing",

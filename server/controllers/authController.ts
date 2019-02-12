@@ -54,7 +54,6 @@ export default class AuthController {
     // const inventory: Inventory = await InventoryController.getInventoryOrFail(
     //   inventoryId
     // );
-    log("Checking for inventory: " + inventory.InventoryId);
     let inventoryUser: InventoryUser;
     try {
       inventoryUser = await InventoryUserController.getInventoryUserOrFail(
