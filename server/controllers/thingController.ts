@@ -129,7 +129,7 @@ export class ThingController {
       // Find the first gap
       (await entityManager.query(queries[1], [
         (res.locals.inventory as Inventory).InventoryId
-      ]))[0].THE_NUMBER;
+      ]))[0].THE_NUMBER || 1;
 
     // Check for duplicates
 
