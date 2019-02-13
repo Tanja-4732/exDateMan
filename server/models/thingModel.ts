@@ -1,12 +1,10 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  OneToMany,
-  ManyToOne
+  ManyToOne,
+  ManyToMany,
+  JoinTable
 } from "typeorm";
-import { InventoryUser } from "./inventoryUserModel";
 import { Category } from "./categoryModel";
 import { Inventory } from "./inventoryModel";
 
@@ -21,11 +19,12 @@ export class Thing {
   @Column()
   ThingName: string;
 
-  @ManyToOne(type => Inventory, inventory => inventory.Things, {
+  @ManyToOne(() => Inventory, inventory => inventory.Things, {
     primary: true
   })
   Inventory: Inventory;
 
-  @OneToMany(type => Category, category => category.things)
+  @ManyToMany(() => Category, category => category.things)
+  @JoinTable()
   Categories: Category[];
 }

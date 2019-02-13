@@ -39,7 +39,7 @@ export class ThingController {
     try {
       const entityManager: EntityManager = getManager();
       res.locals.thing = await entityManager.findOneOrFail(Thing, {
-        // relations: ["Inventory", "Categories"],
+        relations: ["Inventory", "Categories"],
         where: {
           ThingNo: req.params.thingNo,
           Inventory: res.locals.inventory
@@ -135,8 +135,8 @@ export class ThingController {
 
     try {
       if ((req.body as ThingRequest).categories != null) {
-        // Set the categories
-        for (const category of await entityManager.find(Category, {
+        // Get the categories
+        thingToAdd.Categories = await entityManager.find(Category, {
           where: {
             // Only the categories from this inventory
             Inventory: res.locals.inventory as Inventory,
@@ -144,10 +144,7 @@ export class ThingController {
             // Only the specified ones
             number: In((req.body as ThingRequest).categories)
           }
-        })) {
-          // Add the category to the array
-          thingToAdd.Categories.push(category);
-        }
+        });
       }
 
       // Write changes to the db
@@ -197,15 +194,18 @@ export class ThingController {
     let things: Thing[];
     try {
       things = await entityManager.find(Thing, {
+        relations: ["Categories"],
         where: {
           Inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
-      res.status(400).json({
-        status: 400,
-        error: "Invalid parameters. Couldn't execute request."
+      log("Exception in getAllThings:\n" + error);
+      res.status(500).json({
+        status: 500,
+        error: "Something went wrong server-side."
       });
+      return;
     }
     // Send success response with data
     res.status(200).json({

@@ -107,14 +107,15 @@ export default class CategoryController {
       return;
     }
 
-    let cats: Category[] = [];
+    let categories: Category[] = [];
     try {
-      cats = await entityManager.find(Category, {
+      categories = await entityManager.find(Category, {
         where: {
           Inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
+      log("Error in getAllCategories:\n" + error);
       res.status(500).json({
         status: 500,
         error: "Something went wrong server-side."
@@ -126,7 +127,7 @@ export default class CategoryController {
       status: 200,
       message: "Retrieved all categories for this inventory",
       // inventoryId: (res.locals.inventory as Inventory).InventoryId,
-      categories: cats
+      categories: categories
     });
   }
 

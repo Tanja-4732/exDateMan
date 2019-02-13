@@ -14,6 +14,7 @@ import {
 import { Inventory } from "./../models/inventoryModel";
 import InventoryController from "./inventoryController";
 import InventoryUserController from "./inventoryUserController";
+import { EntityManager, getManager } from "typeorm";
 
 /**
  * The private key either as a string or a buffer
@@ -56,10 +57,13 @@ export default class AuthController {
     // );
     let inventoryUser: InventoryUser;
     try {
-      inventoryUser = await InventoryUserController.getInventoryUserOrFail(
-        user,
-        inventory
-      );
+      const entityManager: EntityManager = getManager();
+      inventoryUser = await entityManager.findOneOrFail(InventoryUser, {
+        where: {
+          user: user,
+          inventory: inventory
+        }
+      });
     } catch (error) {
       log("Error in isAuthorized: " + error);
       return false;
