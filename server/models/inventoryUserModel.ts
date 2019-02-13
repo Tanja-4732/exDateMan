@@ -43,11 +43,13 @@ export function compareInventoryUserAccessRights( // TODO move to inventoryUserC
       } else {
         return -1;
       }
+    case InventoryUserAccessRightsEnum.READ:
+      return -1;
   }
 
   // This should be unreachable
   throw new Error(
-    "Cannot compare invalid values." + "Must use InventoryUserAccessRightsEnum."
+    "Cannot compare invalid values:\n" + JSON.stringify({compare: compare, against: against}, null, 2)
   );
 }
 
