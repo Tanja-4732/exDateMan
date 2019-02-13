@@ -401,6 +401,9 @@ export default class InventoryController {
     // Set the array of users
     invToSet.inventoryUsers = invUsers;
 
+    // Set the inventories name
+    invToSet.InventoryName = invReq.name;
+
     try {
       // Use a transaction to roll back a delete if the inserting process fails
       await getManager().transaction(
