@@ -1,6 +1,7 @@
 import { EntityManager, getManager } from "typeorm";
 import { User } from "../models/userModel";
 import { log } from "util";
+import { Response, Request } from "express";
 
 /**
  * Contains db handling code for Stock-class operations
@@ -9,5 +10,15 @@ import { log } from "util";
  * should be implemented here.
  */
 export default class StockController {
+  public static async getStocks(req: Request, res: Response): Promise<void> {
+    const entityManager: EntityManager = getManager();
 
+    let stocks: Stock
+
+    try {
+      en
+    } catch (error) {
+
+    }
+  }
 }
