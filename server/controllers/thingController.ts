@@ -125,11 +125,15 @@ export class ThingController {
       `
     ];
 
-    thingToAdd.ThingNo = // req.params.thingNo ||
-      // Find the first gap
-      (await entityManager.query(queries[1], [
-        (res.locals.inventory as Inventory).InventoryId
-      ]))[0].THE_NUMBER || 1;
+    try {
+      thingToAdd.ThingNo = // req.params.thingNo ||
+        // Find the first gap
+        (await entityManager.query(queries[1], [
+          (res.locals.inventory as Inventory).InventoryId
+        ]))[0].THE_NUMBER;
+    } catch (err) {
+      thingToAdd.ThingNo = 1;
+    }
 
     // Check for duplicates
 
