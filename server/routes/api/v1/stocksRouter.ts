@@ -6,8 +6,6 @@ const stocksRoutes: Router = Router();
 
 // Return all stocks
 // TODO implement
-stocksRoutes.get("/", StockController.);
-
-
+stocksRoutes.get("/", StockController.getStocks);
 
 export default stocksRoutes;

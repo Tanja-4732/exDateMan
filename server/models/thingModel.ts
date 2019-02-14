@@ -3,10 +3,12 @@ import {
   Column,
   ManyToOne,
   ManyToMany,
-  JoinTable
+  JoinTable,
+  OneToMany
 } from "typeorm";
 import { Category } from "./categoryModel";
 import { Inventory } from "./inventoryModel";
+import { Stock } from "./stockModel";
 
 @Entity()
 export class Thing {
@@ -27,4 +29,7 @@ export class Thing {
   @ManyToMany(() => Category, category => category.things)
   @JoinTable()
   Categories: Category[];
+
+  @OneToMany(() => Stock, stock => stock.thing)
+  stocks: Stock[];
 }

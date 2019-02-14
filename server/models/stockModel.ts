@@ -1,9 +1,23 @@
-import { Entity, PrimaryColumn } from "typeorm";
+import { Entity, PrimaryColumn, ManyToOne, Column } from "typeorm";
+import { Thing } from "./thingModel";
 
 @Entity()
-export default class Stock {
+export class Stock {
   @PrimaryColumn()
   number: number;
 
+  @ManyToOne(() => Thing, thing => thing.stocks)
+  thing: Thing;
 
+  @Column("date")
+  exDate: Date;
+
+  @Column()
+  quantity: string;
+
+  @Column()
+  useUpIn: number;
+
+  @Column({ default: 100.0 })
+  percentLeft: number;
 }
