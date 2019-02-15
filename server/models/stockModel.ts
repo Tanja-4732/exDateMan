@@ -6,8 +6,8 @@ export class Stock {
   @PrimaryColumn()
   number: number;
 
-  @ManyToOne(() => Thing, thing => thing.stocks)
-  thing: Thing;
+  // @ManyToOne(() => Thing, thing => thing.stocks) // TODO Uncomment
+  // thing: Thing;
 
   @Column("date")
   exDate: Date;

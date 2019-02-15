@@ -31,5 +31,6 @@ export class Thing {
   Categories: Category[];
 
   @OneToMany(() => Stock, stock => stock.thing)
+  @JoinTable()
   stocks: Stock[];
 }
