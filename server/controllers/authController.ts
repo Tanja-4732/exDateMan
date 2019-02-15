@@ -246,4 +246,33 @@ export default class AuthController {
     // If the token is valid and the user was loaded
     next();
   }
+
+  /**
+   * Checks for authorization in the current inventory for the acting user
+   *
+   * @static
+   * @param {Response} res The Express response object
+   * @param {InventoryUserAccessRightsEnum} accessRights
+   * @returns {Promise<void>}
+   * @memberof AuthController
+   */
+  public static async authOrError(
+    res: Response,
+    accessRights: InventoryUserAccessRightsEnum
+  ): Promise<void> {
+    if (
+      !(await AuthController.isAuthorized(
+        res.locals.actingUser,
+        res.locals.inventory as Inventory,
+        accessRights
+      ))
+    ) {
+      res.status(403).json({
+        status: 403,
+        error:
+          "Requestor doesn't have the " + accessRights + " role or higher for this inventory."
+      });
+      return;
+    }
+  }
 }
