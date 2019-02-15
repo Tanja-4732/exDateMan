@@ -1,5 +1,4 @@
 import { EntityManager, getManager } from "typeorm";
-import { User } from "../models/userModel";
 import { log } from "util";
 import { Response, Request } from "express";
 import { Stock } from "../models/stockModel";
@@ -52,5 +51,25 @@ export default class StockController {
     res.status(200).json({
       stocks: stocks
     });
+  }
+
+  public static async addStock(req: Request, res: Response): Promise<void> {
+
+  }
+
+  public static async setStockInDotLocals(req: Request, res: Response): Promise<void>{
+
+  }
+
+  public static async getStock(req: Request, res: Response): Promise<void>{
+
+  }
+
+  public static async updateStock(req: Request, res: Response): Promise<void> {
+
+  }
+
+  public static async removeStock(req: Request, res: Response): Promise<void> {
+
   }
 }
