@@ -1,14 +1,15 @@
-import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
-import { RegisterComponent } from "./register/register.component";
-import { LoginComponent } from "./login/login.component";
-import { EditThingComponent } from "./edit-thing/edit-thing.component";
-import { EditStockComponent } from "./edit-stock/edit-stock.component";
-import { AddStockComponent } from "./add-stock/add-stock.component";
-import { StocksComponent } from "./stocks/stocks.component";
-import { AddThingComponent } from "./add-thing/add-thing.component";
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { ThingsComponent } from "./things/things.component";
+
+import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
+import { RegisterComponent } from "./components/register/register.component";
+import { LoginComponent } from "./components/login/login.component";
+import { EditThingComponent } from "./components/edit-thing/edit-thing.component";
+import { EditStockComponent } from "./components/edit-stock/edit-stock.component";
+import { AddStockComponent } from "./components/add-stock/add-stock.component";
+import { StocksComponent } from "./components/stocks/stocks.component";
+import { AddThingComponent } from "./components/add-thing/add-thing.component";
+import { ThingsComponent } from "./components/things/things.component";
 
 const routes: Routes = [
   // { path: "", component:  },

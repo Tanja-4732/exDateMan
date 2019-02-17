@@ -1,7 +1,7 @@
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { THING } from "../models/thing.model";
-import { STOCK } from "../models/stock.model";
+import { THING } from "../../models/thing.model";
+import { STOCK } from "../../models/stock.model";
 
 @Component({
   selector: "app-edit-stock",

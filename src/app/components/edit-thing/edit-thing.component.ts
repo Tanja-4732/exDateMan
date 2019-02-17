@@ -1,8 +1,8 @@
-import { THING } from "./../models/thing.model";
+import { THING } from "../../models/thing.model";
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { RestService } from "../services/Rest/rest.service";
+import { RestService } from "../../services/Rest/rest.service";
 
 // Interface
 export interface DialogData {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { THING } from "../models/thing.model";
-import { RestService } from "../services/Rest/rest.service";
+import { THING } from "../../models/thing.model";
+import { RestService } from "../../services/Rest/rest.service";
 
 @Component({
   selector: "app-add-thing",

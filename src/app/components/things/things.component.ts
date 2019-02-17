@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { RestService } from "./../services/Rest/rest.service";
-import { THING } from "./../models/thing.model";
+import { RestService } from "../../services/Rest/rest.service";
+import { THING } from "../../models/thing.model";
 import { Component, OnInit } from "@angular/core";
 
 @Component({

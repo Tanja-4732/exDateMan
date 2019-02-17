@@ -1,4 +1,4 @@
-import { THING } from "./../models/thing.model";
+import { THING } from "../../models/thing.model";
 import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
