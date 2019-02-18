@@ -1,7 +1,9 @@
-<mat-toolbar routerLink="/things" color="primary" mat-app-background class="no-margin">
+<mat-toolbar routerLink="/things" color="primary">
   <i class="material-icons">home</i>
   &nbsp;
   {{title}}
 </mat-toolbar>
 <br>
-<router-outlet></router-outlet>
+<div class="defaultMargin">
+  <router-outlet></router-outlet>
+</div>

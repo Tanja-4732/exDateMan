@@ -16,7 +16,7 @@ import {
   MatNativeDateModule,
   MatSliderModule,
   MatToolbarModule,
-  MatDialogModule
+  MatDialogModule, MatSidenavModule, MatIconModule, MatListModule
 } from "@angular/material";
 
 import { AppComponent } from "./app.component";
@@ -36,6 +36,8 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { InventoriesComponent } from './components/inventories/inventories.component';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { InventoriesComponent } from './components/inventories/inventories.compo
     RegisterComponent,
     DeleteConfirmationDialogComponent,
     PageNotFoundComponent,
-    InventoriesComponent
+    InventoriesComponent,
+    MainNavComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +72,11 @@ import { InventoriesComponent } from './components/inventories/inventories.compo
     MatNativeDateModule,
     MatSliderModule,
     MatToolbarModule,
-    MatDialogModule
+    MatDialogModule,
+    LayoutModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule
   ],
   providers: [DBConnectionService],
   bootstrap: [AppComponent],
