@@ -69,6 +69,11 @@ div.mat-typography {
   h6 {
     margin-bottom: 0px;
   }
+
+  ul,
+  ol {
+    margin-top: 0px;
+  }
 }
 
 // @import "~@angular/material/theming";
