@@ -38,6 +38,9 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { InventoriesComponent } from './components/inventories/inventories.component';
 import { MainNavComponent } from './components/main-nav/main-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { EditInventoryComponent } from './components/edit-inventory/edit-inventory.component';
+import { AddInventoryComponent } from './components/add-inventory/add-inventory.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,10 @@ import { LayoutModule } from '@angular/cdk/layout';
     DeleteConfirmationDialogComponent,
     PageNotFoundComponent,
     InventoriesComponent,
-    MainNavComponent
+    MainNavComponent,
+    WelcomeComponent,
+    EditInventoryComponent,
+    AddInventoryComponent
   ],
   imports: [
     BrowserModule,
