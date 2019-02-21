@@ -1,14 +1,15 @@
-<span *ngIf="things.length === 0" class="mat-typography">
-    Add things by hitting the plus button.
-  </span>
-  <div class="grid">
-    <div *ngFor="let thing of things">
-      <app-thing-card [thing]="thing"></app-thing-card>
-    </div>
-  </div>
+<span *ngIf="inventories.length === 0" class="mat-typography">
+  Add things by hitting the plus button.
+</span>
 
-  <a routerLink="/addThing">
-    <button mat-fab class="fab" (click)="onAddThing()">
+<div class="grid">
+  <div *ngFor="let inventory of inventories">
+    <app-thing-card [thing]="inventory"></app-thing-card> <!-- TODO add inv comp -->
+  </div>
+</div>
+
+  <a routerLink="new">
+    <button mat-fab class="fab" (click)="onAddInventory()">
       <i class="material-icons">add</i>
     </button>
   </a>

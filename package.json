@@ -6,11 +6,11 @@
     "dev": "nodemon -e ts -w ./server -w ./server.ts -x ts-node ./server.ts --stack-size=10000",
     "ng": "ng",
     "start": "ts-node server.ts",
-    "start-js": "ts-node server.js",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "serve": "ng serve --configuration=serve --host 0.0.0.0"
   },
   "private": true,
   "dependencies": {

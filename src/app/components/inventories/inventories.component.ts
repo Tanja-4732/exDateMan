@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Inventory } from '../../models/inventory';
+import { Component, OnInit } from "@angular/core";
+import { Inventory } from "../../models/inventory";
+import { InventoryService } from "../../services/inventory/inventory.service";
 
 @Component({
-  selector: 'app-inventories',
-  templateUrl: './inventories.component.html',
-  styleUrls: ['./inventories.component.scss']
+  selector: "app-inventories",
+  templateUrl: "./inventories.component.html",
+  styleUrls: ["./inventories.component.scss"]
 })
 export class InventoriesComponent implements OnInit {
-  inventories: Inventory[];
+  inventories: Inventory[] = [];
 
+  constructor(private is: InventoryService) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
-  }
-
+  onAddInventory() {}
 }
