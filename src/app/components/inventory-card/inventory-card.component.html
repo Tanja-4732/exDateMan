@@ -1,0 +1,12 @@
+<a routerLink="{{inventory.InventoryId}}" class="noUnderline mat-typography">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h3>
+          {{inventory.InventoryName}}
+        </h3>
+      </mat-card-title>
+      <mat-card-subtitle>Created on: {{inventory.InventoryCreatedOn | date}}</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+</a>

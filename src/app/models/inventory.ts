@@ -9,9 +9,9 @@ export class Inventory {
 
   InventoryCreatedOn: Date;
 
-  inventoryUsers: InventoryUser[];
+  inventoryUsers?: InventoryUser[];
 
-  Things: Thing[];
+  Things?: Thing[];
 
-  categories: Category[];
+  categories?: Category[];
 }

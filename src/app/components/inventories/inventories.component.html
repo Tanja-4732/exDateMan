@@ -1,15 +1,26 @@
-<span *ngIf="inventories.length === 0" class="mat-typography">
-  Add things by hitting the plus button.
+<span class="mat-typography" *ngIf="loading">
+  <h2>Loading...</h2>
+  We're getting your inventories... <br>
+  Please hang on
 </span>
 
-<div class="grid">
-  <div *ngFor="let inventory of inventories">
-    <app-thing-card [thing]="inventory"></app-thing-card> <!-- TODO add inv comp -->
-  </div>
-</div>
+<span *ngIf="!loading">
+  <span *ngIf="inventories.length === 0" class="mat-typography">
+    <h2>
+      No inventories found.
+    </h2>
+    Add inventories by hitting the plus button.
+  </span>
 
-  <a routerLink="new">
-    <button mat-fab class="fab" (click)="onAddInventory()">
-      <i class="material-icons">add</i>
-    </button>
-  </a>
+  <div class="grid">
+    <div *ngFor="let inventory of inventories">
+      <app-inventory-card [inventory]="inventory"></app-inventory-card> <!-- TODO add inv comp -->
+    </div>
+  </div>
+</span>
+
+<a routerLink="new" *ngIf="!loading">
+  <button mat-fab class="fab" (click)="onAddInventory()">
+    <i class="material-icons">add</i>
+  </button>
+</a>

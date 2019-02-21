@@ -9,10 +9,22 @@ import { InventoryService } from "../../services/inventory/inventory.service";
 })
 export class InventoriesComponent implements OnInit {
   inventories: Inventory[] = [];
+  loading: boolean = true;
 
-  constructor(private is: InventoryService) {}
+  constructor(private inv: InventoryService) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.loadInventories();
+  }
 
-  onAddInventory() {}
+  onAddInventory(): void {}
+
+  async loadInventories(): Promise<void> {
+    this.inv.getInventories().then((inventories: Inventory[]) => {
+      this.inventories = inventories;
+      this.loading = false;
+      console.log("Done waiting");
+      console.log(JSON.stringify(this.inventories, null, 2));
+    });
+  }
 }

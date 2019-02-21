@@ -20,10 +20,9 @@ export class AuthService {
    * @memberof AuthService
    */
   async login(email: string, pwd: string): Promise<LoginResponse> {
-    const url: string = this.baseUrl + "/auth/login";
     const user: LoginResponse | any = await this.http
       .post<JSON>(
-        url,
+        this.baseUrl + "/auth/login",
         {
           email: email,
           pwd: pwd
@@ -31,7 +30,8 @@ export class AuthService {
         { withCredentials: true }
       )
       .toPromise();
-    console.log(JSON.stringify(user, null, 2));
+
+    console.log(JSON.stringify(user, null, 2)); // TODO remove when ready
 
     return user;
   }
