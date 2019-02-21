@@ -3,15 +3,10 @@ import { Category } from "./category";
 import { InventoryUser } from "./inventory-user";
 
 export class Inventory {
-  InventoryId: number;
-
-  InventoryName: string;
-
-  InventoryCreatedOn: Date;
-
-  inventoryUsers?: InventoryUser[];
-
-  Things?: Thing[];
-
+  id: number;
+  name: string;
+  InventoryCreatedOn?: Date;
+  users?: InventoryUser[];
+  things?: Thing[];
   categories?: Category[];
 }

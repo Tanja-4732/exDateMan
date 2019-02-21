@@ -1,3 +1,13 @@
-<p>
-  add-inventory works!
-</p>
+<mat-form-field appearance="outline">
+  <mat-label>Inventory name</mat-label>
+  <input matInput type="text" placeholder="Someones inventory" [(ngModel)]="name">
+  <i matSuffix class="material-icons">crop_free</i>
+  <!-- <mat-hint>Hint</mat-hint> -->
+</mat-form-field>
+<br>
+<button mat-raised-button (click)="onAdd()" color="accent">Add inventory</button>
+<br>
+<br>
+<div *ngIf="oof">
+  That didn't work :(
+</div>

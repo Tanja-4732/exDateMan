@@ -23,8 +23,6 @@ export class InventoriesComponent implements OnInit {
     this.inv.getInventories().then((inventories: Inventory[]) => {
       this.inventories = inventories;
       this.loading = false;
-      console.log("Done waiting");
-      console.log(JSON.stringify(this.inventories, null, 2));
     });
   }
 }

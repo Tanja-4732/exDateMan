@@ -30,9 +30,6 @@ export class AuthService {
         { withCredentials: true }
       )
       .toPromise();
-
-    console.log(JSON.stringify(user, null, 2)); // TODO remove when ready
-
     return user;
   }
 }
