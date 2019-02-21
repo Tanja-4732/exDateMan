@@ -19,16 +19,31 @@ export class AuthService {
    * @returns {Promise<User>}
    * @memberof AuthService
    */
-  async login(email: string, pwd: string): Promise<User> {
+  async login(email: string, pwd: string): Promise<LoginResponse> {
     const url: string = this.baseUrl + "/auth/login";
-    const user: User = await this.http
-      .post<JSON>(url, {
-        email: email,
-        pwd: pwd
-      })
+    const user: LoginResponse | any = await this.http
+      .post<JSON>(
+        url,
+        {
+          email: email,
+          pwd: pwd
+        },
+        { withCredentials: true }
+      )
       .toPromise();
     console.log(JSON.stringify(user, null, 2));
 
     return user;
   }
+}
+
+/**
+ * This is the response form the server for the login route
+ *
+ * @export
+ * @interface LoginResponse
+ */
+export interface LoginResponse {
+  status: number;
+  user: string; // The username
 }

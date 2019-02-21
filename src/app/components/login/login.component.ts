@@ -1,6 +1,6 @@
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../services/auth/auth.service";
+import { AuthService, LoginResponse } from "../../services/auth/auth.service";
 
 @Component({
   selector: "app-login",
@@ -11,13 +11,38 @@ export class LoginComponent implements OnInit {
   email: string;
   password: string;
 
-  constructor(private router: ActivatedRoute, private as: AuthService) {
-    this.email = this.router.snapshot.params["email"];
+  // true, when the login data was incorrect
+  oof: boolean = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private auth: AuthService,
+    private router: Router
+  ) {
+    this.email = this.route.snapshot.params["email"];
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // try {
+    //   this.router.navigate(["/inventories"]);
+    // } catch (err) {
+    //   this.oof = true;
+    // }
+  }
 
-  login(): void {
-    this.as.login(this.email, this.password);
+  async onLogin(): Promise<void> {
+    this.auth
+      .login(this.email, this.password)
+      .then((response: LoginResponse) => {
+        if (response.status === 200) {
+          this.oof = false;
+          this.router.navigate(["/inventories"]);
+        } else {
+          this.oof = true;
+        }
+      })
+      .catch(() => {
+        this.oof = true;
+      });
   }
 }

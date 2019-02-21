@@ -3,13 +3,22 @@
   <input matInput type="email" placeholder="someone@example.com" [(ngModel)]="email">
   <i matSuffix class="material-icons">alternate_email</i>
 </mat-form-field>
+
 <br>
+
 <mat-form-field appearance="outline">
   <mat-label>Password</mat-label>
   <input matInput type="password" placeholder="XWf%=7&eF8CxX_j^AC7x" [(ngModel)]="password">
   <i matSuffix class="material-icons">vpn_key</i>
 </mat-form-field>
+
 <br>
-<button mat-raised-button (click)="login()" color="accent">Login</button>
+
+<button mat-raised-button (click)="onLogin()" color="accent">Login</button>
 &nbsp;
 <button mat-stroked-button routerLink="/register/{{email}}" color="">Register</button>
+
+<div class="mat-typography" *ngIf="oof">
+  That didn't work :( <br>
+  Check the data and try again.
+</div>
