@@ -11,9 +11,17 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+   * Logs in the user
+   *
+   * @param {string} email The email address of the user to be logged in
+   * @param {string} pwd The password of the user to be logged in
+   * @returns {Promise<User>}
+   * @memberof AuthService
+   */
   async login(email: string, pwd: string): Promise<User> {
-    let url: string = this.baseUrl + "/auth/login";
-    const user = await this.http
+    const url: string = this.baseUrl + "/auth/login";
+    const user: User = await this.http
       .post<JSON>(url, {
         email: email,
         pwd: pwd
