@@ -13,7 +13,12 @@ export class AuthService {
 
   async login(email: string, pwd: string): Promise<User> {
     let url: string = this.baseUrl + "/auth/login";
-    const user = this.http.get<JSON>(url);
+    const user = await this.http
+      .post<JSON>(url, {
+        email: email,
+        pwd: pwd
+      })
+      .toPromise();
     console.log(JSON.stringify(user, null, 2));
 
     return user;
