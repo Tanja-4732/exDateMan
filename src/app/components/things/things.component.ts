@@ -3,7 +3,6 @@ import { RestService } from "../../services/Rest/rest.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
-import { Inventory } from "../../models/inventory/inventory";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 

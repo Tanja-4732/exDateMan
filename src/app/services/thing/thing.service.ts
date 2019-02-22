@@ -16,4 +16,27 @@ export class ThingService {
       .get<Thing[]>(this.baseUrl + "/inv/" + inventoryId + "/things")
       .toPromise();
   }
+
+  async newThing(thing: Thing, inventoryId: number): Promise<Thing[]> {
+    const categoryNumbers: number[] = [];
+
+    if (thing.categories) {
+      for (const category of thing.categories) {
+        categoryNumbers.push(category.number);
+      }
+    }
+
+    await this.http.post<Thing>(
+      this.baseUrl + "/inv/" + inventoryId + +"/things",
+      {
+        name: thing.name,
+        categories: categoryNumbers
+      } as AddThingRequest
+    );
+  }
+}
+
+interface AddThingRequest {
+  name: string;
+  categories: number[];
 }

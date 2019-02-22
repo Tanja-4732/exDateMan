@@ -7,10 +7,10 @@ import { Thing } from "../../models/thing/thing";
   styleUrls: ["./thing-card.component.scss"]
 })
 export class ThingCardComponent implements OnInit {
-  constructor() {}
-
   @Input()
   thing: Thing;
 
-  ngOnInit() {}
+  constructor() {}
+
+  ngOnInit(): void {}
 }

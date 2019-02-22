@@ -14,6 +14,12 @@
   </span>
 
   <span *ngIf="!loading">
+
+    <button mat-raised-button [routerLink]="['../user/bob']" color="accent">Edit inventory</button> &nbsp;
+    <button mat-raised-button routerLink="../categories" color="primary">Categories</button> &nbsp;
+    <br>
+    <br>
+
     <span *ngIf="things.length === 0" class="mat-typography">
       Add things by hitting the plus button.
     </span>
@@ -23,7 +29,7 @@
       </div>
     </div>
 
-    <a routerLink="/addThing">
+    <a routerLink="new">
       <button mat-fab class="fab" (click)="onAddThing()">
         <i class="material-icons">add</i>
       </button>

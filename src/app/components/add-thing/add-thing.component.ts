@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { THING } from "../../models/thing.model";
-import { RestService } from "../../services/Rest/rest.service";
+import { ThingService } from "../../services/thing/thing.service";
+import { Thing } from "../../models/thing/thing";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-add-thing",
@@ -10,20 +11,31 @@ import { RestService } from "../../services/Rest/rest.service";
 export class AddThingComponent implements OnInit {
   thingName: string;
   thingCategory: string;
+  inventoryId: number;
 
-  constructor(private rest: RestService) {}
+  constructor(private ts: ThingService, private route: ActivatedRoute) {}
 
-  ngOnInit() {}
-
-  onAddThing() {
-    const thing = new THING(this.thingName, this.thingCategory);
-    THING.things.push(thing); // TODO maybe remove; replace by local storage
-    this.createThing(thing);
+  ngOnInit(): void {
+    this.getInventoryId();
   }
 
-  createThing(thing: THING) {
-    this.rest.createThing(thing).subscribe(response => {
-      console.log(response);
-    });
+  onAddThing(): void {
+    const thing: Thing = new Thing();
+    thing.name = this.thingName;
+    thing.categories = [];
+
+    this.createThing(thing).then();
+  }
+
+  async createThing(thing: Thing): Promise<void> {
+    try {
+      await this.ts.newThing(thing, this.inventoryId);
+    } catch (err) {
+      console.log("oof");
+    }
+  }
+
+  getInventoryId(): void {
+    this.inventoryId = this.route.snapshot.params["inventoryId"];
   }
 }
