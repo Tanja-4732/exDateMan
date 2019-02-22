@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Inventory } from "../../models/inventory";
+import { Inventory } from "../../models/inventory/inventory";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";

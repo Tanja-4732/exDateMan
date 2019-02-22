@@ -1,0 +1,12 @@
+import { Thing } from "../thing/thing";
+import { Category } from "../category/category";
+import { InventoryUser } from "../inventory-user/inventory-user";
+
+export class Inventory {
+  id: number;
+  name: string;
+  createdOn?: Date;
+  users?: InventoryUser[];
+  things?: Thing[];
+  categories?: Category[];
+}

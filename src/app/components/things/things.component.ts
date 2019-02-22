@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { RestService } from "../../services/Rest/rest.service";
-import { THING } from "../../models/thing.model";
 import { Component, OnInit } from "@angular/core";
+import { Thing } from '../../models/thing/thing';
+import { ThingService } from '../../services/thing/thing.service';
 
 @Component({
   selector: "app-things",
@@ -9,28 +10,21 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./things.component.scss"]
 })
 export class ThingsComponent implements OnInit {
-  things = THING.things;
-  thingsObservable: Observable<THING[]>;
-  constructor(private rest: RestService) {}
+  things: Thing[] = [];
 
-  ngOnInit() {
+  constructor(private ts: ThingService) {}
+
+  ngOnInit(): void {
     this.getThings();
   }
 
-  getThings() {
-    console.log("Getting things...");
+  async getThings(): Promise<void> {
+    try {
+      this.things = this.ts
+    } catch (error) {
 
-    // this.rest.getThings().subscribe((data: Array<THING>) => {
-    //   THING.things = data;
-    //   console.log(data);
-    // });
-
-    THING.things = [];
-    this.rest.getThings().subscribe((data: THING[]) => {
-      console.log(data);
-      THING.things = data;
-    });
+    }
   }
 
-  onAddThing() {}
+  onAddThing(): void {}
 }

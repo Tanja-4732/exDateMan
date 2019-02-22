@@ -138,7 +138,10 @@ export class ThingController {
     // Check for duplicates
 
     try {
-      if ((req.body as ThingRequest).categories != null && (req.body as ThingRequest).categories.length !== 0) {
+      if (
+        (req.body as ThingRequest).categories != null &&
+        (req.body as ThingRequest).categories.length !== 0
+      ) {
         // Get the categories
         thingToAdd.categories = await entityManager.find(Category, {
           where: {

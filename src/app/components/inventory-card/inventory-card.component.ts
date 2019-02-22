@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Inventory } from "../../models/inventory";
+import { Inventory } from "../../models/inventory/inventory";
 
 @Component({
   selector: "app-inventory-card",
