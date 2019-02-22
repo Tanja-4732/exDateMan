@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{thing.name}}</mat-card-title>
-      <mat-card-subtitle>{{thing.category}}</mat-card-subtitle>
+      <mat-card-subtitle>{{thing.number}}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content *ngFor="let stock of thing.stocks">
       {{stock.quantity}} * {{stock.getExDate() | date}}

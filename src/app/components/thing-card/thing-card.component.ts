@@ -1,5 +1,5 @@
-import { THING } from "../../models/thing.model";
 import { Component, OnInit, Input } from "@angular/core";
+import { Thing } from "../../models/thing/thing";
 
 @Component({
   selector: "app-thing-card",
@@ -10,7 +10,7 @@ export class ThingCardComponent implements OnInit {
   constructor() {}
 
   @Input()
-  thing: THING;
+  thing: Thing;
 
   ngOnInit() {}
 }
