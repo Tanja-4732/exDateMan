@@ -1,8 +1,10 @@
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs";
 import { RestService } from "../../services/Rest/rest.service";
-import { Component, OnInit } from "@angular/core";
-import { Thing } from '../../models/thing/thing';
-import { ThingService } from '../../services/thing/thing.service';
+import { Component, OnInit, Input } from "@angular/core";
+import { Thing } from "../../models/thing/thing";
+import { ThingService } from "../../services/thing/thing.service";
+import { Inventory } from "../../models/inventory/inventory";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-things",
@@ -11,19 +13,25 @@ import { ThingService } from '../../services/thing/thing.service';
 })
 export class ThingsComponent implements OnInit {
   things: Thing[] = [];
+  inventoryId: number;
 
-  constructor(private ts: ThingService) {}
+  constructor(private ts: ThingService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.getThings();
+    this.getInventoryId();
+    this.getThings().then();
   }
 
   async getThings(): Promise<void> {
     try {
-      this.things = this.ts
+      this.things = await this.ts.getThings(this.inventoryId);
     } catch (error) {
-
+      console.log("OOF");
     }
+  }
+
+  getInventoryId(): void {
+    this.inventoryId = this.route.snapshot.params["inventoryId"];
   }
 
   onAddThing(): void {}
