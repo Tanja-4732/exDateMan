@@ -92,35 +92,20 @@ export class ThingController {
 
     // Query collection
     const queries: string[] = [
-      // Doesn't work
-      `
-      SELECT previd
-        FROM (
-          SELECT ThingNo,
-                    LAG(ThingNo) OVER (ORDER BY ThingNo) previd
-          FROM    thing
-            WHERE inventoryInventoryId = $1
-          ) q
-      WHERE   previd <> ThingNo - 1
-        ORDER BY
-              ThingNo
-      LIMIT 1;
-      `,
-
       // Second attempt
       `
-      SELECT  "ThingNo" + 1 AS "THE_NUMBER"
+      SELECT  "number" + 1 AS "THE_NUMBER"
       FROM    thing mo
       WHERE   NOT EXISTS
               (
               SELECT  NULL
               FROM    thing mi
-              WHERE   mi."ThingNo" = mo."ThingNo" + 1
-                AND mi."inventoryInventoryId" = $1
-                AND mo."inventoryInventoryId" = $1
+              WHERE   mi."number" = mo."number" + 1
+                AND mi."inventoryId" = $1
+                AND mo."inventoryId" = $1
               )
       ORDER BY
-              "ThingNo"
+              "number"
       LIMIT 1;
       `
     ];
@@ -128,7 +113,7 @@ export class ThingController {
     try {
       thingToAdd.number = // req.params.thingNo ||
         // Find the first gap
-        (await entityManager.query(queries[1], [
+        (await entityManager.query(queries[0], [
           (res.locals.inventory as Inventory).id
         ]))[0].THE_NUMBER;
     } catch (err) {
@@ -168,14 +153,10 @@ export class ThingController {
 
     // On success respond with OK and the data
     res.status(201).json({
-      status: 201,
-      message: "Created thing",
-      thing: {
-        inventoryId: thingToAdd.inventory.id,
-        name: thingToAdd.name,
-        number: thingToAdd.number,
-        categories: thingToAdd.categories
-      }
+      inventoryId: thingToAdd.inventory.id,
+      name: thingToAdd.name,
+      number: thingToAdd.number,
+      categories: thingToAdd.categories
     });
   }
 

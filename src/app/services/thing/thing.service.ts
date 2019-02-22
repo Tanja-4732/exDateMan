@@ -17,7 +17,7 @@ export class ThingService {
       .toPromise();
   }
 
-  async newThing(thing: Thing, inventoryId: number): Promise<Thing[]> {
+  async newThing(thing: Thing, inventoryId: number): Promise<Thing> {
     const categoryNumbers: number[] = [];
 
     if (thing.categories) {
@@ -26,13 +26,14 @@ export class ThingService {
       }
     }
 
-    await this.http.post<Thing>(
-      this.baseUrl + "/inv/" + inventoryId + +"/things",
-      {
+    console.log("InventoryId=" + inventoryId);
+
+    return await this.http
+      .post<Thing>(this.baseUrl + "/inv/" + inventoryId + "/things", {
         name: thing.name,
         categories: categoryNumbers
-      } as AddThingRequest
-    );
+      } as AddThingRequest)
+      .toPromise();
   }
 }
 
