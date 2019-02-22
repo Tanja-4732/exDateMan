@@ -198,7 +198,7 @@ export class ThingController {
     let things: Thing[];
     try {
       things = await entityManager.find(Thing, {
-        relations: ["Categories"],
+        relations: ["categories"],
         where: {
           inventory: res.locals.inventory as Inventory
         }
@@ -212,10 +212,10 @@ export class ThingController {
       return;
     }
     // Send success response with data
-    res.status(200).json({
-      inventoryId: res.locals.inventory.InventoryId,
-      things: things
-    });
+    res.status(200).json(
+      // inventoryId: res.locals.inventory.InventoryId, // TODO remove line when ready; doesn't work (doesn't need to)
+      things
+    );
   }
 
   public static async getThing(req: Request, res: Response): Promise<void> {

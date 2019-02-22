@@ -53,7 +53,7 @@ class App {
       database: process.env.EDM_DB,
       ssl: true,
       entities: [__dirname + "/models/*"],
-      synchronize: true,
+      synchronize: process.env.EDM_MODE !== "production" || true,
       logging: ["error", "warn"]
       // logging: true
     })
