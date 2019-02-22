@@ -12,31 +12,31 @@ import { Category } from "./categoryModel";
 @Entity()
 export class Inventory {
   constructor(InventoryName: string) {
-    this.InventoryName = InventoryName;
-    this.InventoryCreatedOn = new Date();
+    this.name = InventoryName;
+    this.createdOn = new Date();
   }
 
   @PrimaryGeneratedColumn()
-  InventoryId: number;
+  id: number;
 
   @Column("text")
-  InventoryName: string;
+  name: string;
 
   @Column("date")
   // @CreateDateColumn()
-  InventoryCreatedOn: Date;
+  createdOn: Date;
 
   @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.inventory, {
     cascade: true, onDelete: "CASCADE"
   })
   inventoryUsers: InventoryUser[];
 
-  @OneToMany(type => Thing, thing => thing.Inventory, {
+  @OneToMany(type => Thing, thing => thing.inventory, {
     cascade: true, onDelete: "CASCADE"
   })
-  Things: Thing[];
+  things: Thing[];
 
-  @OneToMany(type => Category, category => category.Inventory, {
+  @OneToMany(type => Category, category => category.inventory, {
     onDelete: "CASCADE"
   })
   categories: Category[];

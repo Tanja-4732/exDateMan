@@ -13,7 +13,6 @@ import {
 } from "../models/inventoryUserModel";
 import { Inventory } from "./../models/inventoryModel";
 import InventoryController from "./inventoryController";
-import InventoryUserController from "./inventoryUserController";
 import { EntityManager, getManager } from "typeorm";
 
 /**
@@ -32,13 +31,11 @@ const PUBLIC_KEY: string | Buffer =
 export default class AuthController {
   static getAuthDetails(req: Request, res: Response): any {
     const actingUser: User = res.locals.actingUser;
+    delete actingUser.inventoryUsers;
+    delete actingUser.saltedPwdHash;
     res.status(200).json({
       status: "Authenticated",
-      "logged in as": {
-        userId: actingUser.UserId,
-        name: actingUser.UserName,
-        email: actingUser.Email
-      }
+      user: actingUser
     });
   }
   /**
@@ -97,15 +94,15 @@ export default class AuthController {
      */
     const newUser: User = new User();
 
-    newUser.Email = req.body.email;
+    newUser.email = req.body.email;
 
     // The current date
-    newUser.UserCreatedOn = new Date(new Date().setHours(0, 0, 0, 0));
+    newUser.createdOn = new Date(new Date().setHours(0, 0, 0, 0));
 
-    newUser.UserName = req.body.name;
+    newUser.name = req.body.name;
 
     // Testing... // TODO remove the following line
-    newUser.SaltedPwdHash = "Hello World";
+    newUser.saltedPwdHash = "Hello World";
 
     // Calculate and set the hash
     await hash(
@@ -114,7 +111,7 @@ export default class AuthController {
       async (err: Error, hashValue: string) => {
         // Add the user to the db
         try {
-          newUser.SaltedPwdHash = hashValue;
+          newUser.saltedPwdHash = hashValue;
           await UserController.addNewUserOrFail(newUser);
         } catch (error) {
           res.status(400).json({
@@ -130,7 +127,7 @@ export default class AuthController {
           jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
             algorithm: "RS256",
             expiresIn: "10h",
-            subject: newUser.UserId + ""
+            subject: newUser.id + ""
           });
         } catch (error) {
           console.error(error);
@@ -142,8 +139,8 @@ export default class AuthController {
           .json({
             status: 201,
             message: "Created new user",
-            email: newUser.Email,
-            id: newUser.UserId
+            email: newUser.email,
+            id: newUser.id
           });
       }
     );
@@ -182,7 +179,7 @@ export default class AuthController {
     }
 
     // Credential validation, return 401 on invalid credentials
-    log(compareSync(password, actingUser.SaltedPwdHash) + "");
+    log(compareSync(password, actingUser.saltedPwdHash) + "");
     // TODO Implement PWD check
 
     let jwtBearerToken: string;
@@ -190,7 +187,7 @@ export default class AuthController {
       jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
         algorithm: "RS256",
         expiresIn: "10h",
-        subject: actingUser.UserId + ""
+        subject: actingUser.id + ""
       });
     } catch (error) {
       console.error(error);
@@ -201,7 +198,7 @@ export default class AuthController {
       .cookie("JWT", jwtBearerToken, { httpOnly: true })
       .json({
         status: 200,
-        user: actingUser.UserName
+        user: actingUser.name
       });
   }
 
@@ -270,7 +267,9 @@ export default class AuthController {
       res.status(403).json({
         status: 403,
         error:
-          "Requestor doesn't have the " + accessRights + " role or higher for this inventory."
+          "Requestor doesn't have the " +
+          accessRights +
+          " role or higher for this inventory."
       });
       return;
     }

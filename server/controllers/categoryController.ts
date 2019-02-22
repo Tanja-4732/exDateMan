@@ -29,7 +29,7 @@ export default class CategoryController {
       // TODO maybe remove this; this may cause bugs
       res.locals.category.Inventory = res.locals.inventory;
       log(
-        "The inventory id is:" + (res.locals.inventory as Inventory).InventoryId
+        "The inventory id is:" + (res.locals.inventory as Inventory).id
       );
     } catch (error) {
       log(error);
@@ -64,7 +64,7 @@ export default class CategoryController {
     // Write the child categories as numbers in an array // TODO maybe change to let
     const childrenNumbers: number[] = [];
     try {
-      for (const cat of (res.locals.category as Category).childCategories) {
+      for (const cat of (res.locals.category as Category).children) {
         childrenNumbers.push(cat.number);
       }
     } catch (error) {
@@ -82,7 +82,7 @@ export default class CategoryController {
       category: {
         number: (res.locals.category as Category).number,
         name: (res.locals.category as Category).name,
-        parent: (res.locals.category as Category).parentCategory.number,
+        parent: (res.locals.category as Category).parent.number,
         children: childrenNumbers
       }
     });
@@ -111,7 +111,7 @@ export default class CategoryController {
     try {
       categories = await entityManager.find(Category, {
         where: {
-          Inventory: res.locals.inventory as Inventory
+          inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
@@ -169,7 +169,7 @@ export default class CategoryController {
           )
       );
       await entityManager.delete(Category, {
-        Inventory: (res.locals.category as Category).Inventory,
+        inventory: (res.locals.category as Category).inventory,
         number: (res.locals.category as Category).number
       });
       log("Removed");
@@ -233,8 +233,8 @@ export default class CategoryController {
     }
 
     // Set the requested values
-    catToUpdate.parentCategory = parent;
-    catToUpdate.childCategories = children;
+    catToUpdate.parent = parent;
+    catToUpdate.children = children;
     catToUpdate.name = (req.body as CategoryRequest).name;
 
     // Save the data
@@ -297,17 +297,17 @@ export default class CategoryController {
 
     // Create category object and set values
     const category: Category = new Category();
-    category.Inventory = res.locals.inventory as Inventory;
+    category.inventory = res.locals.inventory as Inventory;
     category.name = (req.body as CategoryRequest).name;
     category.number = req.params.categoryNo;
-    category.childCategories = [];
+    category.children = [];
     try {
       log("Entered try block");
       // Check if children are specified
       if ((req.body as CategoryRequest).children != null) {
         // Iterate over the specified children and add them to the new object
         for (const categoryNo of (req.body as CategoryRequest).children) {
-          category.childCategories.push(
+          category.children.push(
             await CategoryController.getCategoryByNoAndInvOrFail(
               categoryNo,
               res.locals.inventory
@@ -321,17 +321,17 @@ export default class CategoryController {
         log("No parent specified.");
         // category.parentCategory = req.params.categoryNo;
         // Set parent to null
-        category.parentCategory = null;
+        category.parent = null;
       } else {
         // Set the specified parent
         log("Get parent category");
-        category.parentCategory = await CategoryController.getCategoryByNoAndInvOrFail(
+        category.parent = await CategoryController.getCategoryByNoAndInvOrFail(
           (req.body as CategoryRequest).parent, // The parent categoryNo
           res.locals.inventory // The inventory of both categories
         );
         // Set this as the child of the parent
         // category.parentCategory.childCategories.push(category); // TODO remove line
-        log("Got parent category: " + category.parentCategory.name);
+        log("Got parent category: " + category.parent.name);
       }
       log("Category right before save:\n" + JSON.stringify(category, null, 2));
       await entityManager.save(category);
@@ -361,7 +361,7 @@ export default class CategoryController {
       return await getManager().findOneOrFail(Category, {
         where: {
           number: categoryNo,
-          Inventory: inventory
+          inventory: inventory
         }
       });
     } catch (error) {
@@ -370,7 +370,7 @@ export default class CategoryController {
         "Can't find category where number=" +
           categoryNo +
           " and inventoryId=" +
-          inventory.InventoryId
+          inventory.id
       );
     }
   }

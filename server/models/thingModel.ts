@@ -16,19 +16,19 @@ export class Thing {
     primary: true,
     unique: false
   })
-  ThingNo: number;
+  number: number;
 
   @Column()
-  ThingName: string;
+  name: string;
 
-  @ManyToOne(() => Inventory, inventory => inventory.Things, {
+  @ManyToOne(() => Inventory, inventory => inventory.things, {
     primary: true
   })
-  Inventory: Inventory;
+  inventory: Inventory;
 
   @ManyToMany(() => Category, category => category.things)
   @JoinTable()
-  Categories: Category[];
+  categories: Category[];
 
   @OneToMany(() => Stock, stock => stock.thing)
   stocks: Stock[];

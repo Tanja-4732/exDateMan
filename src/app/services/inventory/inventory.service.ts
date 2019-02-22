@@ -19,8 +19,8 @@ export class InventoryService {
 
     // Convert the date strings to dates
     for (const inventory of response.inventories) {
-      inventory.InventoryCreatedOn = new Date(
-        (inventory.InventoryCreatedOn as unknown) as string
+      inventory.createdOn = new Date(
+        (inventory.createdOn as unknown) as string
       );
     }
     return response.inventories;
@@ -41,19 +41,19 @@ export class InventoryService {
     // Copy ids
     if (admins) {
       for (const admin of admins) {
-        adminIds.push(admin.userId);
+        adminIds.push(admin.id);
       }
     }
 
     if (writeables) {
       for (const writable of writeables) {
-        writeableIds.push(writable.userId);
+        writeableIds.push(writable.id);
       }
     }
 
     if (readables) {
       for (const readable of readables) {
-        readableIds.push(readable.userId);
+        readableIds.push(readable.id);
       }
     }
 

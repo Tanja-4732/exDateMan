@@ -19,7 +19,7 @@ export default class UserController {
     const entityManager: EntityManager = getManager();
     const user: User = await entityManager.findOneOrFail(User, {
       where: {
-        Email: email
+        email: email
       }
     });
     return user;
@@ -35,7 +35,7 @@ export default class UserController {
     const entityManager: EntityManager = getManager();
     const user: User = await entityManager.findOneOrFail(User, {
       where: {
-        UserId: userId
+        id: userId
       }
     });
     return user;
@@ -45,7 +45,7 @@ export default class UserController {
     const entityManager: EntityManager = getManager();
     // Check if the user already exists
     try {
-      await entityManager.findOneOrFail(User, { where: { Email: user.Email } });
+      await entityManager.findOneOrFail(User, { where: { email: user.email } });
     } catch (error) {
       // When the user doesn't already exist
       entityManager.save(user);

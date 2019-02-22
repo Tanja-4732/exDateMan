@@ -10,20 +10,20 @@ import { InventoryUser } from "./inventoryUserModel";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  UserId: number;
+  id: number;
 
   @Column()
-  UserName: string;
+  name: string;
 
   @Column({unique: true})
-  Email: string;
+  email: string;
 
   @Column()
-  SaltedPwdHash: string;
+  saltedPwdHash: string;
 
   @Column("date")
   // @CreateDateColumn()
-  UserCreatedOn: Date;
+  createdOn: Date;
 
   @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.user)
   inventoryUsers: InventoryUser[];

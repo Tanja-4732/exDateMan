@@ -132,8 +132,8 @@ export default class InventoryController {
 
     // Hide pwd hash user creation date
     for (const inventoryUser of inventory.inventoryUsers) {
-      delete inventoryUser.user.SaltedPwdHash;
-      delete inventoryUser.user.UserCreatedOn;
+      delete inventoryUser.user.saltedPwdHash;
+      delete inventoryUser.user.createdOn;
     }
 
     // Return requested info with 200
@@ -152,7 +152,7 @@ export default class InventoryController {
     const entityManager: EntityManager = getManager();
     return await entityManager.findOneOrFail(Inventory, {
       where: {
-        InventoryId: inventoryId
+        id: inventoryId
       }
     });
   }
@@ -183,8 +183,8 @@ export default class InventoryController {
         res.status(200).json({
           message: "Added inventory",
           inventory: {
-            id: invToAdd.InventoryId,
-            name: invToAdd.InventoryName
+            id: invToAdd.id,
+            name: invToAdd.name
           }
         });
         break;
@@ -254,8 +254,8 @@ export default class InventoryController {
         res.status(200).json({
           message: "Updated inventory",
           inventory: {
-            id: invToEdit.InventoryId,
-            name: invToEdit.InventoryName
+            id: invToEdit.id,
+            name: invToEdit.name
           }
         });
         break;
@@ -390,11 +390,11 @@ export default class InventoryController {
     // Validate for unique
     const userSet: Set<number> = new Set<number>([]);
     for (const iu of invUsers as InventoryUser[]) {
-      log("User: " + JSON.stringify(iu.user.UserId, null, 2));
-      if (userSet.has(iu.user.UserId)) {
+      log("User: " + JSON.stringify(iu.user.id, null, 2));
+      if (userSet.has(iu.user.id)) {
         return 400;
       } else {
-        userSet.add(iu.user.UserId);
+        userSet.add(iu.user.id);
       }
     }
 
@@ -402,7 +402,7 @@ export default class InventoryController {
     invToSet.inventoryUsers = invUsers;
 
     // Set the inventories name
-    invToSet.InventoryName = invReq.name;
+    invToSet.name = invReq.name;
 
     try {
       // Use a transaction to roll back a delete if the inserting process fails

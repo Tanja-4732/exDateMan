@@ -78,7 +78,7 @@ export default class StockController {
                 "number"
         LIMIT 1;
         `
-      , [(res.locals.thing as Thing).ThingNo])[0].THE_NUMBER;
+      , [(res.locals.thing as Thing).number])[0].THE_NUMBER;
     } catch (error) {
       res.status(400).json({
         status: 400,

@@ -41,8 +41,8 @@ export class ThingController {
       res.locals.thing = await entityManager.findOneOrFail(Thing, {
         relations: ["Inventory", "Categories"],
         where: {
-          ThingNo: req.params.thingNo,
-          Inventory: res.locals.inventory
+          number: req.params.thingNo,
+          inventory: res.locals.inventory
         }
       });
     } catch (err) {
@@ -87,8 +87,8 @@ export class ThingController {
 
     // Create and set thing // TODO implement thing constructor
     const thingToAdd: Thing = new Thing();
-    thingToAdd.Inventory = res.locals.inventory as Inventory;
-    thingToAdd.ThingName = (req.body as ThingRequest).name;
+    thingToAdd.inventory = res.locals.inventory as Inventory;
+    thingToAdd.name = (req.body as ThingRequest).name;
 
     // Query collection
     const queries: string[] = [
@@ -126,13 +126,13 @@ export class ThingController {
     ];
 
     try {
-      thingToAdd.ThingNo = // req.params.thingNo ||
+      thingToAdd.number = // req.params.thingNo ||
         // Find the first gap
         (await entityManager.query(queries[1], [
-          (res.locals.inventory as Inventory).InventoryId
+          (res.locals.inventory as Inventory).id
         ]))[0].THE_NUMBER;
     } catch (err) {
-      thingToAdd.ThingNo = 1;
+      thingToAdd.number = 1;
     }
 
     // Check for duplicates
@@ -140,10 +140,10 @@ export class ThingController {
     try {
       if ((req.body as ThingRequest).categories != null && (req.body as ThingRequest).categories.length !== 0) {
         // Get the categories
-        thingToAdd.Categories = await entityManager.find(Category, {
+        thingToAdd.categories = await entityManager.find(Category, {
           where: {
             // Only the categories from this inventory
-            Inventory: res.locals.inventory as Inventory,
+            inventory: res.locals.inventory as Inventory,
 
             // Only the specified ones
             number: In((req.body as ThingRequest).categories)
@@ -168,10 +168,10 @@ export class ThingController {
       status: 201,
       message: "Created thing",
       thing: {
-        inventoryId: thingToAdd.Inventory.InventoryId,
-        name: thingToAdd.ThingName,
-        number: thingToAdd.ThingNo,
-        categories: thingToAdd.Categories
+        inventoryId: thingToAdd.inventory.id,
+        name: thingToAdd.name,
+        number: thingToAdd.number,
+        categories: thingToAdd.categories
       }
     });
   }
@@ -200,7 +200,7 @@ export class ThingController {
       things = await entityManager.find(Thing, {
         relations: ["Categories"],
         where: {
-          Inventory: res.locals.inventory as Inventory
+          inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
@@ -263,8 +263,8 @@ export class ThingController {
 
     // Get and set thing
     const thingToEdit: Thing = res.locals.thing; // TODO implement moveToOtherInv
-    thingToEdit.ThingName = (req.body as ThingRequest).name;
-    thingToEdit.Categories = [];
+    thingToEdit.name = (req.body as ThingRequest).name;
+    thingToEdit.categories = [];
 
     try {
       if ((req.body as ThingRequest).categories != null) {
@@ -272,14 +272,14 @@ export class ThingController {
         for (const category of await entityManager.find(Category, {
           where: {
             // Only the categories from this inventory
-            Inventory: res.locals.inventory as Inventory,
+            inventory: res.locals.inventory as Inventory,
 
             // Only the specified ones
             number: In((req.body as ThingRequest).categories)
           }
         })) {
           // Add the category to the array
-          thingToEdit.Categories.push(category);
+          thingToEdit.categories.push(category);
         }
       }
 
@@ -300,10 +300,10 @@ export class ThingController {
       status: 201,
       message: "Created thing",
       thing: {
-        inventoryId: thingToEdit.Inventory.InventoryId,
-        name: thingToEdit.ThingName,
-        number: thingToEdit.ThingNo,
-        categories: thingToEdit.Categories
+        inventoryId: thingToEdit.inventory.id,
+        name: thingToEdit.name,
+        number: thingToEdit.number,
+        categories: thingToEdit.categories
       }
     });
   }
