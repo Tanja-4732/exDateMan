@@ -13,19 +13,23 @@ export class Stock {
   // @ManyToOne(type => Thing, { primary: true }) // this was my first attempt
   // thing: Thing;
 
-  // TODO implement using objects and composite foreign keys
-  @ManyToOne(() => Thing, thing => thing.stocks, { primary: true })
-  @JoinColumn([
-    {
-      name: "inventory",
-      referencedColumnName: "inventory"
-    },
-    {
-      name: "thingNumber",
-      referencedColumnName: "number"
-    }
-  ])
-  thing: Thing;
+  // TODO implement using objects and composite foreign keys #3
+  // @ManyToOne(() => Thing, thing => thing.stocks, { primary: true })
+  // @JoinColumn([
+  //   {
+  //     name: "inventory",
+  //     referencedColumnName: "inventory"
+  //   },
+  //   {
+  //     name: "thingNumber",
+  //     referencedColumnName: "number"
+  //   }
+  // ])
+  // thing: Thing;
+
+  // TODO remove ugly workaround when ready (needs re-implementation) #3
+  @Column({primary: true})
+  thingNumber: number; // very ugly indeed
 
   @Column("date")
   exDate: Date;

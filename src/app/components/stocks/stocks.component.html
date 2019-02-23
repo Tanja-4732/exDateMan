@@ -1,29 +1,39 @@
-<div *ngIf="!stopOperation">
-<button mat-raised-button routerLink="/thing/{{thingName}}/edit-thing" color="accent">Edit/delete thing</button>
-<br>
-<br>
-  <a routerLink="/thing/{{thingName}}/add-stock">
-    <button mat-fab class="fab" (click)="onAddStock()">
-      <i class="material-icons">add</i>
-    </button>
-  </a>
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch your stocks, because you aren't authorized. <br>
+  Try logging in again to resolve this. <br>
+  <br>
+  Redirecting you to the login page in 3 seconds...
+</span>
 
-  <div *ngIf="stocks.length === 0" class="mat-typography">
-    {{thingName}} currently doesn't have any stocks.
-  </div>
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading">
+    <h2>Loading stocks...</h2>
+    We're getting the inventory's thing's stocks... <br>
+    Please hang on
+  </span>
 
-  <div class="grid">
+  <span *ngIf="!loading">
+
+    <button mat-raised-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}" color="accent">Edit
+      thing</button>
+    <br>
+    <br>
+
+    <div *ngIf="stocks.length === 0" class="mat-typography">
+      Add stocks by hitting the plus button.
+    </div>
+
+    <div class="grid">
       <div *ngFor="let stock of stocks">
         <app-stock-card [stock]="stock"></app-stock-card>
       </div>
     </div>
-</div>
 
-<div *ngIf="stopOperation" class="mat-typography">
-  <h2>
-    Oh, no.
-  </h2>
-  <h3>
-    The thing {{thingName}} could not be found.
-  </h3>
-</div>
+    <a routerLink="new">
+      <button mat-fab class="fab" (click)="onAddStock()">
+        <i class="material-icons">add</i>
+      </button>
+    </a>
+  </span>
+</span>

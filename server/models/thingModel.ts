@@ -27,7 +27,7 @@ export class Thing {
     primary: true
   })
   @JoinColumn({
-    name: "inventory",
+    name: "inventoryId",
     referencedColumnName: "id"
   })
   inventory: Inventory;
@@ -36,6 +36,7 @@ export class Thing {
   @JoinTable()
   categories: Category[];
 
+  // TODO fix this #3
   @OneToMany(() => Stock, stock => stock.thing)
   stocks: Stock[];
 }

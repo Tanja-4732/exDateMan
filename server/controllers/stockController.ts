@@ -33,7 +33,8 @@ export default class StockController {
     try {
       stocks = await entityManager.find(Stock, {
         where: {
-          thing: res.locals.thing as Thing
+          thingNumber: (res.locals.thing as Thing).number, // TODO #3
+          inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
@@ -43,9 +44,7 @@ export default class StockController {
       return;
     }
 
-    res.status(200).json({
-      stocks: stocks
-    });
+    res.status(200).json(stocks);
   }
 
   public static async addStock(req: Request, res: Response): Promise<void> {
@@ -61,8 +60,10 @@ export default class StockController {
       stockToAdd.percentLeft = (req.body as StockRequest).percentLeft;
       stockToAdd.quantity = (req.body as StockRequest).quantity;
       stockToAdd.useUpIn = (req.body as StockRequest).useUpIn;
-      stockToAdd.thing = res.locals.thing as Thing;
-      stockToAdd.number = await entityManager.query( // Get the first gap or 1
+      stockToAdd.thingNumber = (res.locals.thing as Thing).number; // TODO #3
+      stockToAdd.inventory = res.locals.inventory as Inventory;
+      stockToAdd.number = await entityManager.query(
+        // Get the first gap or 1
         `
         SELECT  "number" + 1 AS "THE_NUMBER"
         FROM    stock mo
@@ -71,14 +72,23 @@ export default class StockController {
                 SELECT  NULL
                 FROM    stock mi
                 WHERE   mi."number" = mo."number" + 1
-                  AND mi."thingThingNo" = $1
-                  AND mo."thingThingNo" = $1
-                )
+                  AND mi."inventoryId" = $1
+                  AND mo."inventoryId" = $1
+
+                  AND mi."thingNumber" = $2
+                  AND mo."thingNumber" = $2
+                  )
+                  AND mi."inventoryId" = $1
+                  AND mi."thingNumber" = $2
         ORDER BY
                 "number"
         LIMIT 1;
-        `
-      , [(res.locals.thing as Thing).number])[0].THE_NUMBER;
+        `,
+        [
+          (res.locals.inventory as Inventory).id,
+          (res.locals.thing as Thing).number
+        ]
+      )[0].THE_NUMBER;
     } catch (error) {
       res.status(400).json({
         status: 400,
@@ -98,37 +108,53 @@ export default class StockController {
       return;
     }
 
-    res.status(200).json({stock: stockToAdd});
+    res.status(200).json({ stock: stockToAdd });
   }
 
-  public static async setStockInDotLocals(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public static async setStockInDotLocals(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       res.locals.stock = await getManager().findOneOrFail(Stock, {
         where: {
           number: req.params.stockNo,
-          thing: res.locals.thing
+          thingNumber: (res.locals.thing as Thing).number, // TODO #3
+          inventory: res.locals.inventory as Inventory
         }
       });
     } catch (error) {
-      res.status(404).json({error: "Stock couldn't be found."});
+      res.status(404).json({ error: "Stock couldn't be found." });
       return;
     }
     next();
   }
 
-  public static async getStock(req: Request, res: Response): Promise<void>{
+  public static async getStock(req: Request, res: Response): Promise<void> {
     AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
-    res.status(200).json({stock: res.locals.stock});
+    res.status(200).json(res.locals.stock as Stock);
   }
 
   public static async updateStock(req: Request, res: Response): Promise<void> {
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;
 
-    stockToUpdate.exDate = (req.body as StockRequest) ? new Date((req.body as StockRequest).exDate) : stockToUpdate.exDate;
-    stockToUpdate.percentLeft = (req.body as StockRequest).percentLeft ? (req.body as StockRequest).percentLeft : stockToUpdate.percentLeft;
-    stockToUpdate.quantity = (req.body as StockRequest).quantity ? (req.body as StockRequest).quantity : stockToUpdate.quantity;
-    stockToUpdate.useUpIn = (req.body as StockRequest).useUpIn ? (req.body as StockRequest).useUpIn : stockToUpdate.useUpIn;
+    stockToUpdate.exDate = (req.body as StockRequest).exDate
+      ? new Date((req.body as StockRequest).exDate)
+      : stockToUpdate.exDate;
+
+    stockToUpdate.percentLeft = (req.body as StockRequest).percentLeft
+      ? (req.body as StockRequest).percentLeft
+      : stockToUpdate.percentLeft;
+
+    stockToUpdate.quantity = (req.body as StockRequest).quantity
+      ? (req.body as StockRequest).quantity
+      : stockToUpdate.quantity;
+
+    stockToUpdate.useUpIn = (req.body as StockRequest).useUpIn
+      ? (req.body as StockRequest).useUpIn
+      : stockToUpdate.useUpIn;
 
     try {
       entityManager.save(stockToUpdate);
@@ -141,10 +167,12 @@ export default class StockController {
       return;
     }
 
-    res.status(200).json({stock: stockToUpdate});
+    res.status(200).json(stockToUpdate);
   }
 
   public static async removeStock(req: Request, res: Response): Promise<void> {
+    await AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;
 
@@ -159,6 +187,6 @@ export default class StockController {
       return;
     }
 
-    res.status(200).json({stock: stockToUpdate});
+    res.status(200).json({ removed: stockToUpdate.number });
   }
 }
