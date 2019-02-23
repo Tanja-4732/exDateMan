@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ThingService } from "../../services/thing/thing.service";
 import { Thing } from "../../models/thing/thing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: "app-add-thing",
@@ -12,8 +12,13 @@ export class AddThingComponent implements OnInit {
   thingName: string;
   thingCategory: string;
   inventoryId: number;
+  oof: boolean = false; // Error flag
 
-  constructor(private ts: ThingService, private route: ActivatedRoute) {}
+  constructor(
+    private ts: ThingService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getInventoryId();
@@ -24,12 +29,15 @@ export class AddThingComponent implements OnInit {
     thing.name = this.thingName;
     thing.categories = [];
 
-    this.createThing(thing).then();
+    this.createThing(thing).then(() => {
+      this.router.navigate([".."], { relativeTo: this.route });
+    });
   }
 
   async createThing(thing: Thing): Promise<void> {
     try {
       await this.ts.newThing(thing, this.inventoryId);
+      this.oof = false;
     } catch (err) {
       console.log("oof");
     }

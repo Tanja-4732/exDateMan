@@ -8,14 +8,14 @@
 
 <span *ngIf="!unauthorized">
   <span class="mat-typography" *ngIf="loading">
-    <h2>Loading...</h2>
-    We're getting your inventories... <br>
+    <h2>Loading things...</h2>
+    We're getting the inventory's things... <br>
     Please hang on
   </span>
 
   <span *ngIf="!loading">
 
-    <button mat-raised-button [routerLink]="['../user/bob']" color="accent">Edit inventory</button> &nbsp;
+    <button mat-raised-button routerLink="/inventories/{{inventoryId}}/" color="accent">Edit inventory</button> &nbsp;
     <button mat-raised-button routerLink="../categories" color="primary">Categories</button> &nbsp;
     <br>
     <br>

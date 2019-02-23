@@ -137,10 +137,7 @@ export default class InventoryController {
     }
 
     // Return requested info with 200
-    res.status(200).json({
-      message: "Got inventory",
-      inventory: inventory
-    });
+    res.status(200).json(inventory);
   }
 
   /**
@@ -234,16 +231,21 @@ export default class InventoryController {
       return;
     }
 
-    try {
-      // Read the requested owners userId from the request
-      // and replace it with its corresponding user object
-      req.body.owner = await UserController.getUserByIdOrFail(req.body
-        .owner as number);
-    } catch (error) {
-      res.status(404).json({
-        status: 404,
-        error: "Couldn't find one or more specified users"
-      });
+    if ((req.body as InventoryRequest).owner) {
+      try {
+        // Read the requested owners userId from the request
+        // and replace it with its corresponding user object
+        req.body.owner = await UserController.getUserByIdOrFail(req.body
+          .owner as number);
+      } catch (error) {
+        res.status(404).json({
+          status: 404,
+          error: "Couldn't find one or more specified users"
+        });
+      }
+    } else {
+      // Keep current owner
+      req.body.owner = res.locals.actingUser;
     }
 
     // Try to write changes to the db
@@ -251,13 +253,9 @@ export default class InventoryController {
       (await InventoryController.setInventory(invToEdit, req.body)) as number
     ) {
       case 200:
-        res.status(200).json({
-          message: "Updated inventory",
-          inventory: {
-            id: invToEdit.id,
-            name: invToEdit.name
-          }
-        });
+        delete invToEdit.things;
+        delete invToEdit.inventoryUsers;
+        res.status(200).json(invToEdit);
         break;
       case 400:
         res.status(400).json({
@@ -390,7 +388,6 @@ export default class InventoryController {
     // Validate for unique
     const userSet: Set<number> = new Set<number>([]);
     for (const iu of invUsers as InventoryUser[]) {
-      log("User: " + JSON.stringify(iu.user.id, null, 2));
       if (userSet.has(iu.user.id)) {
         return 400;
       } else {

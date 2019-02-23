@@ -1,6 +1,6 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" cdkFocusRegionStart cdkFocusInitial>
   <mat-label>Thing name</mat-label>
-  <input matInput type="text" placeholder="Tomato" [(ngModel)]="thingName">
+  <input matInput type="text" placeholder="Tomato" [(ngModel)]="thingName" autofocus>
   <i matSuffix class="material-icons">crop_free</i>
   <!-- <mat-hint>Hint</mat-hint> -->
 </mat-form-field>
@@ -11,4 +11,4 @@
   <input matInput type="text" placeholder="Vegetables" [(ngModel)]="thingCategory">
 </mat-form-field>
 <br>
-<button mat-raised-button (click)="onAddThing()" color="accent">Add thing</button>
+<button mat-raised-button (click)="onAddThing()" color="accent" cdkFocusRegionEnd>Add thing</button>

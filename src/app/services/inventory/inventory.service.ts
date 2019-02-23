@@ -71,6 +71,24 @@ export class InventoryService {
 
     return response.inventory;
   }
+
+  async getInventory(inventoryId: number): Promise<Inventory> {
+    return await this.http
+      .get<Inventory>(this.baseUrl + "/inv/" + inventoryId)
+      .toPromise();
+  }
+
+  async updateInventory(inventory: Inventory): Promise<Inventory> {
+    return await this.http.put<Inventory>(
+      this.baseUrl + "/inv/" + inventory.id,
+      {
+        admins: [],
+        readables: [],
+        writeables: [],
+        name: inventory.name
+      } as UpdateInventoryRequest
+    ).toPromise();
+  }
 }
 
 interface GetInventoriesResponse {
@@ -89,4 +107,12 @@ interface NewInventoryRequest {
 interface NewInventoryResponse {
   message: string;
   inventory: Inventory;
+}
+
+interface UpdateInventoryRequest {
+  name: string;
+  owner?: number;
+  admins: number[];
+  writeables: number[];
+  readables: number[];
 }
