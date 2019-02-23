@@ -4,7 +4,8 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  OneToMany
+  OneToMany,
+  JoinColumn
 } from "typeorm";
 import { Category } from "./categoryModel";
 import { Inventory } from "./inventoryModel";
@@ -21,8 +22,13 @@ export class Thing {
   @Column()
   name: string;
 
+  // @Column("integer")
   @ManyToOne(() => Inventory, inventory => inventory.things, {
     primary: true
+  })
+  @JoinColumn({
+    name: "inventory",
+    referencedColumnName: "id"
   })
   inventory: Inventory;
 

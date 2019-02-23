@@ -7,24 +7,25 @@ export class Stock {
   @PrimaryColumn()
   number: number;
 
-  // TODO implement using objects and composite foreign keys
-  // @ManyToOne(() => Thing, thing => thing.stocks, { primary: true })
-  // @JoinColumn([
-  //   {
-  //     name: "thingNo",
-  //     referencedColumnName: "ThingNo"
-  //   },
-  //   {
-  //     name: "inventoryId",
-  //     referencedColumnName: "ThingInventory"
-  //   }
-  // ])
-  // thing: Thing;
-  @PrimaryColumn()
-  thingNo: number;
+  @ManyToOne(type => Inventory, { primary: true })
+  inventory: Inventory;
 
-  @PrimaryColumn()
-  inventoryId: number;
+  // @ManyToOne(type => Thing, { primary: true }) // this was my first attempt
+  // thing: Thing;
+
+  // TODO implement using objects and composite foreign keys
+  @ManyToOne(() => Thing, thing => thing.stocks, { primary: true })
+  @JoinColumn([
+    {
+      name: "inventory",
+      referencedColumnName: "inventory"
+    },
+    {
+      name: "thingNumber",
+      referencedColumnName: "number"
+    }
+  ])
+  thing: Thing;
 
   @Column("date")
   exDate: Date;

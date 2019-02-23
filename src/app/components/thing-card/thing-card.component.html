@@ -1,4 +1,4 @@
-<a routerLink="{{thing.number}}" class="noUnderline">
+<a routerLink="{{thing.number}}/stocks" class="noUnderline">
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{thing.name}}</mat-card-title>
@@ -14,7 +14,7 @@
     </mat-card-header>
 
     <mat-card-content *ngFor="let stock of thing.stocks">
-      {{stock.quantity}} * {{stock.getExDate() | date}}
+      <!-- {{stock.quantity}} * {{stock.getExDate() | date}} -->
     </mat-card-content>
   </mat-card>
 </a>
