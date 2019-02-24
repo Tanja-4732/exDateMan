@@ -63,7 +63,9 @@ export default class StockController {
       stockToAdd.useUpIn = (req.body as StockRequest).useUpIn;
       stockToAdd.thingNumber = (res.locals.thing as Thing).number; // TODO #3
       stockToAdd.inventory = res.locals.inventory as Inventory;
-      stockToAdd.number = await entityManager.query(
+      const numberSuggestion: {
+        THE_NUMBER: number;
+      }[] = await entityManager.query(
         // Get the first gap or 1
         `
         SELECT  "number" + 1 AS "THE_NUMBER"
@@ -88,8 +90,10 @@ export default class StockController {
         [
           (res.locals.inventory as Inventory).id,
           (res.locals.thing as Thing).number
-        ] // TODO TypeError: Cannot read property 'THE_NUMBER' of undefined #12
-      )[0].THE_NUMBER;
+        ]
+      );
+      stockToAdd.number = // Fallback to 1 if no number can be found
+        numberSuggestion.length > 0 ? numberSuggestion[0].THE_NUMBER : 1;
     } catch (error) {
       log("Error in addStock:\n" + error);
       res.status(400).json({
