@@ -26,7 +26,7 @@ export class AddThingComponent implements OnInit {
 
   onAddThing(): void {
     const thing: Thing = new Thing();
-    thing.name = this.thingName;
+    thing.name = this.thingName; // TODO tidy this up
     thing.categories = [];
 
     this.createThing(thing).then(() => {
@@ -39,7 +39,7 @@ export class AddThingComponent implements OnInit {
       await this.ts.newThing(thing, this.inventoryId);
       this.oof = false;
     } catch (err) {
-      console.log("oof");
+      console.log("oof"); // TODO remove log
     }
   }
 

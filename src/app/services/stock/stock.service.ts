@@ -32,6 +32,7 @@ export class StockService {
     inventoryId: number,
     thingNumber: number
   ): Promise<Stock> {
+    console.log(stock);
     return await this.http
       .post<Stock>(
         this.baseUrl +
@@ -39,8 +40,7 @@ export class StockService {
           inventoryId +
           "/things/" +
           thingNumber +
-          "/stocks" +
-          stock.number,
+          "/stocks",
         stock
       )
       .toPromise();

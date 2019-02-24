@@ -57,6 +57,7 @@ export default class StockController {
 
     try {
       stockToAdd.exDate = new Date((req.body as StockRequest).exDate);
+      stockToAdd.exDate.setHours(stockToAdd.exDate.getHours() + 1); // Correct for CET
       stockToAdd.percentLeft = (req.body as StockRequest).percentLeft;
       stockToAdd.quantity = (req.body as StockRequest).quantity;
       stockToAdd.useUpIn = (req.body as StockRequest).useUpIn;
@@ -87,9 +88,10 @@ export default class StockController {
         [
           (res.locals.inventory as Inventory).id,
           (res.locals.thing as Thing).number
-        ]
+        ] // TODO TypeError: Cannot read property 'THE_NUMBER' of undefined #12
       )[0].THE_NUMBER;
     } catch (error) {
+      log("Error in addStock:\n" + error);
       res.status(400).json({
         status: 400,
         error: "Invalid request syntax or parameters"

@@ -1,7 +1,8 @@
-import { THING } from "../../models/thing.model";
-import { STOCK } from "../../models/stock.model";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Stock } from "../../models/stock/stock";
+import { StockService } from "../../services/stock/stock.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-add-stock",
@@ -9,32 +10,59 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./add-stock.component.scss"]
 })
 export class AddStockComponent implements OnInit {
-  constructor(private router: ActivatedRoute) {}
-  stopOperation = false;
-  exDate: Date;
-  useUpIn: number; // Days
-  quantity: string;
-  thingName: string;
+  unauthorized: boolean = false;
+  notFound: boolean = false;
+  loading: boolean = true;
+  oof: boolean = false;
 
-  private thing: THING;
+  inventoryId: number;
+  thingNumber: number;
 
-  onAddStock() {
-    this.thing.addStock(
-      new STOCK(this.thing, this.exDate, this.quantity, this.useUpIn)
-    );
+  stock: Stock = new Stock();
+
+  constructor(
+    private ss: StockService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.getInventoryIdAndThingNumber();
   }
-  ngOnInit() {
-    this.getThing();
+
+  onAddStock(): void {
+    this.createStock(this.stock).then(() => {
+      if (this.oof === false) {
+        this.router.navigate([".."], { relativeTo: this.route });
+      }
+    });
   }
 
-  getThing() {
-    this.thingName = this.router.snapshot.params["thingName"];
+  async createStock(stock: Stock): Promise<void> {
     try {
-      this.thing = THING.getThingByName(this.thingName);
+      this.stock.percentLeft = 100;
+      await this.ss.newStock(stock, this.inventoryId, this.thingNumber);
+      this.oof = false;
     } catch (error) {
-      this.stopOperation = true;
-      // console.error(error);
-      console.log("Error.");
+      this.oof = true;
+      console.log(error); // TODO remove log
+      if (error instanceof HttpErrorResponse) {
+        switch (error.status) {
+          case 401:
+            // Set flag for html change and timeout above
+            this.unauthorized = true;
+            break;
+          case 404:
+            this.notFound = true;
+        }
+      } else {
+        console.log("Unknown error in add-stock while creating");
+      }
     }
+  }
+
+  getInventoryIdAndThingNumber(): void {
+    this.inventoryId = this.route.snapshot.params["inventoryId"];
+    this.thingNumber = this.route.snapshot.params["thingNumber"];
   }
 }

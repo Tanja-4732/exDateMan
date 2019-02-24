@@ -1,41 +1,34 @@
-<div *ngIf="!stopOperation">
-  <!-- <mat-form-field >
-    <input matInput [matDatepicker]="exDatePicker" [(ngModel)]="exDate">
-    <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #exDatePicker></mat-datepicker>
-  </mat-form-field>
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch this inventory, because you aren't authorized. <br>
+  Try logging in again to resolve this. <br>
   <br>
-  <mat-form-field>
-    <input matInput type="text" [(ngModel)]="useUpIn">
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input matInput type="text" [(ngModel)]="quantity">
-  </mat-form-field> -->
+  Redirecting you to the login page in 3 seconds...
+</span>
+
+<span *ngIf="!unauthorized">
   <mat-form-field appearance="outline">
     <mat-label>Expiration date</mat-label>
-    <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="exDate">
+    <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate">
     <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
     <mat-datepicker #exDatePicker></mat-datepicker>
   </mat-form-field>
   <br>
+
   <mat-form-field appearance="outline">
     <mat-label>Use up in # days</mat-label>
-    <input matInput type="number" placeholder="3" [(ngModel)]="useUpIn">
+    <input matInput type="number" placeholder="3" [(ngModel)]="stock.useUpIn">
     <!-- <span matSuffix>&nbsp;days</span> -->
     <i matSuffix class="material-icons">update</i>
   </mat-form-field>
   <br>
+
   <mat-form-field appearance="outline">
     <mat-label>Quantity</mat-label>
-    <input matInput type="text" placeholder="3 kg" [(ngModel)]="quantity">
+    <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity">
     <i matSuffix class="material-icons">equalizer</i>
   </mat-form-field>
   <br>
-  <button mat-raised-button (click)="onAddStock()" color="accent">Add stock</button>
-</div>
 
-<div *ngIf="stopOperation">
-  Oh, no. <br>
-  {{thingName}} couldn't be found.
-</div>
+  <button mat-raised-button (click)="onAddStock()" color="accent">Add stock</button>
+</span>
