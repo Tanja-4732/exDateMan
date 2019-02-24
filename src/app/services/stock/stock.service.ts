@@ -12,6 +12,9 @@ export class StockService {
   constructor(private http: HttpClient) {}
 
   async getStocks(inventoryId: number, thingNumber: number): Promise<Stock[]> {
+    if (inventoryId == null || thingNumber == null) {
+      throw new Error("Arguments invalid");
+    }
     return await this.http
       .get<Stock[]>(
         this.baseUrl +

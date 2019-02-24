@@ -54,7 +54,7 @@ const routes: Routes = [
               { path: "", component: ThingsComponent },
               { path: "new", component: AddThingComponent },
               {
-                path: ":thingNo",
+                path: ":thingNumber",
                 children: [
                   { path: "", component: EditThingComponent },
                   {
@@ -62,7 +62,7 @@ const routes: Routes = [
                     children: [
                       { path: "", component: StocksComponent },
                       { path: "new", component: AddStockComponent },
-                      { path: ":sockNo", component: EditStockComponent }
+                      { path: ":sockNumber", component: EditStockComponent }
                     ]
                   }
                 ]

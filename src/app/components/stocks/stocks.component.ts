@@ -1,5 +1,3 @@
-import { THING } from "../../models/thing.model";
-import { STOCK } from "../../models/stock.model";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";

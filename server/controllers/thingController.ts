@@ -36,13 +36,13 @@ export class ThingController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    const entityManager: EntityManager = getManager();
     try {
-      const entityManager: EntityManager = getManager();
       res.locals.thing = await entityManager.findOneOrFail(Thing, {
-        relations: ["Inventory", "Categories"],
+        relations: ["inventory", "categories"],
         where: {
-          number: req.params.thingNo,
-          inventory: res.locals.inventory
+          number: req.params.thingNo as number,
+          inventory: res.locals.inventory as Inventory
         }
       });
     } catch (err) {

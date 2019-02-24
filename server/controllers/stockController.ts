@@ -78,8 +78,8 @@ export default class StockController {
                   AND mi."thingNumber" = $2
                   AND mo."thingNumber" = $2
                   )
-                  AND mi."inventoryId" = $1
-                  AND mi."thingNumber" = $2
+                  AND mo."inventoryId" = $1
+                  AND mo."thingNumber" = $2
         ORDER BY
                 "number"
         LIMIT 1;
