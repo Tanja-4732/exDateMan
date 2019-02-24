@@ -1,0 +1,108 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="9E61F56D-3383-6796-3525-B58B21FFADCA" name="Category_Thing">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Category_CategoryId" id="D4300468-B73D-D83B-DBDE-61B5E7F40491">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="79881EE7-58D5-F32B-DF88-B5183C9E500C" referredColumn="ED87DCDD-A719-FD4D-EF6F-70D7773327D8"/>
+</associations>
+</Column>
+<Column name="Thing_ThingId" id="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="477AAA3C-0895-75F8-B592-924D34BFB43C" referredColumn="1499398F-A1F2-6DDE-BAA1-A0216C78D99C"/>
+</associations>
+</Column>
+<Column name="Thing_InventoryId" id="2804A7AB-095E-FACD-09ED-DC345E80BB01">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="477AAA3C-0895-75F8-B592-924D34BFB43C" referredColumn="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
+</associations>
+</Column>
+<Column name="Thing_InventoryOwnerUserId" id="47667607-BE37-8A7A-31C3-E3C0286ABEFC">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="477AAA3C-0895-75F8-B592-924D34BFB43C" referredColumn="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="866A8792-D2A8-0821-976C-1BC47884C480" name="Category_Thing_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D4300468-B73D-D83B-DBDE-61B5E7F40491"/>
+<colUsage columnID="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA"/>
+<colUsage columnID="2804A7AB-095E-FACD-09ED-DC345E80BB01"/>
+<colUsage columnID="47667607-BE37-8A7A-31C3-E3C0286ABEFC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4DB0D08E-3E5A-0878-7751-54FBBDD13EB0" name="Category_Thing_Category_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:10 UTC</createdTime>
+<generatorID>144AD847-BC6F-87F5-2361-19CB9A011363</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D4300468-B73D-D83B-DBDE-61B5E7F40491"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="07F48CC6-A5D9-40C0-EF3C-DB722346A885" name="Category_Thing_Thing_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>144AD847-BC6F-87F5-2361-19CB9A011363</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA"/>
+<colUsage columnID="2804A7AB-095E-FACD-09ED-DC345E80BB01"/>
+<colUsage columnID="47667607-BE37-8A7A-31C3-E3C0286ABEFC"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

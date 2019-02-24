@@ -1,0 +1,92 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="2BC20D13-75D9-1351-4C9A-D78C3C439802" name="User">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>F9D43D0D-8A0F-4BDF-A577-64C9201447A6</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="UserId" id="0C77F159-6298-7E02-D789-15E4CF76F042">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>A3DFA491-1A45-4CA3-8D86-2EAA66C90562</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserName" id="02893F8D-08F9-41DE-29D1-E6774E98EB6A">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>21CD9748-E675-5E78-D4BC-39420FC278FF</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserEmail" id="10A197D7-C531-2C07-8B8A-3357DB816BFA">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>70CF7760-E344-97B0-EB1E-AB74B0FC28EC</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserPwdSaltedHash" id="7F6F4DCB-A165-DD93-BA90-D8C1DAD5335A">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>BA6DA559-449D-49BC-A837-0BE387E24193</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserPwdHashSalt" id="08BD508C-58CE-1B3D-735F-117622D1CE31">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>AAC14D36-EAAF-5569-5089-4C33D755F98F</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UserCreatedOn" id="9931309C-2C6F-D8C0-EC17-13B40E20D303">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>4CBDC032-7410-CDFA-E7F0-DECA476F2D12</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="9B9EAD14-5C7D-EA24-C404-5E032DBF1AFE" name="User_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>D81F9403-778D-8FE9-7BA0-4186B6EF0E5D</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0C77F159-6298-7E02-D789-15E4CF76F042"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

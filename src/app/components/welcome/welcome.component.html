@@ -1,0 +1,97 @@
+<div class="mat-typography">
+  <h1>Welcome to ExDateMan!</h1>
+  <p>
+    The easy, intuitive and efficient way to manage shared food inventories
+  </p>
+
+  <h2>Start</h2>
+  <p>Until the navigation overhaul is completed, please use the buttons below to get to your inventories/log
+    in/register.</p>
+  <button mat-raised-button routerLink="/inventories" color="accent">Inventories</button> &nbsp;
+  <button mat-raised-button routerLink="/login" color="primary">Login</button> &nbsp;
+  <button mat-stroked-button routerLink="/register" color="basic">Register</button> &nbsp;
+  <br>
+  <br>
+
+  <h2>Usage</h2>
+  <p>Using ExDateMan is easy. Just follow these steps:</p>
+  <ol>
+    <li>Log in or register</li>
+    <li>Create an inventory or open an existing one.</li>
+    <li>Pick a thing or create a new one</li>
+  </ol>
+
+  <h2>Definitions</h2>
+  <p>ExDateMan uses specific words with closely defined meanings:</p>
+
+  <h3>Inventory</h3>
+  <p>
+    The term Inventory refers to a distinct collection of things which is defined by its unique set of owners.
+    <br>
+    Each inventory has an owner. Other users may also be allowed to view or edit the inventory or its contents,
+    depending on their role in a given inventory.
+  </p>
+
+  <h3>User</h3>
+  <p>Someone who is registered in the ExDateMan service. Each user has:</p>
+  <ul>
+    <li>A user-name (used for easy identification)</li>
+    <li>An email address (used for authentication and identification)</li>
+    <li>A passphrase (stored securely; used for authentication)</li>
+  </ul>
+  <p>
+    Furthermore, each user can have one relation per inventory, which is governed by the users role in said
+    inventory.
+  </p>
+
+  <h3>Role</h3>
+  <p>
+    A role governs a users rights in any given inventory. A user may have one or zero roles per inventory. <br>
+    If a user doesn't have a role in an inventory, the inventory doesn't get displayed to the user.
+  </p>
+
+  <h3>Thing</h3>
+  <p>
+    The term thing refers to something stored in an inventory, though not as a piece.
+  </p>
+
+  <h3>Stock</h3>
+  <p>
+    Every stock is an instance of a thing, and associated with one. One thing can have as many or as little (including
+    0) stocks as needed. <br>
+    Each stock has:
+  </p>
+  <ul>
+    <li>Expiration date</li>
+    <li>Date opened</li>
+    <li>Use up in (days)</li>
+    <li>Quantity</li>
+    <li>Percentage left</li>
+  </ul>
+
+  <h3>Category</h3>
+  <p>
+    Every inventory can have categories. Every category can be the parent of other categories, allowing for the
+    formation of sub- and super-category structures.
+  </p>
+
+  <h2>GitHub repository</h2>
+  <p>
+    This project is open-source, meaning anyone may have a look
+    at the <a href="https://github.com/Bernd-L/ExDateMan"> source code</a> used for both the server and the client.
+  </p>
+
+  <h2>Cookie notice</h2>
+  <p>
+    This service uses cookies to keep users logged in. <br>
+    They are used for authentication purposes (and thus are able to identify a user). <br>
+    They are only used for this purpose, as this service doesn't utilize any tracking techniques.
+  </p>
+
+  <h2>Copyright notice</h2>
+  <p>
+    Copyright 2018-2019 Bernd. <br>
+    All rights reserved.
+  </p>
+
+</div>

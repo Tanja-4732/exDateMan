@@ -1,0 +1,91 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D596ADC3-1504-0459-D282-978E38C14FFE" name="InventoryReadPermittedUser">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="User_UserId" id="B3E6A604-5900-3814-EE0C-7B3E299D125A">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="48481787-1A93-E2D6-661E-7BB96FB752F5" referredColumn="0C77F159-6298-7E02-D789-15E4CF76F042"/>
+</associations>
+</Column>
+<Column name="Inventory_InventoryId" id="475A6C3E-A65E-E885-42C2-41FA6CF72740">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6715D636-5B66-E701-C9C8-745EF7AD7A74" referredColumn="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
+</associations>
+</Column>
+<Column name="Inventory_User_UserId" id="ED2F1296-309E-A5C6-A861-08AAEE094B98">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6715D636-5B66-E701-C9C8-745EF7AD7A74" referredColumn="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EEDDEE26-6CCC-A3DA-7CAD-36D65629681A" name="InventoryReadPermittedUser_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3E6A604-5900-3814-EE0C-7B3E299D125A"/>
+<colUsage columnID="475A6C3E-A65E-E885-42C2-41FA6CF72740"/>
+<colUsage columnID="ED2F1296-309E-A5C6-A861-08AAEE094B98"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5E769B82-B7C8-9A8E-BAC7-9670E2D306ED" name="InventoryReadPermittedUser_User_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>5E1F2D3F-574B-AD4F-D675-9C0203622F2C</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B3E6A604-5900-3814-EE0C-7B3E299D125A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C29DFD00-0FF0-1B11-D57E-0C59B59119AF" name="InventoryReadPermittedUser_Inventory_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>5E1F2D3F-574B-AD4F-D675-9C0203622F2C</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="475A6C3E-A65E-E885-42C2-41FA6CF72740"/>
+<colUsage columnID="ED2F1296-309E-A5C6-A861-08AAEE094B98"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -4,11 +4,13 @@ import { Observable } from "rxjs";
 // import { map } from "lodash";
 import { THING } from "src/app/models/thing.model";
 
+// TODO delete this file when ready
+
 @Injectable({
   providedIn: "root"
 })
 export class RestService {
-  private token: String = "hdjeHIn53I87€qQ@fm";
+  private token: String = "hdjeHIn53I87€qQ@fm"; // This never got used
   constructor(private http: HttpClient) {}
 
   endpoint: String = "http://localhost:420/api/v1/";

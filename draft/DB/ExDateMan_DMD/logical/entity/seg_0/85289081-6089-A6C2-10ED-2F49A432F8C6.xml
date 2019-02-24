@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="85289081-6089-A6C2-10ED-2F49A432F8C6" name="Thing">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 12:36:27 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ThingId" id="35540F58-0E1D-F28F-E086-032D4F5FB221">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 12:42:38 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ThingNo" id="F8494C40-E8DA-7888-295B-315C289C4AD8">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-14 07:02:53 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ThingName" id="0DFABFB0-DC35-BA58-086B-AFD360A6731E">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 12:47:08 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="InventoryId" id="CCDC17E3-0525-5D3D-E218-268AF5053926">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:15:51 UTC</createdTime>
+<generatorID>2467F7E4-79EC-9421-A656-949A496662F3</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<referedAttribute>89DDD5A0-7850-3CB8-3FDC-3460D62F2714</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="B61E7CA9-A82F-2183-CD81-A2294D414777" name="Thing PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 12:47:02 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>35540F58-0E1D-F28F-E086-032D4F5FB221</attributeRef>
+<attributeRef>CCDC17E3-0525-5D3D-E218-268AF5053926</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

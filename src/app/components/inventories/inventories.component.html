@@ -1,0 +1,36 @@
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch your inventories, because you aren't authorized. <br>
+  Try logging in again to resolve this. <br>
+  <br>
+  Redirecting you to the login page in 3 seconds...
+</span>
+
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading">
+    <h2>Loading inventories...</h2>
+    We're getting your inventories... <br>
+    Please hang on
+  </span>
+
+  <span *ngIf="!loading">
+    <span *ngIf="inventories.length === 0" class="mat-typography">
+      <h2>
+        No inventories found.
+      </h2>
+      Add inventories by hitting the plus button.
+    </span>
+
+    <div class="grid">
+      <div *ngFor="let inventory of inventories">
+        <app-inventory-card [inventory]="inventory"></app-inventory-card>
+      </div>
+    </div>
+  </span>
+
+  <a routerLink="new" *ngIf="!loading">
+    <button mat-fab class="fab" (click)="onAddInventory()">
+      <i class="material-icons">add</i>
+    </button>
+  </a>
+</span>

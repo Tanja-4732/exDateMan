@@ -13,8 +13,7 @@ routes.use("/api/", apiRoutes);
 routes.use((req: Request, res: Response, next: NextFunction) => {
   // res.redirect("/");
   // log("Triggered fallback");
-  log(  req.originalUrl);
-  log("serve main page");
+  // log(  req.originalUrl);
   res
       .status(200)
       .sendFile(
@@ -22,7 +21,6 @@ routes.use((req: Request, res: Response, next: NextFunction) => {
         {root: process.env.EDM_ROOT_PATH}
       );
 
-  // next();
 });
 
 export default routes;

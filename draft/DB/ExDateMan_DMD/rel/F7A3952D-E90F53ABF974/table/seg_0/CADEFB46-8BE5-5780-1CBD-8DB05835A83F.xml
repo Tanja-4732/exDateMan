@@ -1,0 +1,48 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CADEFB46-8BE5-5780-1CBD-8DB05835A83F" name="Category">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:02 UTC</createdTime>
+<generatorID>5D97177B-F3CA-49BC-0A92-82A4961BE9D6</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CategoryId" id="ED87DCDD-A719-FD4D-EF6F-70D7773327D8">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:04 UTC</createdTime>
+<generatorID>F7AC200A-778D-68A4-1D2B-F2278E1F1D2D</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CategoryName" id="012D9A35-9E43-99EE-B5C5-BF7A36D65468">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:05 UTC</createdTime>
+<generatorID>F77C5553-7B91-6427-4DE6-145C1BA9FFEE</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="6126B2EE-3833-D060-FFF3-92A2B5BB3657" name="Category_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:05 UTC</createdTime>
+<generatorID>5EEFB281-F2DD-EBD1-EC46-EFCA6F267540</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="ED87DCDD-A719-FD4D-EF6F-70D7773327D8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

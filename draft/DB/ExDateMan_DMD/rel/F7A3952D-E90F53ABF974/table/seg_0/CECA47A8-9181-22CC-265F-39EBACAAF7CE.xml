@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="CECA47A8-9181-22CC-265F-39EBACAAF7CE" name="Thing">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>85289081-6089-A6C2-10ED-2F49A432F8C6</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ThingId" id="1499398F-A1F2-6DDE-BAA1-A0216C78D99C">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>35540F58-0E1D-F28F-E086-032D4F5FB221</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ThingName" id="2928D74E-896C-8C98-915D-343F1176FE2D">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>0DFABFB0-DC35-BA58-086B-AFD360A6731E</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT040</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Inventory_InventoryId" id="320C6566-FD4B-DD52-7811-A6458C3C67F2">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>CCDC17E3-0525-5D3D-E218-268AF5053926</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C01E3AD9-BF22-4462-48C4-AD760DACF376" referredColumn="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
+</associations>
+</Column>
+<Column name="Inventory_User_UserId" id="A9616D43-502F-29FB-E059-F07345FB6B02">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>D30F4398-5EB5-95E0-9503-B70FD1F9E593</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C01E3AD9-BF22-4462-48C4-AD760DACF376" referredColumn="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
+</associations>
+</Column>
+<Column name="ThingNo" id="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-14 07:03:37 UTC</createdTime>
+<generatorID>F8494C40-E8DA-7888-295B-315C289C4AD8</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="B30AF61D-815D-4C6B-5A1D-F56FC3A619B4" name="Thing_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:09 UTC</createdTime>
+<generatorID>B61E7CA9-A82F-2183-CD81-A2294D414777</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1499398F-A1F2-6DDE-BAA1-A0216C78D99C"/>
+<colUsage columnID="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
+<colUsage columnID="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CCDCCD62-C69B-A3E7-9656-742B890EEC51" name="Thing_Inventory_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-01-13 20:39:11 UTC</createdTime>
+<generatorID>2467F7E4-79EC-9421-A656-949A496662F3</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
+<colUsage columnID="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

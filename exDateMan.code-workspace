@@ -3,5 +3,16 @@
     {
       "path": "."
     }
-  ]
+  ],
+  "settings": {
+    "cSpell.words": [
+      "Bernd's",
+      "SERIALIZABLE",
+      "hasher",
+      "postgres",
+      "readables",
+      "typeorm",
+      "writeables"
+    ]
+  }
 }

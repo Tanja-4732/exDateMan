@@ -37,3 +37,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Avoid client-side configuration files...
+/src/environments/*
+
+# ...except for the default one and the example one
+!/src/environments/environment.ts
+!/src/environments/environment.example.ts

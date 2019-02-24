@@ -1,5 +1,7 @@
 import { THING } from "./thing.model";
 
+// TODO delete this file when ready
+
 export class STOCK {
   static readonly dayInMs = 86400000;
 

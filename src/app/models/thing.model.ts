@@ -1,6 +1,8 @@
 import { RestService } from './../services/Rest/rest.service';
 import { STOCK } from "./stock.model";
 
+// TODO delete this file when ready
+
 export class THING {
   static things: THING[] = [];
   stocks: STOCK[] = [];
