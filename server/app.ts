@@ -16,9 +16,14 @@ class App {
   constructor() {
     this.app = express();
 
-    this.dbSetup(1, 1);
-    // this.mongoSetup();
-    this.serverConfig();
+      this.dbSetup(1, 1).then((success: boolean) => {
+        if (!success) {
+          log("LETHAL ERROR - Couldn't establish database connection. Shutting down.");
+          process.exit(1);
+        }
+        this.serverConfig();
+      });
+
   }
 
   private serverConfig(): void {
@@ -43,25 +48,33 @@ class App {
     this.app.use(routes);
   }
 
-  private dbSetup(count: number, attempts: number): void {
-    createConnection({
-      type: "postgres",
-      host: process.env.EDM_HOST,
-      port: parseInt(process.env.EDM_PORT, 10),
-      username: process.env.EDM_USER,
-      password: process.env.EDM_PWD,
-      database: process.env.EDM_DB,
-      ssl: true,
-      entities: [__dirname + "/models/*"],
-      synchronize: process.env.EDM_MODE !== "production" || true,
-      logging: ["error", "warn"]
-      // logging: true
-    })
-      .then((connection: Connection) => {
-        log("Connected to DB");
-        return connection;
-      })
-      .catch((error: Error) => {
+  /**
+   * Set up the db connection
+   *
+   * @private
+   * @param {number} count
+   * @param {number} attempts
+   * @returns {boolean} True on success, false on error
+   * @memberof App
+   */
+  private async dbSetup(count: number, attempts: number): Promise<boolean> {
+    try {
+      await createConnection({
+        type: "postgres",
+        host: process.env.EDM_HOST,
+        port: parseInt(process.env.EDM_PORT, 10),
+        username: process.env.EDM_USER,
+        password: process.env.EDM_PWD,
+        database: process.env.EDM_DB,
+        ssl: true,
+        entities: [__dirname + "/models/*"],
+        synchronize: process.env.EDM_MODE !== "production" || true,
+        logging: ["error", "warn"]
+        // logging: true
+      });
+          log("Connected to DB");
+          return true; // Success
+    } catch (err) {
         if (count < attempts) {
           log(
             "DB connection failed " +
@@ -76,9 +89,9 @@ class App {
               count +
               (count === 1 ? " time. Giving up." : " times. Giving up.")
           );
-          throw error;
+          return false; // Failure
         }
-      });
+    }
   }
 
   // private mongoSetup(): void {
