@@ -38,6 +38,7 @@ export default class AuthController {
       user: actingUser
     });
   }
+
   /**
    * Checks if a user is allowed to do something in a given inventory
    *
@@ -179,8 +180,12 @@ export default class AuthController {
     }
 
     // Credential validation, return 401 on invalid credentials
-    log(compareSync(password, actingUser.saltedPwdHash) + "");
-    // TODO Implement PWD check
+    if (!compareSync(password, actingUser.saltedPwdHash)) {
+      res.status(401).json({
+        error: "Invalid credentials"
+      });
+      return;
+    }
 
     let jwtBearerToken: string;
     try {
