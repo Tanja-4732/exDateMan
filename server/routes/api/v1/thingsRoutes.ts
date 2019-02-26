@@ -1,7 +1,7 @@
 import { Request, Response, Router, NextFunction } from "express";
 import { log } from "util";
 
-import stocksRoutes from "./stocksRouter";
+import stocksRoutes from "./stocksRoutes";
 import { ThingController } from "../../../controllers/thingController";
 
 const thingsRoutes: Router = Router();

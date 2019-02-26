@@ -71,7 +71,7 @@ class App {
         entities: [__dirname + "/models/*"],
         synchronize: process.env.EDM_MODE !== "production" || true,
         logging: process.env.EDM_LOG_DB === "3" ? true : ["error", "warn"],
-        schema: process.env.EDM_SCHEMA || "public"
+        schema: process.env.EDM_SCHEMA || "edm_dev"
       } as ConnectionOptions);
       log("Connected to DB");
       return true; // Success
