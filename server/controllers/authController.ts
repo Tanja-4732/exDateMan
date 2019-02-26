@@ -113,7 +113,6 @@ export default class AuthController {
         // Add the user to the db
         try {
           newUser.saltedPwdHash = hashValue;
-          log(JSON.stringify(newUser, null , 2));
           await UserController.addNewUserOrFail(newUser);
         } catch (error) {
           res.status(400).json({
