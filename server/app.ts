@@ -2,7 +2,7 @@ import * as cors from "cors";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
-import { createConnection, Connection } from "typeorm";
+import { createConnection, Connection, ConnectionOptions } from "typeorm";
 import { join } from "path";
 import { log } from "util";
 
@@ -16,14 +16,15 @@ class App {
   constructor() {
     this.app = express();
 
-      this.dbSetup(1, 1).then((success: boolean) => {
-        if (!success) {
-          log("LETHAL ERROR - Couldn't establish database connection. Shutting down.");
-          process.exit(1);
-        }
-        this.serverConfig();
-      });
-
+    this.dbSetup(1, 1).then((success: boolean) => {
+      if (!success) {
+        log(
+          "LETHAL ERROR - Couldn't establish database connection. Shutting down."
+        );
+        process.exit(1);
+      }
+      this.serverConfig();
+    });
   }
 
   private serverConfig(): void {
@@ -69,28 +70,28 @@ class App {
         ssl: true,
         entities: [__dirname + "/models/*"],
         synchronize: process.env.EDM_MODE !== "production" || true,
-        logging: ["error", "warn"]
-        // logging: true
-      });
-          log("Connected to DB");
-          return true; // Success
+        logging: process.env.EDM_LOG_DB === "3" ? true : ["error", "warn"],
+        schema: process.env.EDM_SCHEMA || "public"
+      } as ConnectionOptions);
+      log("Connected to DB");
+      return true; // Success
     } catch (err) {
-        if (count < attempts) {
-          log(
-            "DB connection failed " +
-              count +
-              (count === 1 ? " time. Retrying..." : " times. Retrying...")
-          );
-          count++;
-          this.dbSetup(count, attempts);
-        } else {
-          log(
-            "DB connection failed " +
-              count +
-              (count === 1 ? " time. Giving up." : " times. Giving up.")
-          );
-          return false; // Failure
-        }
+      if (count < attempts) {
+        log(
+          "DB connection failed " +
+            count +
+            (count === 1 ? " time. Retrying..." : " times. Retrying...")
+        );
+        count++;
+        this.dbSetup(count, attempts);
+      } else {
+        log(
+          "DB connection failed " +
+            count +
+            (count === 1 ? " time. Giving up." : " times. Giving up.")
+        );
+        return false; // Failure
+      }
     }
   }
 
