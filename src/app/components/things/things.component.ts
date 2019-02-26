@@ -12,10 +12,13 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./things.component.scss"]
 })
 export class ThingsComponent implements OnInit {
+  unauthorized: boolean = false;
+  notFound: boolean = false;
+  loading: boolean = true;
+  oof: boolean = false;
+
   things: Thing[] = [];
   inventoryId: number;
-  unauthorized: boolean = false;
-  loading: boolean = true;
 
   constructor(
     private ts: ThingService,
@@ -38,13 +41,18 @@ export class ThingsComponent implements OnInit {
       this.things = await this.ts.getThings(this.inventoryId);
       this.loading = false;
     } catch (error) {
+      this.oof = true;
       if (error instanceof HttpErrorResponse) {
-        if (error.status === 401) {
-          // Set flag for html change and timeout above
-          this.unauthorized = true;
-        } else {
-          console.log("Unknown error in inventories while fetching");
+        switch (error.status) {
+          case 401:
+            // Set flag for html change and timeout above
+            this.unauthorized = true;
+            break;
+          case 404:
+            this.notFound = true;
         }
+      } else {
+        console.log("Unknown error in add-stock while creating");
       }
     }
   }

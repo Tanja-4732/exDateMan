@@ -1,41 +1,55 @@
-<div *ngIf="!stopOperation">
-  <mat-form-field appearance="outline">
-      <mat-label>Expiration date</mat-label>
-    <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="exDate">
-    <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #exDatePicker></mat-datepicker>
-  </mat-form-field>
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch your stock, because you aren't authorized. <br>
+  Try logging in again to resolve this. <br>
   <br>
-  <mat-form-field appearance="outline">
-    <mat-label>Use up in # days</mat-label>
-    <input matInput type="text" placeholder="3" [(ngModel)]="useUpIn">
-  <i matSuffix class="material-icons">update</i>
-  </mat-form-field>
-  <br>
-  <mat-form-field appearance="outline">
-    <mat-label>Quantity</mat-label>
-    <input matInput type="text" placeholder="3 kg" [(ngModel)]="quantity">
-    <i matSuffix class="material-icons">equalizer</i>
-  </mat-form-field>
-  <br>
-  <mat-form-field appearance="outline">
-    <mat-label>Percent left</mat-label>
-    <input matInput type="text" placeholder="50%" [(ngModel)]="percentLeft">
-    <i matSuffix class="material-icons">pie_chart</i>
-  </mat-form-field>
-  <br>
-  Or use the slider:
-  <mat-slider min="0" max="100" step="1" [(value)]="percentLeft"></mat-slider>
-  <br>
-  <br>
-  <button mat-raised-button (click)="onEditStock()" color="accent">Edit stock</button>
-</div>
+  Redirecting you to the login page in 3 seconds...
+</span>
 
-<div *ngIf="stopOperation" class="mat-typography">
-  <h2>
-    Oh, no.
-  </h2>
-  <h3>
-    The thing {{thingName}} could not be found.
-  </h3>
-</div>
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading && (!notFound)">
+    <h2>Loading stock...</h2>
+    We're getting the inventory's thing's stock... <br>
+    We'll be done shortly.
+  </span>
+
+  <span *ngIf="!loading && !notFound">
+    <mat-form-field appearance="outline">
+      <mat-label>Expiration date</mat-label>
+      <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate">
+      <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #exDatePicker></mat-datepicker>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Use up in # days</mat-label>
+      <input matInput type="text" placeholder="3" [(ngModel)]="stock.useUpIn">
+      <i matSuffix class="material-icons">update</i>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity">
+      <i matSuffix class="material-icons">equalizer</i>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Percent left</mat-label>
+      <input matInput type="text" placeholder="50%" [(ngModel)]="stock.percentLeft">
+      <i matSuffix class="material-icons">pie_chart</i>
+    </mat-form-field>
+    <br>
+    Or use the slider:
+    <mat-slider min="0" max="100" step="1" [(value)]="stock.percentLeft"></mat-slider>
+    <br>
+    <br>
+    <button mat-raised-button (click)="onEditStock()" color="accent">Edit stock</button>
+  </span>
+
+  <div *ngIf="notFound" class="mat-typography">
+    <h2>
+      Oh, no.
+    </h2>
+    We couldn't find the data you requested.
+  </div>
+</span>

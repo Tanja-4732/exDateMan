@@ -57,8 +57,6 @@ export class InventoryService {
       }
     }
 
-    console.log("Survived");
-
     // Request & Response
     const response: NewInventoryResponse = await this.http
       .post<NewInventoryResponse>(this.baseUrl + "/inv", {
@@ -79,15 +77,14 @@ export class InventoryService {
   }
 
   async updateInventory(inventory: Inventory): Promise<Inventory> {
-    return await this.http.put<Inventory>(
-      this.baseUrl + "/inv/" + inventory.id,
-      {
+    return await this.http
+      .put<Inventory>(this.baseUrl + "/inv/" + inventory.id, {
         admins: [],
         readables: [],
         writeables: [],
         name: inventory.name
-      } as UpdateInventoryRequest
-    ).toPromise();
+      } as UpdateInventoryRequest)
+      .toPromise();
   }
 }
 
