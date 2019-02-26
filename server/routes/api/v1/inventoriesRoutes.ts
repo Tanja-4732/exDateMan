@@ -1,5 +1,5 @@
 import { Router } from "express";
-import thingsRoutes from "./thingsRouter";
+import thingsRoutes from "./thingsRoutes";
 import categoriesRoutes from "./categoriesRoutes";
 import InventoryController from "../../../controllers/inventoryController";
 
