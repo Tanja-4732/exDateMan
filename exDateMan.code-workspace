@@ -13,6 +13,7 @@
       "readables",
       "typeorm",
       "writeables"
-    ]
+    ],
+    "typescript.tsdk": "node_modules\\typescript\\lib"
   }
 }

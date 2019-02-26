@@ -32,6 +32,14 @@ export class AuthService {
       .toPromise();
     return user;
   }
+
+  async register(email: string, pwd: string, name: string): Promise<RegisterResponse> {
+
+    const req: RegisterRequest = ({ email, pwd, name } as RegisterRequest);
+    console.log(req);
+    return await this.http.post<RegisterResponse>(this.baseUrl + "/auth/register",
+    req).toPromise();
+  }
 }
 
 /**
@@ -40,7 +48,19 @@ export class AuthService {
  * @export
  * @interface LoginResponse
  */
-export interface LoginResponse {
+export interface LoginResponse { // TODO redo
   status: number;
   user: string; // The username
+}
+
+interface RegisterRequest {
+  email: string;
+  pwd: string;
+  name: string;
+}
+
+interface RegisterResponse {
+  status: number;
+  message: string;
+  email: string;
 }
