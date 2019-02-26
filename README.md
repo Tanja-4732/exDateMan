@@ -32,7 +32,7 @@ Using a centralized approach, all authorized users (eg. your flatmates) can work
 - Get warned when something is about to expire (wip)
 - Added-on dates
 - Calculates real expiry date when a use-up-in-n-days-after-opening value is set
-- The db schema to be used can be overwritten using the `EDM_SCHEMA` environment variable (defaults to `public`).
+- The db schema to be used can be overwritten using the `EDM_SCHEMA` environment variable (defaults to `edm_dev`). (make sure to set up the schema first, and synchronize it using typeorm (even for production, but then only once))
 
 ## Technologies used
 
