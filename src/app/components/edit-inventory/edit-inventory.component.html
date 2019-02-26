@@ -8,7 +8,7 @@
 
 <span *ngIf="!unauthorized">
 
-  <span class="mat-typography" *ngIf="loading">
+  <span class="mat-typography" *ngIf="loading && (!notFound)">
     <h2>Loading thing...</h2>
     We're getting your thing... <br>
     Please hang on

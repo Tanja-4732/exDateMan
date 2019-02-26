@@ -45,7 +45,6 @@ export class AddStockComponent implements OnInit {
       this.oof = false;
     } catch (error) {
       this.oof = true;
-      console.log(error); // TODO remove log
       if (error instanceof HttpErrorResponse) {
         switch (error.status) {
           case 401:

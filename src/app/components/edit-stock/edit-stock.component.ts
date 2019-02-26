@@ -1,7 +1,8 @@
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
-import { THING } from "../../models/thing.model";
-import { STOCK } from "../../models/stock.model";
+import { Stock } from "../../models/stock/stock";
+import { StockService } from "../../services/stock/stock.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-edit-stock",
@@ -9,47 +10,89 @@ import { STOCK } from "../../models/stock.model";
   styleUrls: ["./edit-stock.component.scss"]
 })
 export class EditStockComponent implements OnInit {
-  stopOperation = false;
+  unauthorized: boolean = false;
+  notFound: boolean = false;
+  loading: boolean = true;
+  oof: boolean = false;
 
-  thing: THING;
-  stock: STOCK;
+  inventoryId: number;
+  thingNumber: number;
+  stockNumber: number;
 
-  thingName: string;
-  stockId: number;
+  stock: Stock;
 
-  exDate: Date;
-  useUpIn: number; // Days
-  quantity: string;
-  percentLeft: number;
+  constructor(
+    private ss: StockService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
-  constructor(private router: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.getStock();
+  ngOnInit(): void {
+    this.getInventoryIdAndThingNumber();
+    this.getStock().then();
+    setTimeout(() => {
+      if (this.unauthorized) {
+        this.router.navigate(["/login"]);
+      }
+    }, 3000);
   }
 
-  getStock() {
-    this.thingName = this.router.snapshot.params["thingName"];
-    this.stockId = this.router.snapshot.params["stockId"];
+  onEditStock(): void {
+    this.editStock().then(() => {
+      if (this.oof === false) {
+        this.router.navigate([".."], { relativeTo: this.route });
+      }
+    });
+  }
 
+  async editStock(): Promise<void> {
     try {
-      this.thing = THING.getThingByName(this.thingName);
-      this.stock = this.thing.getStockById(this.stockId);
-      this.exDate = this.stock.exDate;
-      this.useUpIn = this.stock.useUpIn;
-      this.quantity = this.stock.quantity;
-      this.percentLeft = this.stock._percentLeft;
+      await this.ss.updateStock(this.stock, this.inventoryId, this.thingNumber);
+      this.oof = false;
     } catch (error) {
-      this.stopOperation = true;
-      // console.error(error);
-      console.log("Error.");
+      this.oof = true;
+      if (error instanceof HttpErrorResponse) {
+        switch (error.status) {
+          case 401:
+            // Set flag for html change and timeout above
+            this.unauthorized = true;
+            break;
+          case 404:
+            this.notFound = true;
+        }
+      } else {
+        console.log("Unknown error in add-stock while creating");
+      }
     }
   }
 
-  onEditStock() {
-    this.stock.exDate = this.exDate;
-    this.stock.useUpIn = this.useUpIn;
-    this.stock.quantity = this.quantity;
-    this.stock.percentLeft = this.percentLeft;
+  getInventoryIdAndThingNumber(): void {
+    this.inventoryId = this.route.snapshot.params["inventoryId"];
+    this.thingNumber = this.route.snapshot.params["thingNumber"];
+    this.stockNumber = this.route.snapshot.params["stockNumber"];
+  }
+
+  async getStock(): Promise<void> {
+    try {
+      this.stock = await this.ss.getStock(
+        this.inventoryId,
+        this.thingNumber,
+        this.stockNumber
+      );
+    } catch (error) {
+      this.oof = true;
+      if (error instanceof HttpErrorResponse) {
+        switch (error.status) {
+          case 401:
+            // Set flag for html change and timeout above
+            this.unauthorized = true;
+            break;
+          case 404:
+            this.notFound = true;
+        }
+      } else {
+        console.log("Unknown error in stock while getting stock");
+      }
+    }
   }
 }

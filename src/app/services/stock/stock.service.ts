@@ -11,6 +11,22 @@ export class StockService {
 
   constructor(private http: HttpClient) {}
 
+  async getStock(
+    inventoryId: number,
+    thingNumber: number,
+    stockNumber: number
+  ): Promise<Stock> {
+    return await this.http.get<Stock>(
+      this.baseUrl +
+        "/inv/" +
+        inventoryId +
+        "/things/" +
+        thingNumber +
+        "/stocks/" +
+        stockNumber
+    ).toPromise();
+  }
+
   async getStocks(inventoryId: number, thingNumber: number): Promise<Stock[]> {
     if (inventoryId == null || thingNumber == null) {
       throw new Error("Arguments invalid");
@@ -32,7 +48,6 @@ export class StockService {
     inventoryId: number,
     thingNumber: number
   ): Promise<Stock> {
-    console.log(stock);
     return await this.http
       .post<Stock>(
         this.baseUrl +
@@ -41,6 +56,25 @@ export class StockService {
           "/things/" +
           thingNumber +
           "/stocks",
+        stock
+      )
+      .toPromise();
+  }
+
+  async updateStock(
+    stock: Stock,
+    inventoryId: number,
+    thingNumber: number
+  ): Promise<Stock> {
+    return await this.http
+      .put<Stock>(
+        this.baseUrl +
+          "/inv/" +
+          inventoryId +
+          "/things/" +
+          thingNumber +
+          "/stocks/" +
+          stock.number,
         stock
       )
       .toPromise();

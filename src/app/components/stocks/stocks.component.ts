@@ -12,6 +12,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 export class StocksComponent implements OnInit {
   oof: boolean = false;
   unauthorized: boolean = false;
+  notFound: boolean = false;
   loading: boolean = true;
 
   inventoryId: number;
@@ -40,13 +41,18 @@ export class StocksComponent implements OnInit {
       this.stocks = await this.ss.getStocks(this.inventoryId, this.thingNumber);
       this.loading = false;
     } catch (error) {
+      this.oof = true;
       if (error instanceof HttpErrorResponse) {
-        if (error.status === 401) {
-          // Set flag for html change and timeout above
-          this.unauthorized = true;
-        } else {
-          console.log("Unknown error in stocks while fetching");
+        switch (error.status) {
+          case 401:
+            // Set flag for html change and timeout above
+            this.unauthorized = true;
+            break;
+          case 404:
+            this.notFound = true;
         }
+      } else {
+        console.log("Unknown error in add-stock while creating");
       }
     }
   }
