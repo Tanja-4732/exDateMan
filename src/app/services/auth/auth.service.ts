@@ -34,8 +34,11 @@ export class AuthService {
   }
 
   async register(email: string, pwd: string, name: string): Promise<RegisterResponse> {
+
+    const req: RegisterRequest = ({ email, pwd, name } as RegisterRequest);
+    console.log(req);
     return await this.http.post<RegisterResponse>(this.baseUrl + "/auth/register",
-    { email, pwd, name } as RegisterRequest).toPromise();
+    req).toPromise();
   }
 }
 

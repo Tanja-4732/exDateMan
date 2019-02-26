@@ -15,8 +15,11 @@ export class RegisterComponent implements OnInit {
   repeat_password: string;
   name: string;
 
-
-  constructor(private as: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private as: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.email = this.route.snapshot.params["email"];
   }
 
@@ -24,9 +27,9 @@ export class RegisterComponent implements OnInit {
 
   onRegister(): void {
     this.register().then(() => {
-     if(!this.oof) {
+      if (!this.oof) {
         this.router.navigate(["/login"], { relativeTo: this.route });
-     }
+      }
     });
   }
 
