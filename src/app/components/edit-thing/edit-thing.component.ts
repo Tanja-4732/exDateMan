@@ -54,7 +54,6 @@ export class EditThingComponent implements OnInit {
     try {
       this.thing = await this.ts.getThing(this.inventoryId, this.thingNumber);
       this.loading = false;
-    console.log(this. thing);
     } catch (error) {
       this.oof = true;
       if (error instanceof HttpErrorResponse) {
@@ -75,7 +74,7 @@ export class EditThingComponent implements OnInit {
   onEditThing(): void {
     this.editThing().then(() => {
       if (this.oof === false) {
-        this.router.navigate([".."], { relativeTo: this.route });
+        this.router.navigate(["stocks"], { relativeTo: this.route });
       }
     });
   }
