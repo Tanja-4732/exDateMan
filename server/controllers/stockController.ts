@@ -81,8 +81,8 @@ export default class StockController {
                   AND mi."thingNumber" = $2
                   AND mo."thingNumber" = $2
                   )
-                  AND mo."inventoryId" = $1
-                  AND mo."thingNumber" = $2
+                AND mo."inventoryId" = $1
+                AND mo."thingNumber" = $2
         ORDER BY
                 "number"
         LIMIT 1;
@@ -94,6 +94,9 @@ export default class StockController {
       );
       stockToAdd.number = // Fallback to 1 if no number can be found
         numberSuggestion.length > 0 ? numberSuggestion[0].THE_NUMBER : 1;
+      log("The number picked for your stock is " + stockToAdd.number);
+      log("The length is: " + numberSuggestion.length);
+      log("The contents:\n" + JSON.stringify(numberSuggestion, null, 2));
     } catch (error) {
       log("Error in addStock:\n" + error);
       res.status(400).json({

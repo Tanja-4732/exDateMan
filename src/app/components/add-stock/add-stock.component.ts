@@ -12,7 +12,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 export class AddStockComponent implements OnInit {
   unauthorized: boolean = false;
   notFound: boolean = false;
-  loading: boolean = true;
   oof: boolean = false;
 
   inventoryId: number;
