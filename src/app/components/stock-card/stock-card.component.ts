@@ -1,7 +1,6 @@
-import { THING } from "../../models/thing.model";
-import { STOCK } from "../../models/stock.model";
 import { Input } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
+import { Stock } from "../../models/stock/stock";
 
 @Component({
   selector: "app-stock-card",
@@ -9,12 +8,15 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./stock-card.component.scss"]
 })
 export class StockCardComponent implements OnInit {
-  constructor() {}
-  thing: THING;
   @Input()
-  stock: STOCK;
+  stock: Stock;
 
-  ngOnInit() {
-    this.thing = this.stock.thing;
+  constructor() {}
+
+  ngOnInit(): void {
+    console.log("Stock be like:");
+    console.log(this.stock);
   }
+
+
 }
