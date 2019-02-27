@@ -37,7 +37,7 @@ export class Stock {
   @Column()
   quantity: string;
 
-  @Column()
+  @Column({ nullable: true })
   useUpIn: number;
 
   @Column({ default: 100.0 })
