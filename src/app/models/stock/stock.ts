@@ -6,7 +6,8 @@ export class Stock {
   percentLeft: number;
   openedOn: Date;
 
-  getExDate(): Date {
+  get calculatedExDate(): Date {
+    return new Date();
     if (this.useUpIn != null && this.openedOn) {
       return new Date().setDate(this.openedOn.getDate() + this.useUpIn) as unknown as Date;
     } else {

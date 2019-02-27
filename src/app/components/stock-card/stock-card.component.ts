@@ -11,11 +11,17 @@ export class StockCardComponent implements OnInit {
   @Input()
   stock: Stock;
 
+  ced: Date ;
+
   constructor() {}
 
   ngOnInit(): void {
     console.log("Stock be like:");
     console.log(this.stock);
+    this.ced = this.stock.calculatedExDate;
+    this.ced = new Date();
+    console.log(this.ced);
+
   }
 
 
