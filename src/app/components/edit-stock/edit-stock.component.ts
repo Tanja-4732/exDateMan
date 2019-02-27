@@ -79,6 +79,7 @@ export class EditStockComponent implements OnInit {
         this.thingNumber,
         this.stockNumber
       );
+      this.loading = false;
     } catch (error) {
       this.oof = true;
       if (error instanceof HttpErrorResponse) {
