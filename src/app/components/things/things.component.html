@@ -7,13 +7,13 @@
 </span>
 
 <span *ngIf="!unauthorized">
-  <span class="mat-typography" *ngIf="loading">
+  <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading things...</h2>
     We're getting the inventory's things... <br>
     Please hang on
   </span>
 
-  <span *ngIf="!loading">
+  <span *ngIf="!loading && !notFound">
 
     <button mat-raised-button routerLink="/inventories/{{inventoryId}}/" color="accent">Edit inventory</button> &nbsp;
     <button mat-raised-button routerLink="../categories" color="primary">Categories</button> &nbsp;
@@ -36,4 +36,11 @@
       </button>
     </a>
   </span>
+
+  <div *ngIf="notFound" class="mat-typography">
+    <h2>
+      Oh, no.
+    </h2>
+    We couldn't find the inventory you requested.
+  </div>
 </span>
