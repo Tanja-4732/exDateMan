@@ -28,7 +28,7 @@ export class EditStockComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getInventoryIdAndThingNumber();
+    this.getIds();
     this.getStock().then();
     setTimeout(() => {
       if (this.unauthorized) {
@@ -66,7 +66,7 @@ export class EditStockComponent implements OnInit {
     }
   }
 
-  getInventoryIdAndThingNumber(): void {
+  getIds(): void {
     this.inventoryId = this.route.snapshot.params["inventoryId"];
     this.thingNumber = this.route.snapshot.params["thingNumber"];
     this.stockNumber = this.route.snapshot.params["stockNumber"];
@@ -92,7 +92,7 @@ export class EditStockComponent implements OnInit {
             this.notFound = true;
         }
       } else {
-        console.log("Unknown error in stock while getting stock");
+        console.log("Unknown error in edit-stock while getting stock");
       }
     }
   }

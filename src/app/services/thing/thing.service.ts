@@ -11,6 +11,14 @@ export class ThingService {
 
   constructor(private http: HttpClient) {}
 
+  async getThing(inventoryId: number, thingNumber: number): Promise<Thing> {
+    return await this.http
+      .get<Thing>(
+        this.baseUrl + "/inv/" + inventoryId + "/things/" + thingNumber
+      )
+      .toPromise();
+  }
+
   async getThings(inventoryId: number): Promise<Thing[]> {
     return await this.http
       .get<Thing[]>(this.baseUrl + "/inv/" + inventoryId + "/things")
@@ -33,6 +41,19 @@ export class ThingService {
         name: thing.name,
         categories: categoryNumbers
       } as AddThingRequest)
+      .toPromise();
+  }
+
+  async updateThing(
+    thing: Thing,
+    inventoryId: number,
+    thingNumber: number
+  ): Promise<Thing> {
+    return await this.http
+      .put<Thing>(
+        this.baseUrl + "/inv/" + inventoryId + "/things/" + thingNumber,
+        thing
+      )
       .toPromise();
   }
 }

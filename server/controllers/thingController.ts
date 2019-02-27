@@ -219,11 +219,7 @@ export class ThingController {
       });
       return;
     }
-    res.status(200).json({
-      status: 200,
-      message: "Returned thing",
-      thing: res.locals.thing as Thing
-    });
+    res.status(200).json(res.locals.thing as Thing);
   }
 
   public static async replaceThing(req: Request, res: Response): Promise<void> {
@@ -252,7 +248,7 @@ export class ThingController {
     thingToEdit.categories = [];
 
     try {
-      if ((req.body as ThingRequest).categories != null) {
+      if ((req.body as ThingRequest).categories != null && (req.body as ThingRequest).categories.length !== 0) {
         // Set the categories
         for (const category of await entityManager.find(Category, {
           where: {

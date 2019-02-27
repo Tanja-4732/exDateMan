@@ -1,19 +1,19 @@
 <span class="mat-typography" *ngIf="unauthorized">
   <h2>Unauthorized</h2>
-  We couldn't fetch this inventory, because you aren't authorized. <br>
+  We couldn't fetch this thing, because you aren't authorized. <br>
   Try logging in again to resolve this. <br>
   <br>
   Redirecting you to the login page in 3 seconds...
 </span>
 
 <span *ngIf="!unauthorized">
-  <span class="mat-typography" *ngIf="loading">
+  <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading thing...</h2>
     We're getting your thing... <br>
     Please hang on
   </span>
 
-  <span *ngIf="(!notFound) && (!loading)">
+  <span *ngIf="!notFound && !loading">
     <mat-form-field appearance="outline">
       <mat-label>Thing name</mat-label>
       <input matInput type="text" placeholder="Tomato" [(ngModel)]="thing.name">
@@ -26,4 +26,11 @@
     &nbsp;
     <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
   </span>
+
+  <div *ngIf="notFound" class="mat-typography">
+    <h2>
+      Oh, no.
+    </h2>
+    We couldn't find the data you requested.
+  </div>
 </span>
