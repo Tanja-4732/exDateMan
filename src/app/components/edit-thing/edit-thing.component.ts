@@ -1,9 +1,9 @@
-import { THING } from "../../models/thing.model";
 import { ActivatedRoute } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { RestService } from "../../services/Rest/rest.service";
 import { Thing } from "../../models/thing/thing";
+import { ThingService } from "../../services/thing/thing.service";
 
 // Interface
 export interface DialogData {
@@ -26,9 +26,9 @@ export class EditThingComponent implements OnInit {
   thing: Thing;
 
   constructor(
-    private router: ActivatedRoute,
-    public dialog: MatDialog,
-    private rest: RestService
+    private ts: ThingService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
