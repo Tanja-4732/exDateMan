@@ -47,6 +47,9 @@ export class EditStockComponent implements OnInit {
 
   async editStock(): Promise<void> {
     try {
+      if (this.stock.openedOn == null && this.stock.percentLeft !== 100) {
+        this.stock.openedOn = new Date();
+      }
       await this.ss.updateStock(this.stock, this.inventoryId, this.thingNumber);
       this.oof = false;
     } catch (error) {

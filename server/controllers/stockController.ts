@@ -13,6 +13,7 @@ export interface StockRequest {
   quantity: string;
   useUpIn: number;
   percentLeft: number;
+  openedOn: string;
 }
 
 /**
@@ -152,6 +153,10 @@ export default class StockController {
     stockToUpdate.exDate = (req.body as StockRequest).exDate
       ? new Date((req.body as StockRequest).exDate)
       : stockToUpdate.exDate;
+
+      stockToUpdate.openedOn = (req.body as StockRequest).openedOn
+      ? new Date((req.body as StockRequest).openedOn)
+      : stockToUpdate.openedOn;
 
     stockToUpdate.percentLeft = (req.body as StockRequest).percentLeft
       ? (req.body as StockRequest).percentLeft
