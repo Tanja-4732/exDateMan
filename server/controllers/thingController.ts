@@ -104,7 +104,7 @@ export class ThingController {
                 AND mi."inventoryId" = $1
                 AND mo."inventoryId" = $1
               )
-              AND mo."inventoryId" = $1
+          -- AND mo."inventoryId" = $1
       ORDER BY
               "number"
       LIMIT 1;
