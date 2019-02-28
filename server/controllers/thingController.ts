@@ -94,17 +94,17 @@ export class ThingController {
     const queries: string[] = [
       // Second attempt
       `
-      SELECT  "number" + 1 AS "THE_NUMBER"
-      FROM    thing mo
+      SELECT  "number" + 1 AS the_number
+      FROM    edm_dev.thing mo
       WHERE   NOT EXISTS
               (
               SELECT  NULL
-              FROM    thing mi
+              FROM    edm_dev.thing mi
               WHERE   mi."number" = mo."number" + 1
                 AND mi."inventoryId" = $1
                 AND mo."inventoryId" = $1
               )
-          -- AND mo."inventoryId" = $1
+              -- AND mo."inventoryId" = 1
       ORDER BY
               "number"
       LIMIT 1;
@@ -112,11 +112,14 @@ export class ThingController {
     ];
 
     try {
+      const qRes: any = await entityManager.query(
+        queries[0]
+        , [          (res.locals.inventory as Inventory).id        ]
+      );
+      log("suggested number=" + JSON.stringify(qRes, null, 2));
       thingToAdd.number = // req.params.thingNo ||
         // Find the first gap
-        (await entityManager.query(queries[0], [
-          (res.locals.inventory as Inventory).id
-        ]))[0].THE_NUMBER;
+        qRes[0].the_number;
     } catch (err) {
       thingToAdd.number = 1;
     }
@@ -248,7 +251,10 @@ export class ThingController {
     thingToEdit.categories = [];
 
     try {
-      if ((req.body as ThingRequest).categories != null && (req.body as ThingRequest).categories.length !== 0) {
+      if (
+        (req.body as ThingRequest).categories != null &&
+        (req.body as ThingRequest).categories.length !== 0
+      ) {
         // Set the categories
         for (const category of await entityManager.find(Category, {
           where: {
