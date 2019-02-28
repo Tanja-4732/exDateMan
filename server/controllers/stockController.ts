@@ -128,6 +128,7 @@ export default class StockController {
   ): Promise<void> {
     try {
       res.locals.stock = await getManager().findOneOrFail(Stock, {
+        relations: ["inventory"],
         where: {
           number: req.params.stockNo,
           thingNumber: (res.locals.thing as Thing).number, // TODO #3
