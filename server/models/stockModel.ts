@@ -42,4 +42,7 @@ export class Stock {
 
   @Column({ default: 100.0 })
   percentLeft: number;
+
+  @Column({nullable: true, type: "date"})
+  openedOn: Date;
 }

@@ -89,22 +89,25 @@ export class ThingController {
     const thingToAdd: Thing = new Thing();
     thingToAdd.inventory = res.locals.inventory as Inventory;
     thingToAdd.name = (req.body as ThingRequest).name;
+    const schema: string = process.env.EDM_SCHEMA || "edm_dev";
 
     // Query collection
     const queries: string[] = [
       // Second attempt
       `
-      SELECT  "number" + 1 AS "THE_NUMBER"
-      FROM    thing mo
+      SELECT  "number" + 1 AS the_number
+      FROM    (SELECT * FROM ${schema}.thing foo
+              WHERE foo."inventoryId" = $1
+              UNION ALL SELECT 0 AS "number",
+              '' AS "name", $1 AS "inventoryId") foo
       WHERE   NOT EXISTS
               (
               SELECT  NULL
-              FROM    thing mi
-              WHERE   mi."number" = mo."number" + 1
-                AND mi."inventoryId" = $1
-                AND mo."inventoryId" = $1
+              FROM    ${schema}.thing bar
+              WHERE   bar."number" = foo."number" + 1
+                AND bar."inventoryId" = $1
+                AND foo."inventoryId" = $1
               )
-              AND mo."inventoryId" = $1
       ORDER BY
               "number"
       LIMIT 1;
@@ -112,13 +115,16 @@ export class ThingController {
     ];
 
     try {
-      thingToAdd.number = // req.params.thingNo ||
-        // Find the first gap
-        (await entityManager.query(queries[0], [
-          (res.locals.inventory as Inventory).id
-        ]))[0].THE_NUMBER;
-    } catch (err) {
-      thingToAdd.number = 1;
+      const qRes: any = await entityManager.query(queries[0], [
+        (res.locals.inventory as Inventory).id
+      ]);
+      thingToAdd.number = qRes[0].the_number;
+    } catch (error) {
+      log("Unexpected error in createNewThing:\n" + error);
+      res.status(500).json({
+        error: "Something went wrong server-side"
+      });
+      return;
     }
 
     // Check for duplicates
@@ -248,7 +254,10 @@ export class ThingController {
     thingToEdit.categories = [];
 
     try {
-      if ((req.body as ThingRequest).categories != null && (req.body as ThingRequest).categories.length !== 0) {
+      if (
+        (req.body as ThingRequest).categories != null &&
+        (req.body as ThingRequest).categories.length !== 0
+      ) {
         // Set the categories
         for (const category of await entityManager.find(Category, {
           where: {
