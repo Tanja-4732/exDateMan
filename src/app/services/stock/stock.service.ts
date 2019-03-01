@@ -16,15 +16,19 @@ export class StockService {
     thingNumber: number,
     stockNumber: number
   ): Promise<Stock> {
-    return await this.http.get<Stock>(
+    const qRes: Stock = await this.http.get<Stock>(
       this.baseUrl +
-        "/inv/" +
-        inventoryId +
+      "/inv/" +
+      inventoryId +
         "/things/" +
         thingNumber +
         "/stocks/" +
         stockNumber
-    ).toPromise();
+        ).toPromise();
+        if(qRes) {
+          qRes.openedOn = new Date(qRes.openedOn);
+        }
+    return qRes;
   }
 
   async getStocks(inventoryId: number, thingNumber: number): Promise<Stock[]> {
