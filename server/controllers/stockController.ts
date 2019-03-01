@@ -64,26 +64,31 @@ export default class StockController {
       stockToAdd.useUpIn = (req.body as StockRequest).useUpIn;
       stockToAdd.thingNumber = (res.locals.thing as Thing).number; // TODO #3
       stockToAdd.inventory = res.locals.inventory as Inventory;
+      const schema: string = process.env.EDM_SCHEMA || "edm_dev";
       const numberSuggestion: {
-        THE_NUMBER: number;
+        the_number: number;
       }[] = await entityManager.query(
         // Get the first gap or 1
         `
-        SELECT  "number" + 1 AS "THE_NUMBER"
-        FROM    stock mo
+        SELECT  "number" + 1 AS the_number
+        FROM    (SELECT * FROM ${schema}.stock foo
+                WHERE foo."inventoryId" = $1
+                AND foo."thingNumber" = $2 UNION ALL
+                SELECT 0 AS "number", $2 AS "thingNumber",
+                CURRENT_DATE AS "exDate", '' AS "quantity",
+                0 AS "useUpIn", 100 AS "percentLeft",
+                $1 AS "inventoryId", NULL as "openedOn") foo
         WHERE   NOT EXISTS
                 (
                 SELECT  NULL
-                FROM    stock mi
-                WHERE   mi."number" = mo."number" + 1
-                  AND mi."inventoryId" = $1
-                  AND mo."inventoryId" = $1
+                FROM    ${schema}.stock bar
+                WHERE   bar."number" = foo."number" + 1
+                  AND bar."inventoryId" = $1
+                  AND foo."inventoryId" = $1
 
-                  AND mi."thingNumber" = $2
-                  AND mo."thingNumber" = $2
-                  )
-                AND mo."inventoryId" = $1
-                AND mo."thingNumber" = $2
+                  AND bar."thingNumber" = $2
+                  AND foo."thingNumber" = $2
+                )
         ORDER BY
                 "number"
         LIMIT 1;
@@ -93,11 +98,7 @@ export default class StockController {
           (res.locals.thing as Thing).number
         ]
       );
-      stockToAdd.number = // Fallback to 1 if no number can be found
-        numberSuggestion.length > 0 ? numberSuggestion[0].THE_NUMBER : 1;
-      log("The number picked for your stock is " + stockToAdd.number);
-      log("The length is: " + numberSuggestion.length);
-      log("The contents:\n" + JSON.stringify(numberSuggestion, null, 2));
+      stockToAdd.number = numberSuggestion[0].the_number;
     } catch (error) {
       log("Error in addStock:\n" + error);
       res.status(400).json({
