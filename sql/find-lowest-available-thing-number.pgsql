@@ -38,6 +38,11 @@ WHERE
 -- Stock
 --
 
+-- Delete all things
+DELETE FROM "edm_dev"."stock" where number = 1;
+DELETE FROM "edm_dev"."inventory" CASCADE;
+DELETE FROM "edm_dev"."inventory_user";
+
 -- Get all the things
 SELECT * FROM "edm_dev"."stock" order by number LIMIT 1000;
 
