@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { Thing } from "../../models/thing/thing";
+import { StockService } from "../../services/stock/stock.service";
+import { Stock } from "../../models/stock/stock";
 
 @Component({
   selector: "app-thing-card",
@@ -10,7 +12,11 @@ export class ThingCardComponent implements OnInit {
   @Input()
   thing: Thing;
 
-  constructor() {}
+  stocks: Stock[];
 
-  ngOnInit(): void {}
+  constructor(private ss: StockService) {}
+
+  ngOnInit(): void {
+    this.ss.getStocks()
+  }
 }
