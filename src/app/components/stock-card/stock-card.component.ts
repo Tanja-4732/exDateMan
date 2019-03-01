@@ -16,16 +16,12 @@ export class StockCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log("Stock be like:");
-    console.log(this.stock);
     this.ced = this.calculatedExDate;
-    console.log(this.ced);
   }
 
   get calculatedExDate(): Date {
     // return new Date();
     if (this.stock.useUpIn != null && this.stock.openedOn) {
-      console.log("The maybe-date object: " + this.stock.openedOn);
       return (new Date().setDate(
         this.stock.openedOn.getDate() + this.stock.useUpIn
       ) as unknown) as Date;
