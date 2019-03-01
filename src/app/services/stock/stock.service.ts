@@ -25,7 +25,7 @@ export class StockService {
         "/stocks/" +
         stockNumber
         ).toPromise();
-        if(qRes) {
+        if (qRes != null) {
           qRes.openedOn = new Date(qRes.openedOn);
         }
     return qRes;
@@ -35,7 +35,7 @@ export class StockService {
     if (inventoryId == null || thingNumber == null) {
       throw new Error("Arguments invalid");
     }
-    return await this.http
+    const qRes: Stock[] = await this.http
       .get<Stock[]>(
         this.baseUrl +
           "/inv/" +
@@ -45,6 +45,13 @@ export class StockService {
           "/stocks"
       )
       .toPromise();
+
+      for (const stock of qRes) {
+        if (stock.openedOn != null) {
+          stock.openedOn = new Date(stock.openedOn);
+        }
+      }
+    return qRes;
   }
 
   async newStock(
