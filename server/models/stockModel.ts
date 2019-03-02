@@ -45,4 +45,7 @@ export class Stock {
 
   @Column({nullable: true, type: "date"})
   openedOn: Date;
+
+  @Column({type: "date"})
+  addedOn: Date;
 }

@@ -1,6 +1,7 @@
 import { Input } from "@angular/core";
 import { Component, OnInit } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
+import { StockService } from "../../services/stock/stock.service";
 
 @Component({
   selector: "app-stock-card",
@@ -13,24 +14,9 @@ export class StockCardComponent implements OnInit {
 
   ced: Date;
 
-  constructor() {}
+  constructor(private ss: StockService) {}
 
   ngOnInit(): void {
-    console.log("Stock be like:");
-    console.log(this.stock);
-    this.ced = this.calculatedExDate;
-    console.log(this.ced);
-  }
-
-  get calculatedExDate(): Date {
-    // return new Date();
-    if (this.stock.useUpIn != null && this.stock.openedOn) {
-      console.log("The maybe-date object: " + this.stock.openedOn);
-      return (new Date().setDate(
-        this.stock.openedOn.getDate() + this.stock.useUpIn
-      ) as unknown) as Date;
-    } else {
-      return this.stock.exDate;
-    }
+    this.ced = this.ss.calculateExDate(this.stock);
   }
 }

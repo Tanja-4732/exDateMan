@@ -5,4 +5,5 @@ export class Stock {
   useUpIn: number;
   percentLeft: number;
   openedOn: Date;
+  addedOn: Date;
 }

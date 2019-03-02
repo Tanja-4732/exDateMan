@@ -40,8 +40,7 @@ export class StocksComponent implements OnInit {
     try {
       this.stocks = await this.ss.getStocks(this.inventoryId, this.thingNumber);
       this.loading = false;
-    console.log(this.stocks);
-  } catch (error) {
+    } catch (error) {
       this.oof = true;
       if (error instanceof HttpErrorResponse) {
         switch (error.status) {

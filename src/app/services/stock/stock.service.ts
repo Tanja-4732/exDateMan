@@ -16,18 +16,20 @@ export class StockService {
     thingNumber: number,
     stockNumber: number
   ): Promise<Stock> {
-    const qRes: Stock = await this.http.get<Stock>(
-      this.baseUrl +
-      "/inv/" +
-      inventoryId +
-        "/things/" +
-        thingNumber +
-        "/stocks/" +
-        stockNumber
-        ).toPromise();
-        if (qRes != null) {
-          qRes.openedOn = new Date(qRes.openedOn);
-        }
+    const qRes: Stock = await this.http
+      .get<Stock>(
+        this.baseUrl +
+          "/inv/" +
+          inventoryId +
+          "/things/" +
+          thingNumber +
+          "/stocks/" +
+          stockNumber
+      )
+      .toPromise();
+    if (qRes != null) {
+      qRes.openedOn = new Date(qRes.openedOn);
+    }
     return qRes;
   }
 
@@ -46,11 +48,11 @@ export class StockService {
       )
       .toPromise();
 
-      for (const stock of qRes) {
-        if (stock.openedOn != null) {
-          stock.openedOn = new Date(stock.openedOn);
-        }
+    for (const stock of qRes) {
+      if (stock.openedOn != null) {
+        stock.openedOn = new Date(stock.openedOn);
       }
+    }
     return qRes;
   }
 
@@ -89,5 +91,15 @@ export class StockService {
         stock
       )
       .toPromise();
+  }
+
+  calculateExDate(stock: Stock): Date {
+    if (stock.useUpIn != null && stock.openedOn) {
+      return (new Date().setDate(
+        stock.openedOn.getDate() + stock.useUpIn
+      ) as unknown) as Date;
+    } else {
+      return stock.exDate;
+    }
   }
 }

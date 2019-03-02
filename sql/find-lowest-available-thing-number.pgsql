@@ -1,3 +1,12 @@
+--
+--
+--
+-- Notice:
+-- This script isn't always kept up-to-date.
+--
+--
+--
+--
 
 -- Get all the things
 SELECT * FROM "edm_dev"."thing" order by number LIMIT 1000;
