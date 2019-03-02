@@ -2,12 +2,13 @@
   <mat-card>
     <mat-card-header>
       <mat-card-title>Use up before {{ced | date}}</mat-card-title>
-      <mat-card-subtitle>Stock #{{stock.number}}</mat-card-subtitle>
+      <mat-card-subtitle>Quantity: {{stock.quantity}} ({{stock.percentLeft}}% left)</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      Added on: {{stock.openedOn | date}} <br>
+      Added on: {{stock.addedOn | date}} <br>
+      Opened on: {{stock.openedOn | date}} <br>
       Expiration date: {{stock.exDate | date}} <br>
-      Use up in: {{stock.useUpIn}} <br>
+      <span *ngIf="stock.useUpIn != null">Use up in: {{stock.useUpIn}} <br></span>
       Quantity: {{stock.quantity}} <br>
       Percent left: {{stock.percentLeft}}
     </mat-card-content>

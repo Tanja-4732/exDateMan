@@ -5,5 +5,4 @@ export class Thing {
   number: number;
   name: string;
   categories: Category[];
-  stocks?: Stock[];
 }

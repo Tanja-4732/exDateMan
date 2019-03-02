@@ -64,10 +64,11 @@ export default class StockController {
       stockToAdd.useUpIn = (req.body as StockRequest).useUpIn;
       stockToAdd.thingNumber = (res.locals.thing as Thing).number; // TODO #3
       stockToAdd.inventory = res.locals.inventory as Inventory;
+      stockToAdd.addedOn = new Date(new Date().setHours(0, 0, 0, 0));
       const schema: string = process.env.EDM_SCHEMA || "edm_dev";
       const numberSuggestion: {
         the_number: number;
-      }[] = await entityManager.query(
+      }[] = await entityManager.query( // TODO add one more collumn (addedOn)
         // Get the first gap or 1
         `
         SELECT  "number" + 1 AS the_number
@@ -77,7 +78,8 @@ export default class StockController {
                 SELECT 0 AS "number", $2 AS "thingNumber",
                 CURRENT_DATE AS "exDate", '' AS "quantity",
                 0 AS "useUpIn", 100 AS "percentLeft",
-                $1 AS "inventoryId", NULL as "openedOn") foo
+                $1 AS "inventoryId", NULL as "openedOn",
+                CURRENT_DATE AS "addedOn") foo
         WHERE   NOT EXISTS
                 (
                 SELECT  NULL
