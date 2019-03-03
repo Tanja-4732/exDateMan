@@ -1,15 +1,10 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { RestService } from "../../services/Rest/rest.service";
+import { MatDialog, MatDialogRef } from "@angular/material";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
 import { HttpErrorResponse } from "@angular/common/http";
-
-// Interface
-export interface DialogData {
-  thing: Thing;
-}
+import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 
 @Component({
   selector: "app-edit-thing",
@@ -17,11 +12,11 @@ export interface DialogData {
   styleUrls: ["./edit-thing.component.scss"]
 })
 export class EditThingComponent implements OnInit {
-  reallyDelete: boolean = false;
   unauthorized: boolean = false;
   notFound: boolean = false;
   loading: boolean = true;
   oof: boolean = false;
+  reallyDelete: boolean = false;
 
   inventoryId: number;
   thingNumber: number;
@@ -73,7 +68,7 @@ export class EditThingComponent implements OnInit {
 
   onEditThing(): void {
     this.editThing().then(() => {
-      if (this.oof === false) {
+      if (!this.oof) {
         this.router.navigate(["stocks"], { relativeTo: this.route });
       }
     });
@@ -81,7 +76,7 @@ export class EditThingComponent implements OnInit {
 
   async editThing(): Promise<void> {
     try {
-      await this.ts.updateThing(this.thing, this.inventoryId, this.thingNumber);
+      await this.ts.updateThing(this.thing, this.inventoryId);
       this.oof = false;
     } catch (error) {
       this.oof = true;
@@ -99,49 +94,51 @@ export class EditThingComponent implements OnInit {
     }
   }
 
-  // onEditThing(): void {
-  //   if (this.thingName === this.thing.name) {
-  //     this.thing.category = this.thingCategory;
-  //   } else {
-  //     if (this.thing.tryChangeName(this.thingName)) {
-  //       this.thing.category = this.thingCategory;
-  //     } else {
-  //       this.nameUnavailable = true;
-  //       this.unavailableName = this.thingName;
-  //       return;
-  //     }
-  //   }
-  //   this.rest.updateThing(this.thing).subscribe(response => {
-  //     console.log(response);
-  //   });
-  // }
-
   onDeleteThing(): void {
-    //   this.reallyDelete = false;
-    //   const dialogRef: MatDialogRef<any> = this.dialog.open(
-    //     DeleteConfirmationDialogComponent,
-    //     {
-    //       // height: "400px",
-    //       // width: "600px",
-    //       data: { thing: this.thing }
-    //     }
-    //   );
-    //   dialogRef.afterClosed().subscribe(result => {
-    //     if (result) {
-    //       this.thing.deleteThingByName(this.thingName);
-    //     }
-    //   });
+    this.deleteThing().then(() => {
+      if (this.reallyDelete) {
+        this.router.navigate(["inventories", this.inventoryId, "things"]);
+      }
+    });
+  }
+
+  async deleteThing(): Promise<void> {
+    const dialogRef: MatDialogRef<any> = this.dialog.open(
+      DeleteConfirmationDialogComponent,
+      {
+        data: { thing: this.thing }
+      }
+    );
+
+    this.reallyDelete = await dialogRef.afterClosed().toPromise();
+
+    if (this.reallyDelete) {
+      try {
+        const res: unknown = await this.ts.removeThing(
+          this.thing,
+          this.inventoryId
+        );
+      } catch (error) {
+        // Catch sending-to-the-server errors
+        this.oof = true;
+        if (error instanceof HttpErrorResponse) {
+          switch (error.status) {
+            case 401:
+              // Set flag for html change and timeout above
+              this.unauthorized = true;
+              break;
+            case 404:
+              this.notFound = true;
+          }
+        } else {
+          console.log("Unknown error in add-stock while creating");
+        }
+      }
+    }
   }
 }
 
-// Dialog implementation
-@Component({
-  selector: "app-confirm-dialog",
-  templateUrl: "./confirm-dialog.component.html"
-})
-export class DeleteConfirmationDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {}
+// Interface
+export interface DialogData {
+  thing: Thing;
 }

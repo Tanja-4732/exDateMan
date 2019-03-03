@@ -3,6 +3,8 @@ import { Inventory } from "../../models/inventory/inventory";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
+import { MatDialog, MatDialogRef } from "@angular/material";
+import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 
 @Component({
   selector: "app-edit-inventory",
@@ -14,12 +16,14 @@ export class EditInventoryComponent implements OnInit {
   notFound: boolean = false;
   loading: boolean = true;
   oof: boolean = false;
-  inventory: Inventory = new Inventory();
-  inventoryId: number;
+  reallyDelete: boolean = false;
+
+  inventory: Inventory;
 
   constructor(
     private is: InventoryService,
     private route: ActivatedRoute,
+    public dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -28,12 +32,12 @@ export class EditInventoryComponent implements OnInit {
   }
 
   async getInventory(): Promise<void> {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
     try {
-      this.inventory = await this.is.getInventory(this.inventoryId);
+      this.inventory = await this.is.getInventory(
+        this.route.snapshot.params["inventoryId"]
+      );
       this.loading = false;
     } catch (error) {
-      console.log(error);
       if (error instanceof HttpErrorResponse) {
         switch (error.status) {
           case 401:
@@ -78,5 +82,43 @@ export class EditInventoryComponent implements OnInit {
     }
   }
 
-  onDeleteInventory(): void {}
+  onDeleteInventory(): void {
+    this.deleteInventory().then(() => {
+      if (this.reallyDelete) {
+        this.router.navigate(["inventories"]);
+      }
+    });
+  }
+
+  async deleteInventory(): Promise<void> {
+    const dialogRef: MatDialogRef<any> = this.dialog.open(
+      DeleteConfirmationDialogComponent,
+      {
+        data: { inventory: this.inventory }
+      }
+    );
+
+    this.reallyDelete = await dialogRef.afterClosed().toPromise();
+
+    if (this.reallyDelete) {
+      try {
+        const res: unknown = await this.is.deleteInventory(this.inventory);
+      } catch (error) {
+        // Catch sending-to-the-server errors
+        this.oof = true;
+        if (error instanceof HttpErrorResponse) {
+          switch (error.status) {
+            case 401:
+              // Set flag for html change and timeout above
+              this.unauthorized = true;
+              break;
+            case 404:
+              this.notFound = true;
+          }
+        } else {
+          console.log("Unknown error in add-stock while creating");
+        }
+      }
+    }
+  }
 }

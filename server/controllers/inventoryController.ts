@@ -10,6 +10,7 @@ import {
 import AuthController from "./authController";
 import UserController from "./userController";
 import { Thing } from "../models/thingModel";
+import { Stock } from "../models/stockModel";
 
 interface InventoryRequest {
   name: string;
@@ -27,8 +28,11 @@ export default class InventoryController {
   ): Promise<void> {
     // log("setting inv");
     try {
-      res.locals.inventory = await InventoryController.getInventoryOrFail(
-        req.params.inventoryId
+      const entityManager: EntityManager = getManager();
+      res.locals.inventory = await entityManager.findOneOrFail(
+        Inventory,
+        req.params.inventoryId,
+        { relations: ["inventoryUsers", "inventoryUsers.user"] }
       );
     } catch (error) {
       res.status(404).json({
@@ -114,44 +118,14 @@ export default class InventoryController {
       return;
     }
 
-    const entityManager: EntityManager = getManager();
-    let inventory: Inventory;
-    try {
-      inventory = await entityManager.findOneOrFail(
-        Inventory,
-        res.locals.inventory.InventoryId,
-        { relations: ["inventoryUsers", "inventoryUsers.user"] }
-      );
-    } catch (error) {
-      res.status(404).json({
-        status: 404,
-        error: "The requested inventory couldn't be found"
-      });
-      return;
-    }
-
     // Hide pwd hash user creation date
-    for (const inventoryUser of inventory.inventoryUsers) {
+    for (const inventoryUser of res.locals.inventory.inventoryUsers) {
       delete inventoryUser.user.saltedPwdHash;
       delete inventoryUser.user.createdOn;
     }
 
     // Return requested info with 200
-    res.status(200).json(inventory);
-  }
-
-  /**
-   * Returns one inventory object based on its id or fails
-   */
-  public static async getInventoryOrFail(
-    inventoryId: number
-  ): Promise<Inventory> {
-    const entityManager: EntityManager = getManager();
-    return await entityManager.findOneOrFail(Inventory, {
-      where: {
-        id: inventoryId
-      }
-    });
+    res.status(200).json(res.locals.inventory);
   }
 
   /**
@@ -276,9 +250,6 @@ export default class InventoryController {
     req: Request,
     res: Response
   ): Promise<void> {
-    // Get the inventory object to later be updated on the db
-    const invToDelete: Inventory = res.locals.inventory;
-
     // Get the entity manager
     const entityManager: EntityManager = getManager();
 
@@ -286,7 +257,7 @@ export default class InventoryController {
     if (
       !(await AuthController.isAuthorized(
         res.locals.actingUser,
-        invToDelete,
+        res.locals.inventory as Inventory,
         InventoryUserAccessRightsEnum.ADMIN
       ))
     ) {
@@ -299,21 +270,25 @@ export default class InventoryController {
     }
 
     try {
-      /*  Old code // TODO delete when ready
+      //  Old code // TODO delete when ready
       // Delete all InventoryUsers
       await entityManager.delete(InventoryUser, {
-        inventory: invToDelete
+        inventory: res.locals.inventory as Inventory
       });
 
       // Delete all things
       await entityManager.delete(Thing, {
-        Inventory: invToDelete.InventoryId
-      }); */
+        Inventory: res.locals.inventory as Inventory
+      });
 
-      /*Remove the inventory.
-      This should be sufficient because of
-      the CASCADE option set in the inventoryModel. */
-      entityManager.remove(invToDelete);
+      await entityManager.delete(Stock, {
+        inventory: res.locals.inventory as Inventory
+      });
+
+      // Remove the inventory
+      await entityManager.delete(Inventory, {
+        id: (res.locals.inventory as Inventory).id
+      });
     } catch (error) {
       res.status(500).json({
         status: 500,

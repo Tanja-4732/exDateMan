@@ -34,8 +34,6 @@ export class ThingService {
       }
     }
 
-    console.log("InventoryId=" + inventoryId);
-
     return await this.http
       .post<Thing>(this.baseUrl + "/inv/" + inventoryId + "/things", {
         name: thing.name,
@@ -44,17 +42,22 @@ export class ThingService {
       .toPromise();
   }
 
-  async updateThing(
-    thing: Thing,
-    inventoryId: number,
-    thingNumber: number
-  ): Promise<Thing> {
+  async updateThing(thing: Thing, inventoryId: number): Promise<Thing> {
     return await this.http
       .put<Thing>(
-        this.baseUrl + "/inv/" + inventoryId + "/things/" + thingNumber,
+        this.baseUrl + "/inv/" + inventoryId + "/things/" + thing.number,
         thing
       )
       .toPromise();
+  }
+
+  async removeThing(thing: Thing, inventoryId: number): Promise<unknown> {
+    const qRes: unknown = this.http
+      .delete<Thing>(
+        this.baseUrl + "/inv/" + inventoryId + "/things/" + thing.number
+      )
+      .toPromise();
+    return qRes;
   }
 }
 
