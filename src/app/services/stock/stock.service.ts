@@ -29,6 +29,8 @@ export class StockService {
       .toPromise();
     if (qRes != null) {
       qRes.openedOn = new Date(qRes.openedOn);
+      qRes.exDate = new Date(qRes.exDate);
+      qRes.addedOn = new Date(qRes.addedOn);
     }
     return qRes;
   }
@@ -51,6 +53,8 @@ export class StockService {
     for (const stock of qRes) {
       if (stock.openedOn != null) {
         stock.openedOn = new Date(stock.openedOn);
+        stock.exDate = new Date(stock.exDate);
+        stock.addedOn = new Date(stock.addedOn);
       }
     }
     return qRes;
@@ -95,6 +99,8 @@ export class StockService {
 
   calculateExDate(stock: Stock): Date {
     if (stock.useUpIn != null && stock.openedOn) {
+      console.log(stock);
+
       return (new Date().setDate(
         stock.openedOn.getDate() + stock.useUpIn
       ) as unknown) as Date;

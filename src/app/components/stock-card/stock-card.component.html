@@ -6,11 +6,9 @@
     </mat-card-header>
     <mat-card-content>
       Added on: {{stock.addedOn | date}} <br>
-      Opened on: {{stock.openedOn | date}} <br>
+      <span *ngIf="stock.openedOn != null">Opened on: {{stock.openedOn | date}} <br></span>
       Expiration date: {{stock.exDate | date}} <br>
-      <span *ngIf="stock.useUpIn != null">Use up in: {{stock.useUpIn}} <br></span>
-      Quantity: {{stock.quantity}} <br>
-      Percent left: {{stock.percentLeft}}
+      <span *ngIf="stock.useUpIn != null">Use up in {{stock.useUpIn}} days after opening<br></span>
     </mat-card-content>
   </mat-card>
 </a>

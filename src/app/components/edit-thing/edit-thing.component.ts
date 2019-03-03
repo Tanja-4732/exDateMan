@@ -81,7 +81,7 @@ export class EditThingComponent implements OnInit {
 
   async editThing(): Promise<void> {
     try {
-      await this.ts.updateThing(this.thing, this.inventoryId, this.thingNumber);
+      await this.ts.updateThing(this.thing, this.inventoryId);
       this.oof = false;
     } catch (error) {
       this.oof = true;
@@ -99,38 +99,21 @@ export class EditThingComponent implements OnInit {
     }
   }
 
-  // onEditThing(): void {
-  //   if (this.thingName === this.thing.name) {
-  //     this.thing.category = this.thingCategory;
-  //   } else {
-  //     if (this.thing.tryChangeName(this.thingName)) {
-  //       this.thing.category = this.thingCategory;
-  //     } else {
-  //       this.nameUnavailable = true;
-  //       this.unavailableName = this.thingName;
-  //       return;
-  //     }
-  //   }
-  //   this.rest.updateThing(this.thing).subscribe(response => {
-  //     console.log(response);
-  //   });
-  // }
-
   onDeleteThing(): void {
-    //   this.reallyDelete = false;
-    //   const dialogRef: MatDialogRef<any> = this.dialog.open(
-    //     DeleteConfirmationDialogComponent,
-    //     {
-    //       // height: "400px",
-    //       // width: "600px",
-    //       data: { thing: this.thing }
-    //     }
-    //   );
-    //   dialogRef.afterClosed().subscribe(result => {
-    //     if (result) {
-    //       this.thing.deleteThingByName(this.thingName);
-    //     }
-    //   });
+    this.reallyDelete = false;
+    const dialogRef: MatDialogRef<any> = this.dialog.open(
+      DeleteConfirmationDialogComponent,
+      {
+        // height: "400px",
+        // width: "600px",
+        data: { thing: this.thing }
+      }
+    );
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.ts.removeThing(this.thing, this.inventoryId);
+      }
+    });
   }
 }
 
