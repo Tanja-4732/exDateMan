@@ -1,8 +1,10 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Inject } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
+import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 
 @Component({
   selector: "app-edit-stock",
@@ -14,6 +16,7 @@ export class EditStockComponent implements OnInit {
   notFound: boolean = false;
   loading: boolean = true;
   oof: boolean = false;
+  reallyDelete: boolean = false;
 
   inventoryId: number;
   thingNumber: number;
@@ -24,6 +27,7 @@ export class EditStockComponent implements OnInit {
   constructor(
     private ss: StockService,
     private route: ActivatedRoute,
+    public dialog: MatDialog,
     private router: Router
   ) {}
 
@@ -39,7 +43,7 @@ export class EditStockComponent implements OnInit {
 
   onEditStock(): void {
     this.editStock().then(() => {
-      if (this.oof === false) {
+      if (!this.oof) {
         this.router.navigate([".."], { relativeTo: this.route });
       }
     });
@@ -47,12 +51,20 @@ export class EditStockComponent implements OnInit {
 
   async editStock(): Promise<void> {
     try {
-      if (this.stock.openedOn == null && this.stock.percentLeft !== 100) {
+      // Confirm that it has been opened for the first time just now.
+      if (
+        ((this.stock.openedOn as unknown) as number) - 0 ===
+          ((new Date(0) as unknown) as number) - 0 &&
+        this.stock.percentLeft !== 100
+      ) {
+        // Set the openedOn date to now
         this.stock.openedOn = new Date();
       }
+      // Send changes to the server
       await this.ss.updateStock(this.stock, this.inventoryId, this.thingNumber);
       this.oof = false;
     } catch (error) {
+      // Catch sending-to-the-server errors
       this.oof = true;
       if (error instanceof HttpErrorResponse) {
         switch (error.status) {
@@ -99,4 +111,52 @@ export class EditStockComponent implements OnInit {
       }
     }
   }
+
+  onDeleteStock(): void {
+    this.deleteStock().then(() => {
+      if (this.reallyDelete) {
+        this.router.navigate([".."], { relativeTo: this.route });
+      }
+    });
+  }
+
+  async deleteStock(): Promise<void> {
+    const dialogRef: MatDialogRef<any> = this.dialog.open(
+      DeleteConfirmationDialogComponent,
+      {
+        data: { stock: this.stock }
+      }
+    );
+
+    this.reallyDelete = await dialogRef.afterClosed().toPromise();
+
+    if (this.reallyDelete) {
+      try {
+        const res: unknown = await this.ss.deleteStock(
+          this.stock,
+          this.inventoryId,
+          this.thingNumber
+        );
+      } catch (error) {
+        // Catch sending-to-the-server errors
+        this.oof = true;
+        if (error instanceof HttpErrorResponse) {
+          switch (error.status) {
+            case 401:
+              // Set flag for html change and timeout above
+              this.unauthorized = true;
+              break;
+            case 404:
+              this.notFound = true;
+          }
+        } else {
+          console.log("Unknown error in add-stock while creating");
+        }
+      }
+    }
+  }
+}
+
+export interface DialogData {
+  stock: Stock;
 }

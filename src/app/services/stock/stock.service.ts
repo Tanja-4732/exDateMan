@@ -97,10 +97,27 @@ export class StockService {
       .toPromise();
   }
 
+  async deleteStock(
+    stock: Stock,
+    inventoryId: number,
+    thingNumber: number
+  ): Promise<unknown> {
+    const qRes: unknown = this.http
+      .delete<Stock>(
+        this.baseUrl +
+          "/inv/" +
+          inventoryId +
+          "/things/" +
+          thingNumber +
+          "/stocks/" +
+          stock.number
+      )
+      .toPromise();
+    return qRes;
+  }
+
   calculateExDate(stock: Stock): Date {
     if (stock.useUpIn != null && stock.openedOn) {
-      console.log(stock);
-
       return (new Date().setDate(
         stock.openedOn.getDate() + stock.useUpIn
       ) as unknown) as Date;

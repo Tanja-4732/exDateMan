@@ -39,11 +39,13 @@
       <i matSuffix class="material-icons">pie_chart</i>
     </mat-form-field>
     <br>
-    Or use the slider:
+    <span class="mat-typography">Or use the slider:</span>
     <mat-slider min="0" max="100" step="1" [(value)]="stock.percentLeft"></mat-slider>
     <br>
     <br>
     <button mat-raised-button (click)="onEditStock()" color="accent">Edit stock</button>
+    &nbsp;
+    <button mat-raised-button (click)="onDeleteStock()" color="warn">Delete stock</button>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">

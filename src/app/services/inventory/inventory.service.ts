@@ -32,8 +32,6 @@ export class InventoryService {
     writeables?: User[],
     readables?: User[]
   ): Promise<Inventory> {
-    console.log("Creating inventory " + name);
-
     const adminIds: number[] = [];
     const writeableIds: number[] = [];
     const readableIds: number[] = [];
@@ -85,6 +83,13 @@ export class InventoryService {
         name: inventory.name
       } as UpdateInventoryRequest)
       .toPromise();
+  }
+
+  async deleteInventory(inventory: Inventory): Promise<unknown> {
+    const qRes: unknown = this.http
+      .delete<Inventory>(this.baseUrl + "/inv/" + inventory.id)
+      .toPromise();
+    return qRes;
   }
 }
 
