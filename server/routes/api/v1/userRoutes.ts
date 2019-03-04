@@ -2,9 +2,9 @@ import { Router } from "express";
 
 import UserController from "../../../controllers/userController";
 
-const thingsRoutes: Router = Router();
+const userRoutes: Router = Router();
 
 // Get one user by email
-thingsRoutes.get("/:email", UserController.getUserByEmail);
+userRoutes.get("/:email", UserController.getUserByEmail);
 
-export default thingsRoutes;
+export default userRoutes;

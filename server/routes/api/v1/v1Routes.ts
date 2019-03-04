@@ -4,6 +4,7 @@ import { log } from "util";
 import authRoutes from "./authRoutes";
 import inventoriesRoutes from "./inventoriesRoutes";
 import AuthController from "../../../controllers/authController";
+import userRoutes from "./userRoutes";
 
 const v1Routes: Router = Router();
 
@@ -18,6 +19,9 @@ v1Routes.get("/", (req: Request, res: Response) => {
 v1Routes.use("/inv", AuthController.authenticate, inventoriesRoutes);
 
 // Use authentication routes
-v1Routes.use("/auth", AuthController.authenticate, authRoutes);
+v1Routes.use("/auth", authRoutes);
+
+// Use user routes
+v1Routes.use("/user", AuthController.authenticate, userRoutes);
 
 export default v1Routes;
