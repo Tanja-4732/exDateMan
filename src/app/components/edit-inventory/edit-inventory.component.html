@@ -21,7 +21,48 @@
       <i matSuffix class="material-icons">crop_free</i>
       <!-- <mat-hint>Hint</mat-hint> -->
     </mat-form-field>
+    <br>
 
+    <mat-form-field appearance="outline">
+      <mat-label>Admins</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let admin of admins" [selectable]="selectable" [removable]="removable" (removed)="removeAdmin(admin)">
+          {{admin.name}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addAdmin($event)">
+      </mat-chip-list>
+      <i matSuffix class="material-icons">build</i>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Writeables</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let writeable of writeables" [selectable]="selectable" [removable]="removable" (removed)="removeWriteable(writeable)">
+          {{writeable.name}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addWriteable($event)">
+      </mat-chip-list>
+      <i matSuffix class="material-icons">create</i>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Readables</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let admin of admins" [selectable]="selectable" [removable]="removable" (removed)="removeAdmin(admin)">
+          {{admin.name}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addAdmin($event)">
+      </mat-chip-list>
+      <i matSuffix class="material-icons">import_contacts</i>
+    </mat-form-field>
     <br>
 
     <button mat-raised-button (click)="onEditInventory()" color="accent">Edit inventory</button>

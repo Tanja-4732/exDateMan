@@ -3,8 +3,14 @@ import { Inventory } from "../../models/inventory/inventory";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
-import { MatDialog, MatDialogRef } from "@angular/material";
+import { MatDialog, MatDialogRef, MatChipInputEvent } from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { User } from "../../models/user/user";
+
+export interface Fruit {
+  name: string;
+}
 
 @Component({
   selector: "app-edit-inventory",
@@ -19,6 +25,106 @@ export class EditInventoryComponent implements OnInit {
   reallyDelete: boolean = false;
 
   inventory: Inventory = new Inventory();
+
+
+
+
+
+
+
+
+
+  visible: boolean = true;
+  selectable: boolean = true;
+  removable: boolean = true;
+  addOnBlur: boolean = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  admins: User[] = [];
+  writeables: User[] = [];
+  readables: User[] = [];
+
+  // admin
+  addAdmin(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeAdmin(admin: User): void {
+    const index: number = this.admins.indexOf(admin);
+
+    if (index >= 0) {
+      this.admins.splice(index, 1);
+    }
+  }
+
+
+  // writeable
+  addWritable(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeWritable(writeable: User): void {
+    const index: number = this.writeables.indexOf(writeable);
+
+    if (index >= 0) {
+      this.writeables.splice(index, 1);
+    }
+  }
+
+
+  // readable
+  addReadable(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.readables.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeReadable(admin: User): void {
+    const index: number = this.admins.indexOf(admin);
+
+    if (index >= 0) {
+      this.readables.splice(index, 1);
+    }
+  }
+
+
+
+
+
+
+
+
+
 
   constructor(
     private is: InventoryService,
@@ -37,6 +143,10 @@ export class EditInventoryComponent implements OnInit {
       this.inventory = await this.is.getInventory(
         this.inventory.id
       );
+
+        console.log(this.inventory);
+
+
       this.loading = false;
     } catch (error) {
       if (error instanceof HttpErrorResponse) {

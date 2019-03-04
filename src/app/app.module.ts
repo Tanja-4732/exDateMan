@@ -19,7 +19,8 @@ import {
   MatDialogModule,
   MatSidenavModule,
   MatIconModule,
-  MatListModule
+  MatListModule,
+  MatChipsModule
 } from "@angular/material";
 
 import { AppComponent } from "./app.component";
@@ -85,7 +86,8 @@ import { DeleteConfirmationDialogComponent } from "./components/delete-confirmat
     LayoutModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatChipsModule
   ],
   providers: [DBConnectionService],
   bootstrap: [AppComponent],
