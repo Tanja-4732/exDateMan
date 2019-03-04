@@ -18,6 +18,6 @@ v1Routes.get("/", (req: Request, res: Response) => {
 v1Routes.use("/inv", AuthController.authenticate, inventoriesRoutes);
 
 // Use authentication routes
-v1Routes.use("/auth", authRoutes);
+v1Routes.use("/auth", AuthController.authenticate, authRoutes);
 
 export default v1Routes;
