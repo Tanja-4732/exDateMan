@@ -9,10 +9,16 @@ import { User } from '../../models/user/user';
 export class UserService {
   private readonly baseUrl: string = environment.baseUrl;
 
-  constructor(private http: HttpClientl) { }
+  constructor(private http: HttpClient) { }
 
   async getUser(email: string): Promise<User> {
-    const qRes: User = await this.http.get<User>(this.baseUrl + "/users/" + email);
+    const qRes: User = await this.http.get<User>(this.baseUrl + "/users/" + email).toPromise();
     return qRes;
   }
+}
+
+export interface InventoryUsers {
+  owner?: User;
+  admins: User[];
+
 }

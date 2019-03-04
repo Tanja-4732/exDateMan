@@ -5,8 +5,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatDialog, MatDialogRef, MatChipInputEvent } from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
+import { UserService } from "../../services/user/user.service";
 
 export interface Fruit {
   name: string;
@@ -24,110 +25,22 @@ export class EditInventoryComponent implements OnInit {
   oof: boolean = false;
   reallyDelete: boolean = false;
 
-  inventory: Inventory = new Inventory();
-
-
-
-
-
-
-
-
-
   visible: boolean = true;
   selectable: boolean = true;
   removable: boolean = true;
   addOnBlur: boolean = true;
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
   admins: User[] = [];
   writeables: User[] = [];
   readables: User[] = [];
 
-  // admin
-  addAdmin(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeAdmin(admin: User): void {
-    const index: number = this.admins.indexOf(admin);
-
-    if (index >= 0) {
-      this.admins.splice(index, 1);
-    }
-  }
-
-
-  // writeable
-  addWritable(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeWritable(writeable: User): void {
-    const index: number = this.writeables.indexOf(writeable);
-
-    if (index >= 0) {
-      this.writeables.splice(index, 1);
-    }
-  }
-
-
-  // readable
-  addReadable(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.readables.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeReadable(admin: User): void {
-    const index: number = this.admins.indexOf(admin);
-
-    if (index >= 0) {
-      this.readables.splice(index, 1);
-    }
-  }
-
-
-
-
-
-
-
-
-
+  inventory: Inventory = new Inventory();
 
   constructor(
     private is: InventoryService,
+    private us: UserService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router
@@ -140,12 +53,9 @@ export class EditInventoryComponent implements OnInit {
 
   async getInventory(): Promise<void> {
     try {
-      this.inventory = await this.is.getInventory(
-        this.inventory.id
-      );
+      this.inventory = await this.is.getInventory(this.inventory.id);
 
-        console.log(this.inventory);
-
+      console.log(this.inventory);
 
       this.loading = false;
     } catch (error) {
@@ -230,6 +140,82 @@ export class EditInventoryComponent implements OnInit {
           console.log("Unknown error in add-stock while creating");
         }
       }
+    }
+  }
+
+  //
+  // Chips logic
+  //
+
+  // admin
+  addAdmin(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || "").trim()) {
+      this.admins.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeAdmin(admin: User): void {
+    const index: number = this.admins.indexOf(admin);
+
+    if (index >= 0) {
+      this.admins.splice(index, 1);
+    }
+  }
+
+  // writeable
+  addWriteable(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || "").trim()) {
+      this.writeables.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeWriteable(writeable: User): void {
+    const index: number = this.writeables.indexOf(writeable);
+
+    if (index >= 0) {
+      this.writeables.splice(index, 1);
+    }
+  }
+
+  // readable
+  addReadable(event: MatChipInputEvent): void {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || "").trim()) {
+      this.readables.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeReadable(readable: User): void {
+    const index: number = this.readables.indexOf(readable);
+
+    if (index >= 0) {
+      this.readables.splice(index, 1);
     }
   }
 }
