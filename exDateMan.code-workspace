@@ -9,8 +9,10 @@
       "Bernd's",
       "SERIALIZABLE",
       "hasher",
+      "keycodes",
       "postgres",
       "readables",
+      "selectable",
       "typeorm",
       "writeables"
     ],

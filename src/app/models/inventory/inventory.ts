@@ -6,7 +6,6 @@ export class Inventory {
   id: number;
   name: string;
   createdOn?: Date;
-  users?: InventoryUser[];
-  things?: Thing[];
+  inventoryUsers?: InventoryUser[];
   categories?: Category[];
 }
