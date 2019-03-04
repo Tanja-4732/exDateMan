@@ -9,8 +9,8 @@
 <span *ngIf="!unauthorized">
 
   <span class="mat-typography" *ngIf="loading && (!notFound)">
-    <h2>Loading thing...</h2>
-    We're getting your thing... <br>
+    <h2>Loading inventory...</h2>
+    We're getting your inventory... <br>
     Please hang on
   </span>
 
@@ -27,13 +27,14 @@
     <button mat-raised-button (click)="onEditInventory()" color="accent">Edit inventory</button>
     &nbsp;
     <button mat-raised-button (click)="onDeleteInventory()" color="warn">Delete inventory</button>
-
+    &nbsp;
+    <button mat-stroked-button routerLink="/inventories/{{inventory.id}}/things/">Go back</button>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">
     <h2>
       Oh, no.
     </h2>
-    We couldn't find the inventory with the ID {{inventoryId}}
+    We couldn't find the inventory with the ID {{inventory.id}}
   </div>
 </span>

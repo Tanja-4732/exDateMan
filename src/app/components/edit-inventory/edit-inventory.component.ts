@@ -18,7 +18,7 @@ export class EditInventoryComponent implements OnInit {
   oof: boolean = false;
   reallyDelete: boolean = false;
 
-  inventory: Inventory;
+  inventory: Inventory = new Inventory();
 
   constructor(
     private is: InventoryService,
@@ -28,13 +28,14 @@ export class EditInventoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.inventory.id = this.route.snapshot.params["inventoryId"];
     this.getInventory().then();
   }
 
   async getInventory(): Promise<void> {
     try {
       this.inventory = await this.is.getInventory(
-        this.route.snapshot.params["inventoryId"]
+        this.inventory.id
       );
       this.loading = false;
     } catch (error) {

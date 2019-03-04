@@ -43,9 +43,11 @@
     <mat-slider min="0" max="100" step="1" [(value)]="stock.percentLeft"></mat-slider>
     <br>
     <br>
-    <button mat-raised-button (click)="onEditStock()" color="accent">Edit stock</button>
+    <button mat-raised-button (click)="onEditStock()" color="accent">Save changes</button>
     &nbsp;
     <button mat-raised-button (click)="onDeleteStock()" color="warn">Delete stock</button>
+    &nbsp;
+    <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">

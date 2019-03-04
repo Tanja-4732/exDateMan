@@ -22,9 +22,11 @@
     </mat-form-field>
     <br>
 
-    <button mat-raised-button (click)="onEditThing()" color="accent">Edit thing</button>
+    <button mat-raised-button (click)="onEditThing()" color="accent">Save changes</button>
     &nbsp;
     <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
+    &nbsp;
+    <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">
