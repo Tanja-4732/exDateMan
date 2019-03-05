@@ -8,6 +8,7 @@ import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
 import { UserService } from "../../services/user/user.service";
+import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 
 export interface Fruit {
   name: string;
@@ -32,6 +33,7 @@ export class EditInventoryComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
+  owner: User;
   admins: User[] = [];
   writeables: User[] = [];
   readables: User[] = [];
@@ -48,7 +50,30 @@ export class EditInventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.inventory.id = this.route.snapshot.params["inventoryId"];
-    this.getInventory().then();
+    this.getInventory().then(() => {
+      this.mapUsers();
+    });
+  }
+
+  mapUsers(): void {
+    for (const inventoryUser of this.inventory.inventoryUsers) {
+      switch (inventoryUser.InventoryUserAccessRights) {
+        case InventoryUserAccess.OWNER:
+          this.owner = inventoryUser.user;
+          break;
+        case InventoryUserAccess.ADMIN:
+          this.admins.push(inventoryUser.user);
+          break;
+        case InventoryUserAccess.WRITE:
+          this.writeables.push(inventoryUser.user);
+          break;
+        case InventoryUserAccess.READ:
+          this.readables.push(inventoryUser.user);
+          break;
+        default:
+          throw new Error("mapUsers fallThrough error");
+      }
+    }
   }
 
   async getInventory(): Promise<void> {
