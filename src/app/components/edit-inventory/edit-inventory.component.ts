@@ -53,6 +53,11 @@ export class EditInventoryComponent implements OnInit {
   ngOnInit(): void {
     this.inventory.id = this.route.snapshot.params["inventoryId"];
     this.getInventory().then(() => {
+      setTimeout(() => {
+        if (this.unauthorized) {
+          this.router.navigate(["/login"]);
+        }
+      }, 3000);
       this.mapUsers();
     });
   }
@@ -214,6 +219,38 @@ export class EditInventoryComponent implements OnInit {
   //
   // Chips logic
   //
+
+  // owner
+
+  onAddOwner(event: MatChipInputEvent): void {
+    this.addOwner(event).then();
+  }
+
+  async addOwner(event: MatChipInputEvent): Promise<void> {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add the admin
+    if ((value || "").trim()) {
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.owner = user;
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeOwner(): void {
+    this.owner = null;
+  }
 
   // admin
   async addAdmin(event: MatChipInputEvent): Promise<void> {

@@ -63,7 +63,6 @@ export default class AuthController {
         }
       });
     } catch (error) {
-      log("Error in isAuthorized: " + error);
       return false;
     }
 

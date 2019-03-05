@@ -24,6 +24,19 @@
     <br>
 
     <mat-form-field appearance="outline">
+      <mat-label>Owner</mat-label>
+      <mat-chip-list #OwnerChipList>
+        <mat-chip [selectable]="selectable" [removable]="false">
+          {{owner.name}}
+        </mat-chip>
+        <input placeholder="Bob" [matChipInputFor]="OwnerChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="onAddOwner($event)">
+      </mat-chip-list>
+      <i matSuffix class="material-icons">build</i>
+    </mat-form-field>
+    <br>
+
+    <mat-form-field appearance="outline">
       <mat-label>Admins</mat-label>
       <mat-chip-list #AdminsChipList>
         <mat-chip *ngFor="let admin of admins" [selectable]="selectable" [removable]="removable" (removed)="removeAdmin(admin)">
