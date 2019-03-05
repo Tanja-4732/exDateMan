@@ -1,4 +1,3 @@
-import { model } from "mongoose";
 import { Request, Response, NextFunction } from "express";
 import { EntityManager, getManager, In } from "typeorm";
 import { Thing } from "../models/thingModel";
@@ -68,20 +67,7 @@ export class ThingController {
     res: Response
   ): Promise<void> {
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser as User,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the entity manager
     const entityManager: EntityManager = getManager();
@@ -170,20 +156,7 @@ export class ThingController {
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.READ
-      )) // TODO implement one unified pass or denied method; preferably with fake-404 toggle
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the READ role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     // Get the things
     const entityManager: EntityManager = getManager();
@@ -212,39 +185,14 @@ export class ThingController {
 
   public static async getThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.READ
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the READ role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+
     res.status(200).json(res.locals.thing as Thing);
   }
 
   public static async replaceThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser as User,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the entity manager
     const entityManager: EntityManager = getManager();
@@ -301,20 +249,7 @@ export class ThingController {
 
   public static async deleteThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser as User,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get entityManager
     const entityManager: EntityManager = getManager();

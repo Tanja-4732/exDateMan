@@ -151,6 +151,9 @@ export default class StockController {
   }
 
   public static async updateStock(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;
 
