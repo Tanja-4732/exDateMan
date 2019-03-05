@@ -28,9 +28,7 @@ export default class CategoryController {
       );
       // TODO maybe remove this; this may cause bugs
       res.locals.category.Inventory = res.locals.inventory;
-      log(
-        "The inventory id is:" + (res.locals.inventory as Inventory).id
-      );
+      log("The inventory id is:" + (res.locals.inventory as Inventory).id);
     } catch (error) {
       log(error);
       res.status(404).json({
@@ -46,20 +44,7 @@ export default class CategoryController {
     // const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.READ
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the READ role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     // Write the child categories as numbers in an array // TODO maybe change to let
     const childrenNumbers: number[] = [];
@@ -92,20 +77,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.READ
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the READ role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     let categories: Category[] = [];
     try {
@@ -135,20 +107,8 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+
     // TODO check if category is form this inventory
 
     // Attempt deletion
@@ -193,20 +153,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the category to be updated
     const catToUpdate: Category = res.locals.category;
@@ -257,20 +204,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    if (
-      !(await AuthController.isAuthorized(
-        res.locals.actingUser,
-        res.locals.inventory as Inventory,
-        InventoryUserAccessRightsEnum.WRITE
-      ))
-    ) {
-      res.status(403).json({
-        status: 403,
-        error:
-          "Requestor doesn't have the WRITE role or higher for this inventory."
-      });
-      return;
-    }
+    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Check if already present
     let goAhead: boolean = true as boolean;
