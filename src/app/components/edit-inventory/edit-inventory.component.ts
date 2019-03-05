@@ -9,6 +9,7 @@ import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
 import { UserService } from "../../services/user/user.service";
 import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
+import { InventoryUser } from "../../models/inventory-user/inventory-user";
 
 export interface Fruit {
   name: string;
@@ -25,6 +26,7 @@ export class EditInventoryComponent implements OnInit {
   loading: boolean = true;
   oof: boolean = false;
   reallyDelete: boolean = false;
+  userNotFound: boolean = false;
 
   visible: boolean = true;
   selectable: boolean = true;
@@ -55,6 +57,11 @@ export class EditInventoryComponent implements OnInit {
     });
   }
 
+  /**
+   * Map the inventories users to the local arrays
+   *
+   * @memberof EditInventoryComponent
+   */
   mapUsers(): void {
     for (const inventoryUser of this.inventory.inventoryUsers) {
       switch (inventoryUser.InventoryUserAccessRights) {
@@ -76,11 +83,46 @@ export class EditInventoryComponent implements OnInit {
     }
   }
 
+  /**
+   * Write the users from the local arrays to the inventory
+   *
+   * @memberof EditInventoryComponent
+   */
+  reverseMapUsers(): void {
+    const inventoryUsers: InventoryUser[] = [];
+
+    inventoryUsers.push({
+      user: this.owner,
+      InventoryUserAccessRights: InventoryUserAccess.OWNER
+    });
+
+    for (const admin of this.admins) {
+      inventoryUsers.push({
+        user: admin,
+        InventoryUserAccessRights: InventoryUserAccess.ADMIN
+      });
+    }
+
+    for (const writeable of this.writeables) {
+      inventoryUsers.push({
+        user: writeable,
+        InventoryUserAccessRights: InventoryUserAccess.WRITE
+      });
+    }
+
+    for (const readable of this.readables) {
+      inventoryUsers.push({
+        user: readable,
+        InventoryUserAccessRights: InventoryUserAccess.READ
+      });
+    }
+
+    this.inventory.inventoryUsers = inventoryUsers;
+  }
+
   async getInventory(): Promise<void> {
     try {
       this.inventory = await this.is.getInventory(this.inventory.id);
-
-      console.log(this.inventory);
 
       this.loading = false;
     } catch (error) {
@@ -109,6 +151,7 @@ export class EditInventoryComponent implements OnInit {
 
   async updateInventory(): Promise<void> {
     try {
+      this.reverseMapUsers();
       await this.is.updateInventory(this.inventory);
       this.oof = false;
     } catch (error) {
@@ -173,13 +216,20 @@ export class EditInventoryComponent implements OnInit {
   //
 
   // admin
-  addAdmin(event: MatChipInputEvent): void {
+  async addAdmin(event: MatChipInputEvent): Promise<void> {
     const input: HTMLInputElement = event.input;
     const value: string = event.value;
 
-    // Add our fruit
+    // Add the admin
     if ((value || "").trim()) {
-      this.admins.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.admins.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
     }
 
     // Reset the input value
@@ -197,13 +247,20 @@ export class EditInventoryComponent implements OnInit {
   }
 
   // writeable
-  addWriteable(event: MatChipInputEvent): void {
+  async addWriteable(event: MatChipInputEvent): Promise<void> {
     const input: HTMLInputElement = event.input;
     const value: string = event.value;
 
     // Add our fruit
     if ((value || "").trim()) {
-      this.writeables.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.writeables.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
     }
 
     // Reset the input value
@@ -221,13 +278,20 @@ export class EditInventoryComponent implements OnInit {
   }
 
   // readable
-  addReadable(event: MatChipInputEvent): void {
+  async addReadable(event: MatChipInputEvent): Promise<void> {
     const input: HTMLInputElement = event.input;
     const value: string = event.value;
 
     // Add our fruit
     if ((value || "").trim()) {
-      this.readables.push({ email: value.trim(), name: "", id: 0 }); // TODO implement getUserByEmail
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.readables.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
     }
 
     // Reset the input value

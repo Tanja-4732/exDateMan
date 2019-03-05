@@ -70,6 +70,14 @@
     <button mat-raised-button (click)="onDeleteInventory()" color="warn">Delete inventory</button>
     &nbsp;
     <button mat-stroked-button routerLink="/inventories/{{inventory.id}}/things/">Go back</button>
+
+
+    <div *ngIf="userNotFound" class="mat-typography">
+      <br>
+      <br>
+      We couldn't find that user.
+      <br>
+    </div>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">
