@@ -5,8 +5,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatDialog, MatDialogRef, MatChipInputEvent } from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
+import { UserService } from "../../services/user/user.service";
+import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
+import { InventoryUser } from "../../models/inventory-user/inventory-user";
 
 export interface Fruit {
   name: string;
@@ -23,111 +26,25 @@ export class EditInventoryComponent implements OnInit {
   loading: boolean = true;
   oof: boolean = false;
   reallyDelete: boolean = false;
-
-  inventory: Inventory = new Inventory();
-
-
-
-
-
-
-
-
+  userNotFound: boolean = false;
 
   visible: boolean = true;
   selectable: boolean = true;
   removable: boolean = true;
   addOnBlur: boolean = true;
+
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  owner: User;
   admins: User[] = [];
   writeables: User[] = [];
   readables: User[] = [];
 
-  // admin
-  addAdmin(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeAdmin(admin: User): void {
-    const index: number = this.admins.indexOf(admin);
-
-    if (index >= 0) {
-      this.admins.splice(index, 1);
-    }
-  }
-
-
-  // writeable
-  addWritable(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.admins.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeWritable(writeable: User): void {
-    const index: number = this.writeables.indexOf(writeable);
-
-    if (index >= 0) {
-      this.writeables.splice(index, 1);
-    }
-  }
-
-
-  // readable
-  addReadable(event: MatChipInputEvent): void {
-    const input: HTMLInputElement = event.input;
-    const value: string = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.readables.push({email: value.trim(), name: "", id: 0}); // TODO implement getUserByEmail
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = "";
-    }
-  }
-
-  removeReadable(admin: User): void {
-    const index: number = this.admins.indexOf(admin);
-
-    if (index >= 0) {
-      this.readables.splice(index, 1);
-    }
-  }
-
-
-
-
-
-
-
-
-
+  inventory: Inventory = new Inventory();
 
   constructor(
     private is: InventoryService,
+    private us: UserService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router
@@ -135,17 +52,77 @@ export class EditInventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.inventory.id = this.route.snapshot.params["inventoryId"];
-    this.getInventory().then();
+    this.getInventory().then(() => {
+      this.mapUsers();
+    });
+  }
+
+  /**
+   * Map the inventories users to the local arrays
+   *
+   * @memberof EditInventoryComponent
+   */
+  mapUsers(): void {
+    for (const inventoryUser of this.inventory.inventoryUsers) {
+      switch (inventoryUser.InventoryUserAccessRights) {
+        case InventoryUserAccess.OWNER:
+          this.owner = inventoryUser.user;
+          break;
+        case InventoryUserAccess.ADMIN:
+          this.admins.push(inventoryUser.user);
+          break;
+        case InventoryUserAccess.WRITE:
+          this.writeables.push(inventoryUser.user);
+          break;
+        case InventoryUserAccess.READ:
+          this.readables.push(inventoryUser.user);
+          break;
+        default:
+          throw new Error("mapUsers fallThrough error");
+      }
+    }
+  }
+
+  /**
+   * Write the users from the local arrays to the inventory
+   *
+   * @memberof EditInventoryComponent
+   */
+  reverseMapUsers(): void {
+    const inventoryUsers: InventoryUser[] = [];
+
+    inventoryUsers.push({
+      user: this.owner,
+      InventoryUserAccessRights: InventoryUserAccess.OWNER
+    });
+
+    for (const admin of this.admins) {
+      inventoryUsers.push({
+        user: admin,
+        InventoryUserAccessRights: InventoryUserAccess.ADMIN
+      });
+    }
+
+    for (const writeable of this.writeables) {
+      inventoryUsers.push({
+        user: writeable,
+        InventoryUserAccessRights: InventoryUserAccess.WRITE
+      });
+    }
+
+    for (const readable of this.readables) {
+      inventoryUsers.push({
+        user: readable,
+        InventoryUserAccessRights: InventoryUserAccess.READ
+      });
+    }
+
+    this.inventory.inventoryUsers = inventoryUsers;
   }
 
   async getInventory(): Promise<void> {
     try {
-      this.inventory = await this.is.getInventory(
-        this.inventory.id
-      );
-
-        console.log(this.inventory);
-
+      this.inventory = await this.is.getInventory(this.inventory.id);
 
       this.loading = false;
     } catch (error) {
@@ -174,6 +151,7 @@ export class EditInventoryComponent implements OnInit {
 
   async updateInventory(): Promise<void> {
     try {
+      this.reverseMapUsers();
       await this.is.updateInventory(this.inventory);
       this.oof = false;
     } catch (error) {
@@ -230,6 +208,103 @@ export class EditInventoryComponent implements OnInit {
           console.log("Unknown error in add-stock while creating");
         }
       }
+    }
+  }
+
+  //
+  // Chips logic
+  //
+
+  // admin
+  async addAdmin(event: MatChipInputEvent): Promise<void> {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add the admin
+    if ((value || "").trim()) {
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.admins.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeAdmin(admin: User): void {
+    const index: number = this.admins.indexOf(admin);
+
+    if (index >= 0) {
+      this.admins.splice(index, 1);
+    }
+  }
+
+  // writeable
+  async addWriteable(event: MatChipInputEvent): Promise<void> {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || "").trim()) {
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.writeables.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeWriteable(writeable: User): void {
+    const index: number = this.writeables.indexOf(writeable);
+
+    if (index >= 0) {
+      this.writeables.splice(index, 1);
+    }
+  }
+
+  // readable
+  async addReadable(event: MatChipInputEvent): Promise<void> {
+    const input: HTMLInputElement = event.input;
+    const value: string = event.value;
+
+    // Add our fruit
+    if ((value || "").trim()) {
+      let user: User;
+      try {
+        user = await this.us.getUser(value.trim());
+        this.readables.push(user);
+      } catch (error) {
+        this.userNotFound = true;
+      }
+      this.userNotFound = false;
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = "";
+    }
+  }
+
+  removeReadable(readable: User): void {
+    const index: number = this.readables.indexOf(readable);
+
+    if (index >= 0) {
+      this.readables.splice(index, 1);
     }
   }
 }

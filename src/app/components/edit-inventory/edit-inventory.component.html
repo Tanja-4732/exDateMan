@@ -25,12 +25,12 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Admins</mat-label>
-      <mat-chip-list #chipList>
+      <mat-chip-list #AdminsChipList>
         <mat-chip *ngFor="let admin of admins" [selectable]="selectable" [removable]="removable" (removed)="removeAdmin(admin)">
           {{admin.name}}
           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
-        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        <input placeholder="Bob" [matChipInputFor]="AdminsChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addAdmin($event)">
       </mat-chip-list>
       <i matSuffix class="material-icons">build</i>
@@ -39,12 +39,12 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Writeables</mat-label>
-      <mat-chip-list #chipList>
+      <mat-chip-list #writeablesChipList>
         <mat-chip *ngFor="let writeable of writeables" [selectable]="selectable" [removable]="removable" (removed)="removeWriteable(writeable)">
           {{writeable.name}}
           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
-        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        <input placeholder="Bob" [matChipInputFor]="writeablesChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addWriteable($event)">
       </mat-chip-list>
       <i matSuffix class="material-icons">create</i>
@@ -53,23 +53,31 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Readables</mat-label>
-      <mat-chip-list #chipList>
-        <mat-chip *ngFor="let admin of admins" [selectable]="selectable" [removable]="removable" (removed)="removeAdmin(admin)">
-          {{admin.name}}
+      <mat-chip-list #readablesChipList>
+        <mat-chip *ngFor="let readable of readables" [selectable]="selectable" [removable]="removable" (removed)="removeReadable(readable)">
+          {{readable.name}}
           <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
         </mat-chip>
-        <input placeholder="Bob" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addAdmin($event)">
+        <input placeholder="Bob" [matChipInputFor]="readablesChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addReadable($event)">
       </mat-chip-list>
       <i matSuffix class="material-icons">import_contacts</i>
     </mat-form-field>
     <br>
 
-    <button mat-raised-button (click)="onEditInventory()" color="accent">Edit inventory</button>
+    <button mat-raised-button (click)="onEditInventory()" color="accent">Save changes</button>
     &nbsp;
     <button mat-raised-button (click)="onDeleteInventory()" color="warn">Delete inventory</button>
     &nbsp;
     <button mat-stroked-button routerLink="/inventories/{{inventory.id}}/things/">Go back</button>
+
+
+    <div *ngIf="userNotFound" class="mat-typography">
+      <br>
+      <br>
+      We couldn't find that user.
+      <br>
+    </div>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">

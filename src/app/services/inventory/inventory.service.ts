@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Inventory } from "../../models/inventory/inventory";
 import { environment } from "../../../environments/environment";
 import { User } from "../../models/user/user";
+import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 
 @Injectable({
   providedIn: "root"
@@ -75,14 +76,43 @@ export class InventoryService {
   }
 
   async updateInventory(inventory: Inventory): Promise<Inventory> {
-    return await this.http
-      .put<Inventory>(this.baseUrl + "/inv/" + inventory.id, {
-        admins: [],
-        readables: [],
-        writeables: [],
-        name: inventory.name
-      } as UpdateInventoryRequest)
+    let owner: number;
+    const admins: number[] = [];
+    const writeables: number[] = [];
+    const readables: number[] = [];
+
+    for (const inventoryUser of inventory.inventoryUsers) {
+      switch (inventoryUser.InventoryUserAccessRights) {
+        case InventoryUserAccess.OWNER:
+          owner = inventoryUser.user.id;
+          break;
+        case InventoryUserAccess.ADMIN:
+          admins.push(inventoryUser.user.id);
+          break;
+        case InventoryUserAccess.WRITE:
+          writeables.push(inventoryUser.user.id);
+          break;
+        case InventoryUserAccess.READ:
+          readables.push(inventoryUser.user.id);
+          break;
+        default:
+          throw new Error("mapUsers fallThrough error");
+      }
+    }
+
+    const qReq: UpdateInventoryRequest = {
+      owner,
+      admins,
+      readables,
+      writeables,
+      name: inventory.name
+    } as UpdateInventoryRequest;
+
+    const qRes: any = await this.http
+      .put<Inventory>(this.baseUrl + "/inv/" + inventory.id, qReq)
       .toPromise();
+
+      return qRes;
   }
 
   async deleteInventory(inventory: Inventory): Promise<unknown> {

@@ -22,6 +22,6 @@ v1Routes.use("/inv", AuthController.authenticate, inventoriesRoutes);
 v1Routes.use("/auth", authRoutes);
 
 // Use user routes
-v1Routes.use("/user", AuthController.authenticate, userRoutes);
+v1Routes.use("/users", AuthController.authenticate, userRoutes);
 
 export default v1Routes;
