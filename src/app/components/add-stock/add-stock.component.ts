@@ -59,6 +59,7 @@ export class AddStockComponent implements OnInit {
     try {
       this.stock.percentLeft = 100;
       this.stock.exDate = this.form.value.exDate;
+      this.stock.useUpIn = this.form.value.useUpIn;
       this.stock.quantity = this.form.value.quantity;
       await this.ss.newStock(stock, this.inventoryId, this.thingNumber);
       this.oof = false;
