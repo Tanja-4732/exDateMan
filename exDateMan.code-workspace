@@ -8,12 +8,14 @@
     "cSpell.words": [
       "Bernd's",
       "SERIALIZABLE",
+      "Validators",
       "hasher",
       "keycodes",
       "postgres",
       "readables",
       "selectable",
       "typeorm",
+      "writeable",
       "writeables"
     ],
     "typescript.tsdk": "node_modules\\typescript\\lib",

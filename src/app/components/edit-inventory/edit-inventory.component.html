@@ -30,9 +30,10 @@
           {{owner.name}}
         </mat-chip>
         <input placeholder="Bob" [matChipInputFor]="OwnerChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="onAddOwner($event)">
+          [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="onAddOwner($event)" [formControl]="ownerEmail">
       </mat-chip-list>
       <i matSuffix class="material-icons">build</i>
+      <mat-error *ngIf="ownerEmail.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
     <br>
 

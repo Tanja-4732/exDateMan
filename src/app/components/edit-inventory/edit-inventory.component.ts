@@ -10,6 +10,7 @@ import { User } from "../../models/user/user";
 import { UserService } from "../../services/user/user.service";
 import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 import { InventoryUser } from "../../models/inventory-user/inventory-user";
+import { Validators, FormControl } from "@angular/forms";
 
 export interface Fruit {
   name: string;
@@ -29,7 +30,7 @@ export class EditInventoryComponent implements OnInit {
   userNotFound: boolean = false;
 
   visible: boolean = true;
-  selectable: boolean = true;
+  selectable: boolean = false;
   removable: boolean = true;
   addOnBlur: boolean = true;
 
@@ -42,6 +43,8 @@ export class EditInventoryComponent implements OnInit {
 
   inventory: Inventory = new Inventory();
 
+  ownerEmail: FormControl = new FormControl('', [Validators.required, Validators.email]);
+
   constructor(
     private is: InventoryService,
     private us: UserService,
@@ -49,6 +52,12 @@ export class EditInventoryComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router
   ) {}
+
+  getErrorMessage(): string {
+    return this.ownerEmail.hasError('required') ? 'You must enter a value' :
+        this.ownerEmail.hasError('email') ? 'Not a valid email' :
+            '';
+  }
 
   ngOnInit(): void {
     this.inventory.id = this.route.snapshot.params["inventoryId"];
