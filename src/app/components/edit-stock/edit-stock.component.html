@@ -16,26 +16,26 @@
   <span *ngIf="!loading && !notFound">
     <mat-form-field appearance="outline">
       <mat-label>Expiration date</mat-label>
-      <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate">
+      <input matInput placeholder="12/31/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate" required>
       <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #exDatePicker></mat-datepicker>
     </mat-form-field>
     <br>
     <mat-form-field appearance="outline">
       <mat-label>Use up in # days</mat-label>
-      <input matInput type="text" placeholder="3" [(ngModel)]="stock.useUpIn">
+      <input matInput type="number" placeholder="3" [(ngModel)]="stock.useUpIn">
       <i matSuffix class="material-icons">update</i>
     </mat-form-field>
     <br>
     <mat-form-field appearance="outline">
       <mat-label>Quantity</mat-label>
-      <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity">
+      <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity" required>
       <i matSuffix class="material-icons">equalizer</i>
     </mat-form-field>
     <br>
     <mat-form-field appearance="outline">
       <mat-label>Percent left</mat-label>
-      <input matInput type="text" placeholder="50%" [(ngModel)]="stock.percentLeft">
+      <input matInput type="number" placeholder="50%" [(ngModel)]="stock.percentLeft" required>
       <i matSuffix class="material-icons">pie_chart</i>
     </mat-form-field>
     <br>

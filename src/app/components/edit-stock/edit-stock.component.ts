@@ -5,6 +5,7 @@ import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-edit-stock",
@@ -24,12 +25,23 @@ export class EditStockComponent implements OnInit {
 
   stock: Stock;
 
+  form: FormGroup;
+
   constructor(
     private ss: StockService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+    ) {
+      this.createForm();
+    }
+
+    createForm(): void  {
+      this.form = this.fb.group({
+
+      });
+    }
 
   ngOnInit(): void {
     this.getIds();

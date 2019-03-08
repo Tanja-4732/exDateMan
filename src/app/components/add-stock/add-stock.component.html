@@ -10,7 +10,7 @@
   <form [formGroup]="form" (ngSubmit)="onAddStock()">
     <mat-form-field appearance="outline">
       <mat-label>Expiration date</mat-label>
-      <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" formControlName="exDate" required>
+      <input matInput placeholder="12/31/2018" [matDatepicker]="exDatePicker" formControlName="exDate" required>
       <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #exDatePicker></mat-datepicker>
       <mat-error *ngIf="form.value.exDate.invalid">{{getExDateErrorMessage()}}</mat-error>
