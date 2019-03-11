@@ -5,7 +5,7 @@ import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-edit-stock",
@@ -39,7 +39,10 @@ export class EditStockComponent implements OnInit {
 
     createForm(): void  {
       this.form = this.fb.group({
-
+        "exDate": ["", [Validators.required]],
+        "quantity": [""],
+        "useUpIn": [],
+        "percentLeft": []
       });
     }
 
