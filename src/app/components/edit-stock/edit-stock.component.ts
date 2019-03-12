@@ -40,15 +40,17 @@ export class EditStockComponent implements OnInit {
     createForm(): void  {
       this.form = this.fb.group({
         "exDate": ["", [Validators.required]],
-        "quantity": [""],
-        "useUpIn": [],
-        "percentLeft": []
+        "useUpIn": [5],
+        "quantity": ["8 kg"],
+        "percentLeft": [75]
       });
     }
 
   ngOnInit(): void {
     this.getIds();
-    this.getStock().then();
+    this.getStock().then(() => {
+      this.form.patchValue(this.stock);
+    });
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
