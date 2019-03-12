@@ -33,18 +33,18 @@ export class EditStockComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder
-    ) {
-      this.createForm();
-    }
+  ) {
+    this.createForm();
+  }
 
-    createForm(): void  {
-      this.form = this.fb.group({
-        "exDate": ["", [Validators.required]],
-        "useUpIn": [5],
-        "quantity": ["8 kg"],
-        "percentLeft": [75]
-      });
-    }
+  createForm(): void {
+    this.form = this.fb.group({
+      exDate: ["", [Validators.required]],
+      useUpIn: [5],
+      quantity: ["8 kg"],
+      percentLeft: [75]
+    });
+  }
 
   ngOnInit(): void {
     this.getIds();
@@ -68,6 +68,7 @@ export class EditStockComponent implements OnInit {
 
   async editStock(): Promise<void> {
     try {
+      this.copyData();
       // Confirm that it has been opened for the first time just now.
       if (
         ((this.stock.openedOn as unknown) as number) - 0 ===
@@ -96,6 +97,11 @@ export class EditStockComponent implements OnInit {
         console.log("Unknown error in add-stock while creating");
       }
     }
+  }
+
+  private copyData(): void {
+    this.stock = this.form.value;
+    this.stock.number = this.stockNumber;
   }
 
   getIds(): void {
