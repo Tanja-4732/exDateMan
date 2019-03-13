@@ -14,40 +14,46 @@
   </span>
 
   <span *ngIf="!loading && !notFound">
-    <mat-form-field appearance="outline">
-      <mat-label>Expiration date</mat-label>
-      <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate">
-      <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #exDatePicker></mat-datepicker>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="outline">
-      <mat-label>Use up in # days</mat-label>
-      <input matInput type="text" placeholder="3" [(ngModel)]="stock.useUpIn">
-      <i matSuffix class="material-icons">update</i>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="outline">
-      <mat-label>Quantity</mat-label>
-      <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity">
-      <i matSuffix class="material-icons">equalizer</i>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="outline">
-      <mat-label>Percent left</mat-label>
-      <input matInput type="text" placeholder="50%" [(ngModel)]="stock.percentLeft">
-      <i matSuffix class="material-icons">pie_chart</i>
-    </mat-form-field>
-    <br>
-    <span class="mat-typography">Or use the slider:</span>
-    <mat-slider min="0" max="100" step="1" [(value)]="stock.percentLeft"></mat-slider>
-    <br>
-    <br>
-    <button mat-raised-button (click)="onEditStock()" color="accent">Save changes</button>
-    &nbsp;
-    <button mat-raised-button (click)="onDeleteStock()" color="warn">Delete stock</button>
-    &nbsp;
-    <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+    <form [formGroup]="form" (ngSubmit)="onEditStock()">
+      <mat-form-field appearance="outline">
+        <mat-label>Expiration date</mat-label>
+        <input matInput placeholder="12/31/2018" [matDatepicker]="exDatePicker" formControlName="exDate" required>
+        <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #exDatePicker></mat-datepicker>
+      </mat-form-field>
+      <br>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Use up in # days</mat-label>
+        <input matInput type="number" placeholder="3" formControlName="useUpIn">
+        <i matSuffix class="material-icons">update</i>
+      </mat-form-field>
+      <br>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="text" placeholder="3 kg" formControlName="quantity" required>
+        <i matSuffix class="material-icons">equalizer</i>
+      </mat-form-field>
+      <br>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Percent left</mat-label>
+        <input matInput type="number" placeholder="50%" formControlName="percentLeft" (input)="percentMoved($event)" required>
+        <i matSuffix class="material-icons">pie_chart</i>
+      </mat-form-field>
+      <br>
+
+      <span class="mat-typography">Or use the slider:</span>
+      <mat-slider min="0" max="100" step="1" formControlName="percentLeft" (input)="sliderMoved($event)"></mat-slider>
+      <br>
+      <br>
+      <button mat-raised-button type="submit" color="accent" [disabled]="!form.valid">Save changes</button>
+      &nbsp;
+      <button mat-raised-button type="button" (click)="onDeleteStock()" color="warn">Delete stock</button>
+      &nbsp;
+      <button mat-stroked-button type="button" routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+    </form>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">

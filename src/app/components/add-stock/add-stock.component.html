@@ -7,28 +7,32 @@
 </span>
 
 <span *ngIf="!unauthorized">
-  <mat-form-field appearance="outline">
-    <mat-label>Expiration date</mat-label>
-    <input matInput placeholder="9/9/2018" [matDatepicker]="exDatePicker" [(ngModel)]="stock.exDate">
-    <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #exDatePicker></mat-datepicker>
-  </mat-form-field>
-  <br>
+  <form [formGroup]="form" (ngSubmit)="onAddStock()">
+    <mat-form-field appearance="outline">
+      <mat-label>Expiration date</mat-label>
+      <input matInput placeholder="12/31/2018" [matDatepicker]="exDatePicker" formControlName="exDate" required>
+      <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #exDatePicker></mat-datepicker>
+      <mat-error *ngIf="form.value.exDate.invalid">{{getExDateErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Use up in # days</mat-label>
-    <input matInput type="number" placeholder="3" [(ngModel)]="stock.useUpIn">
-    <!-- <span matSuffix>&nbsp;days</span> -->
-    <i matSuffix class="material-icons">update</i>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Use up in # days</mat-label>
+      <input matInput type="number" placeholder="3" formControlName="useUpIn">
+      <!-- <span matSuffix>&nbsp;days</span> -->
+      <i matSuffix class="material-icons">update</i>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Quantity</mat-label>
-    <input matInput type="text" placeholder="3 kg" [(ngModel)]="stock.quantity">
-    <i matSuffix class="material-icons">equalizer</i>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="text" placeholder="3 kg" formControlName="quantity" required>
+      <mat-error *ngIf="form.value.quantity.invalid">{{getQuantityErrorMessage()}}</mat-error>
+      <i matSuffix class="material-icons">equalizer</i>
+    </mat-form-field>
+    <br>
 
-  <button mat-raised-button (click)="onAddStock()" color="accent">Add stock</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="!form.valid">Add stock</button>
+  </form>
 </span>

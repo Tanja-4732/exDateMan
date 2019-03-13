@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { FormControl, Validators, FormGroup, FormBuilder } from "@angular/forms";
 
 @Component({
   selector: "app-add-stock",
@@ -19,14 +20,31 @@ export class AddStockComponent implements OnInit {
 
   stock: Stock = new Stock();
 
+  form: FormGroup;
+
   constructor(
     private ss: StockService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    fb: FormBuilder
+  ) {
+    this.form = fb.group({
+      "exDate": ["", [Validators.required]],
+      "quantity": [""],
+      "useUpIn": []
+    });
+  }
 
   ngOnInit(): void {
     this.getInventoryIdAndThingNumber();
+  }
+
+  getExDateErrorMessage(): string {
+    return this.form.value.exDate.hasError('required') ? "We need you to enter an expiration date" : "";
+  }
+
+  getQuantityErrorMessage(): string {
+    return this.form.value.quantity.hasError('required') ? "We need you to enter a quantity" : "";
   }
 
   onAddStock(): void {
@@ -40,6 +58,9 @@ export class AddStockComponent implements OnInit {
   async createStock(stock: Stock): Promise<void> {
     try {
       this.stock.percentLeft = 100;
+      this.stock.exDate = this.form.value.exDate;
+      this.stock.useUpIn = this.form.value.useUpIn;
+      this.stock.quantity = this.form.value.quantity;
       await this.ss.newStock(stock, this.inventoryId, this.thingNumber);
       this.oof = false;
     } catch (error) {

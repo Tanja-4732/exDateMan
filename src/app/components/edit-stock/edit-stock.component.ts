@@ -1,10 +1,16 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialog,
+  MatSliderChange
+} from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-edit-stock",
@@ -24,16 +30,32 @@ export class EditStockComponent implements OnInit {
 
   stock: Stock;
 
+  form: FormGroup;
+
   constructor(
     private ss: StockService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.createForm();
+  }
+
+  createForm(): void {
+    this.form = this.fb.group({
+      exDate: ["", [Validators.required]],
+      useUpIn: [5],
+      quantity: ["8 kg"],
+      percentLeft: [75]
+    });
+  }
 
   ngOnInit(): void {
     this.getIds();
-    this.getStock().then();
+    this.getStock().then(() => {
+      this.form.patchValue(this.stock);
+    });
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
@@ -51,6 +73,7 @@ export class EditStockComponent implements OnInit {
 
   async editStock(): Promise<void> {
     try {
+      this.copyData();
       // Confirm that it has been opened for the first time just now.
       if (
         ((this.stock.openedOn as unknown) as number) - 0 ===
@@ -79,6 +102,11 @@ export class EditStockComponent implements OnInit {
         console.log("Unknown error in add-stock while creating");
       }
     }
+  }
+
+  private copyData(): void {
+    this.stock = this.form.value;
+    this.stock.number = this.stockNumber;
   }
 
   getIds(): void {
@@ -154,6 +182,23 @@ export class EditStockComponent implements OnInit {
         }
       }
     }
+  }
+
+  percentMoved(event: any): void {
+    let value: number = parseInt(event.target.value, 10);
+    // Normalize outstanding values
+    value = value < 0 ? 0 : value > 100 ? 100 : value;
+    this.form.patchValue(
+      { percentLeft: value },
+      { onlySelf: false, emitEvent: true }
+    );
+  }
+
+  sliderMoved(event: any): void {
+    this.form.patchValue(
+      { percentLeft: event.value },
+      { onlySelf: false, emitEvent: true }
+    );
   }
 }
 
