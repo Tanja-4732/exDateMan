@@ -50,9 +50,9 @@
       <br>
       <button mat-raised-button type="submit" color="accent" [disabled]="!form.valid">Save changes</button>
       &nbsp;
-      <button mat-raised-button (click)="onDeleteStock()" color="warn">Delete stock</button>
+      <button mat-raised-button type="button" (click)="onDeleteStock()" color="warn">Delete stock</button>
       &nbsp;
-      <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+      <button mat-stroked-button type="button" routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
     </form>
   </span>
 
