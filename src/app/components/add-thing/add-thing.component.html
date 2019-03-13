@@ -1,14 +1,18 @@
-<mat-form-field appearance="outline" cdkFocusRegionStart cdkFocusInitial>
-  <mat-label>Thing name</mat-label>
-  <input matInput type="text" placeholder="Tomato" [(ngModel)]="thingName" autofocus>
-  <i matSuffix class="material-icons">crop_free</i>
-  <!-- <mat-hint>Hint</mat-hint> -->
-</mat-form-field>
-<br>
-<mat-form-field appearance="outline">
-  <mat-label>Thing category</mat-label>
-  <i matSuffix class="material-icons">category</i>
-  <input matInput type="text" placeholder="Vegetables" [(ngModel)]="thingCategory">
-</mat-form-field>
-<br>
-<button mat-raised-button (click)="onAddThing()" color="accent" cdkFocusRegionEnd>Add thing</button>
+<form [formGroup]="form" (ngSubmit)="onAddThing()">
+  <mat-form-field appearance="outline" cdkFocusRegionStart cdkFocusInitial>
+    <mat-label>Thing name</mat-label>
+    <input matInput type="text" placeholder="Tomato" formControlName="name" autofocus required>
+    <i matSuffix class="material-icons">crop_free</i>
+    <!-- <mat-hint>Hint</mat-hint> -->
+  </mat-form-field>
+  <br>
+  <!-- <mat-form-field appearance="outline">
+    <mat-label>Thing category</mat-label>
+    <i matSuffix class="material-icons">category</i>
+    <input matInput type="text" placeholder="Vegetables" [(ngModel)]="thingCategory">
+  </mat-form-field>
+  <br> -->
+  <button mat-raised-button ype="submit" color="accent" cdkFocusRegionEnd [disabled]="!form.valid">Add thing</button>
+  &nbsp;
+  <button mat-stroked-button type="button" routerLink="/inventories/{{inventoryId}}/things">Go back</button>
+</form>

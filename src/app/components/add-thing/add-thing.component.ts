@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ThingService } from "../../services/thing/thing.service";
 import { Thing } from "../../models/thing/thing";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Validators, FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-add-thing",
@@ -9,37 +10,58 @@ import { ActivatedRoute, Router } from "@angular/router";
   styleUrls: ["./add-thing.component.scss"]
 })
 export class AddThingComponent implements OnInit {
-  thingName: string;
-  thingCategory: string;
-  inventoryId: number;
   oof: boolean = false; // Error flag
+  unauthorized: boolean = false;
+
+  thing: Thing;
+  inventoryId: number;
+
+  form: FormGroup;
 
   constructor(
     private ts: ThingService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+    ) {
+    this.createForm();
+    }
+
+    createForm(): void {
+      this.form = this.fb.group({
+        name: ["", [Validators.required]]
+      });
+    }
 
   ngOnInit(): void {
     this.getInventoryId();
+    setTimeout(() => {
+      if (this.unauthorized) {
+        this.router.navigate(["/login"]);
+      }
+    }, 3000);
   }
 
   onAddThing(): void {
-    const thing: Thing = new Thing();
-    thing.name = this.thingName; // TODO tidy this up
-    thing.categories = [];
-
-    this.createThing(thing).then(() => {
+    this.createThing().then(() => {
       this.router.navigate([".."], { relativeTo: this.route });
     });
   }
 
-  async createThing(thing: Thing): Promise<void> {
+  private copyData(): void {
+    this.thing = this.form.value;
+  }
+
+  async createThing(): Promise<void> {
     try {
-      await this.ts.newThing(thing, this.inventoryId);
+      this.copyData();
+      this.thing.categories = [];
+      await this.ts.newThing(this.thing, this.inventoryId);
       this.oof = false;
     } catch (err) {
       console.log("oof"); // TODO remove log
+      console.log(err);
+
     }
   }
 
