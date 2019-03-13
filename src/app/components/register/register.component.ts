@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-register",
@@ -10,17 +11,25 @@ import { AuthService } from "../../services/auth/auth.service";
 export class RegisterComponent implements OnInit {
   oof: boolean = false;
 
-  email: string;
-  password: string;
-  repeat_password: string;
-  name: string;
+  form: FormGroup;
 
   constructor(
     private as: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fb: FormBuilder
   ) {
-    this.email = this.route.snapshot.params["email"];
+    this.createForm();
+    this.form.patchValue({email: this.route.snapshot.params["email"]});
+  }
+
+  createForm(): void {
+    this.form = this.fb.group({
+      name: ["", [Validators.required]],
+      email: ["", [Validators.required]],
+      password: ["", [Validators.required]],
+      repeat_password: ["", [Validators.required]]
+    });
   }
 
   ngOnInit(): void {}
@@ -34,12 +43,12 @@ export class RegisterComponent implements OnInit {
   }
 
   async register(): Promise<void> {
-    if (this.password !== this.repeat_password) {
+    if (this.form.value.password !== this.form.value.repeat_password) {
       alert("Passwords don't match!");
       return;
     }
     try {
-      await this.as.register(this.email, this.password, this.name);
+      await this.as.register(this.form.value.email, this.form.value.password, this.form.value.name);
       this.oof = false;
     } catch (error) {
       this.oof = true;
