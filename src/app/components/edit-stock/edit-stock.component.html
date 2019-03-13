@@ -39,19 +39,19 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Percent left</mat-label>
-        <input matInput type="number" placeholder="50%" formControlName="percentLeft" required>
+        <input matInput type="number" placeholder="50%" formControlName="percentLeft" (input)="percentMoved($event)" required>
         <i matSuffix class="material-icons">pie_chart</i>
       </mat-form-field>
       <br>
 
       <span class="mat-typography">Or use the slider:</span>
-      <mat-slider min="0" max="100" step="1" formControlName="percentLeft"></mat-slider>
+      <mat-slider min="0" max="100" step="1" formControlName="percentLeft" (input)="sliderMoved($event)"></mat-slider>
       <br>
       <br>
       <button mat-raised-button type="submit" color="accent" [disabled]="!form.valid">Save changes</button>
       &nbsp;
       <button mat-raised-button (click)="onDeleteStock()" color="warn">Delete stock</button>
-      &nbsp;{{form.value.percentLeft}}
+      &nbsp;
       <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
     </form>
   </span>

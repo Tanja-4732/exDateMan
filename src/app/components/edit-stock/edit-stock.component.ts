@@ -1,9 +1,14 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialog,
+  MatSliderChange
+} from "@angular/material";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
@@ -177,6 +182,23 @@ export class EditStockComponent implements OnInit {
         }
       }
     }
+  }
+
+  percentMoved(event: any): void {
+    let value: number = parseInt(event.target.value, 10);
+    // Normalize outstanding values
+    value = value < 0 ? 0 : value > 100 ? 100 : value;
+    this.form.patchValue(
+      { percentLeft: value },
+      { onlySelf: false, emitEvent: true }
+    );
+  }
+
+  sliderMoved(event: any): void {
+    this.form.patchValue(
+      { percentLeft: event.value },
+      { onlySelf: false, emitEvent: true }
+    );
   }
 }
 
