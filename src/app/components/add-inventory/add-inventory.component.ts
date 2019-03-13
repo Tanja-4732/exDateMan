@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
   styleUrls: ["./add-inventory.component.scss"]
 })
 export class AddInventoryComponent implements OnInit {
-  name: string;
+  name: string = "";
   oof: boolean = false; // Error flag
 
   // TODO add support for shared inventories
