@@ -5,6 +5,7 @@ import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
+import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 
 @Component({
   selector: "app-edit-thing",
@@ -23,21 +24,39 @@ export class EditThingComponent implements OnInit {
 
   thing: Thing;
 
+  form: FormGroup;
+
   constructor(
     private ts: ThingService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    private router: Router
-  ) {}
+    private router: Router,
+    private fb: FormBuilder
+    ) {
+    this.createForm();
+  }
+
+  createForm(): void {
+    this.form = this.fb.group({
+      name: ["", [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.getIds();
-    this.getThing().then();
+    this.getThing().then(() => {
+      this.form.patchValue(this.thing);
+    });
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
       }
     }, 3000);
+  }
+
+  private copyData(): void {
+    this.thing = this.form.value;
+    this.thing.number = this.thingNumber;
   }
 
   getIds(): void {
@@ -76,6 +95,7 @@ export class EditThingComponent implements OnInit {
 
   async editThing(): Promise<void> {
     try {
+      this.copyData();
       await this.ts.updateThing(this.thing, this.inventoryId);
       this.oof = false;
     } catch (error) {

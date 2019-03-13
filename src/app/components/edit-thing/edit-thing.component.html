@@ -14,19 +14,22 @@
   </span>
 
   <span *ngIf="!notFound && !loading">
-    <mat-form-field appearance="outline">
-      <mat-label>Thing name</mat-label>
-      <input matInput type="text" placeholder="Tomato" [(ngModel)]="thing.name">
-      <i matSuffix class="material-icons">crop_free</i>
-      <!-- <mat-hint>Hint</mat-hint> -->
-    </mat-form-field>
-    <br>
+    <form [formGroup]="form" (ngSubmit)="onEditThing()">
+      <mat-form-field appearance="outline">
+        <mat-label>Thing name</mat-label>
+        <input matInput type="text" placeholder="Tomato" formControlName="name" required>
+        <i matSuffix class="material-icons">crop_free</i>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      <br>
 
-    <button mat-raised-button (click)="onEditThing()" color="accent">Save changes</button>
-    &nbsp;
-    <button mat-raised-button (click)="onDeleteThing()" color="warn">Delete thing</button>
-    &nbsp;
-    <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+      <button mat-raised-button type="submit" (click)="onEditThing()" color="accent" [disabled]="!form.valid">Save changes</button>
+      &nbsp;
+      <button mat-raised-button type="button" (click)="onDeleteThing()" color="warn">Delete thing</button>
+      &nbsp;
+      <button mat-stroked-button type="button" routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+
+    </form>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">
