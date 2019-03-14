@@ -28,7 +28,7 @@ export class ThingService {
   async newThing(thing: Thing, inventoryId: number): Promise<Thing> {
     const categoryNumbers: number[] = [];
 
-    if (thing.categories) {
+    if (thing.categories != null) {
       for (const category of thing.categories) {
         categoryNumbers.push(category.number);
       }
