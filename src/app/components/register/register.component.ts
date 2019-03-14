@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { group } from "@angular/animations";
 
 @Component({
   selector: "app-register",
@@ -27,8 +28,10 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group({
       name: ["", [Validators.required]],
       email: ["", [Validators.required]],
-      password: ["", [Validators.required]],
-      repeat_password: ["", [Validators.required]]
+      passwords: this.fb.group({
+        password: ["", [Validators.required]],
+        repeat_password: ["", [Validators.required]]
+      })
     });
   }
 
