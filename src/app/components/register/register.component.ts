@@ -3,6 +3,8 @@ import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { group } from "@angular/animations";
+import { CustomValidators } from "../../custom-validators/custom-validators.module";
+import { CustomValidatorsService } from "../../services/CustomValidators/custom-validators.service";
 
 @Component({
   selector: "app-register",
@@ -19,7 +21,8 @@ export class RegisterComponent implements OnInit {
     private as: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cvs: CustomValidatorsService
   ) {
     this.createForm();
     this.form.patchValue({email: this.route.snapshot.params["email"]});
@@ -32,7 +35,7 @@ export class RegisterComponent implements OnInit {
       passwords: this.fb.group({
         password: ["", [Validators.required]],
         repeat_password: ["", [Validators.required]]
-      }, {validators: })
+      }, {validators: this.cvs.childrenEqual})
     });
   }
 
