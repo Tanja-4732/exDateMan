@@ -14,6 +14,7 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
 
+
   constructor(
     private as: AuthService,
     private router: Router,
@@ -31,7 +32,7 @@ export class RegisterComponent implements OnInit {
       passwords: this.fb.group({
         password: ["", [Validators.required]],
         repeat_password: ["", [Validators.required]]
-      })
+      }, {validators: })
     });
   }
 
