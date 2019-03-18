@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
       passwords: this.fb.group({
         password: ["", [Validators.required]],
         repeat_password: ["", [Validators.required]]
-      }, {validators: this.cvs.childrenEqual})
+      }, {validators: CustomValidatorsService.childrenEqual})
     });
   }
 
