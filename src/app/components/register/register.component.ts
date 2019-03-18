@@ -3,7 +3,6 @@ import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { group } from "@angular/animations";
-import { CustomValidators } from "../../custom-validators/custom-validators.module";
 import { CustomValidatorsService } from "../../services/CustomValidators/custom-validators.service";
 
 @Component({
