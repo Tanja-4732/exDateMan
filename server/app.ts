@@ -7,13 +7,16 @@ import { join } from "path";
 import { log } from "util";
 
 import routes from "./routes/routes";
+import { readFileSync, writeFileSync } from "fs";
 
 class App {
   public app: express.Application;
   public db: Connection;
-  // public routePrv: Routes = new Routes(this.app);
 
   constructor() {
+    // Patch index.html
+    this.patchIndexHtml();
+
     this.app = express();
 
     this.dbSetup(1, 1).then((success: boolean) => {
@@ -95,11 +98,28 @@ class App {
     }
   }
 
-  // private mongoSetup(): void {
-  //   // mongoose.Promise = global.Promise;
-  //   require("mongoose").Promise = global.Promise;
-  //   mongoose.connect(process.env.MLAB_STRING_EDM);
-  // }
+  /**
+   * Patches the index.html file in order to use the root as the base href.
+   *
+   * This is required because browsers would otherwise request files from other
+   * directories. For example, when a browser is at the /inventories/1/things/2
+   * path, it would request /inventories/1/things/2/main.min.js instead of
+   * requesting /main.min.js, which breaks the application.
+   *
+   * This method is intended to be run once after each deployment, but as it
+   * barely uses any resources, it gets run every time the server starts.
+   *
+   * @private
+   * @memberof App
+   */
+  private patchIndexHtml(): void {
+    const path: string = __dirname + "/../dist/exDateMan/index.html";
+    const fileContents: string = readFileSync(path, "utf8");
+    const targetContents: string = fileContents.replace(/\<base href\="\.\/"\>/g, "<base href=\"/\">");
+    writeFileSync(path, targetContents, "utf8");
+
+    log("Patched index.html");
+  }
 }
 
 export default new App().app;
