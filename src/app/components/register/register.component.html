@@ -13,18 +13,20 @@
   </mat-form-field>
   <br>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput type="password" placeholder="XWf%=7&eF8CxX_j^AC7x" formControlName="password" required>
-    <i matSuffix class="material-icons">vpn_key</i>
-  </mat-form-field>
-  <br>
+  <ng-container formGroupName="passwords">
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" placeholder="XWf%=7&eF8CxX_j^AC7x" formControlName="password" required>
+      <i matSuffix class="material-icons">vpn_key</i>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Repeat password</mat-label>
-    <input matInput type="password" placeholder="XWf%=7&eF8CxX_j^AC7x" formControlName="repeat_password" required>
-    <i matSuffix class="material-icons">lock</i>
-  </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Repeat password</mat-label>
+      <input matInput type="password" placeholder="XWf%=7&eF8CxX_j^AC7x" formControlName="repeat_password" required>
+      <i matSuffix class="material-icons">lock</i>
+    </mat-form-field>
+  </ng-container>
   <br>
 
   <button mat-raised-button type="submit" color="accent" [disabled]="!form.valid">Register</button>

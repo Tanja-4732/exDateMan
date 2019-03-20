@@ -1,4 +1,3 @@
-import { DBConnectionService } from "./services/DBConnection/dbconnection.service";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -90,7 +89,7 @@ import { DeleteConfirmationDialogComponent } from "./components/delete-confirmat
     MatChipsModule,
     ReactiveFormsModule
   ],
-  providers: [DBConnectionService],
+  providers: [],
   bootstrap: [AppComponent],
   entryComponents: [DeleteConfirmationDialogComponent]
 })
