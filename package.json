@@ -98,6 +98,5 @@
   "bugs": {
     "url": "https://github.com/Bernd-L/exDateMan/issues"
   },
-  "homepage": "https://github.com/Bernd-L/exDateMan#readme",
-  "heroku-run-build-script": true
+  "homepage": "https://github.com/Bernd-L/exDateMan#readme"
 }
