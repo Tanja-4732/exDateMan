@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon -e ts -w ./server -w ./server.ts -x ts-node ./server.ts",
     "ng": "ng",
-    "start": "node ./dist/out-tsc/server/server.js",
+    "start": "node ./dist/server/server.js",
     "build": "ng build --prod && tsc",
     "test": "ng test",
     "lint": "ng lint",

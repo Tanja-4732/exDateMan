@@ -6,12 +6,12 @@ The easy, intuitive and efficient way to manage a shared food inventory - WIP
 
 ## Contents
 
-- [Expiration date manager](#expiration-date-manager)
-  - [Contents](#contents)
-  - [Description](#description)
-  - [Features](#features)
-  - [Technologies used](#technologies-used)
-  - [License](#license)
+- [Expiration date manager](#Expiration-date-manager)
+  - [Contents](#Contents)
+  - [Description](#Description)
+  - [Features](#Features)
+  - [Technologies used](#Technologies-used)
+  - [License](#License)
 
 ## Description
 
@@ -52,7 +52,7 @@ The project has a `Procfile` because this project is meant to be deployed to Her
 
 ## License
 
-I may add a license later.
+Licensed under the GNU AGPL version 3 license.
 
 Copyright (c) 2018-2019 Bernd-L.
 All rights reserved.

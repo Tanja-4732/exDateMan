@@ -5,8 +5,7 @@ import { Inventory } from "../models/inventoryModel";
 import AuthController from "./authController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { Category } from "../models/categoryModel";
-import { User } from "../models/userModel";
-import { log, debug } from "util";
+import { log } from "util";
 import { Stock } from "../models/stockModel";
 
 interface ThingRequest {
