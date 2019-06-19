@@ -113,7 +113,7 @@ class App {
    * @memberof App
    */
   private patchIndexHtml(): void {
-    const path: string = __dirname + "/../dist/exDateMan/index.html";
+    const path: string = __dirname + "/../../exDateMan/index.html";
     const fileContents: string = readFileSync(path, "utf8");
     const targetContents: string = fileContents.replace(/\<base href\="\.\/"\>/g, "<base href=\"/\">");
     writeFileSync(path, targetContents, "utf8");
