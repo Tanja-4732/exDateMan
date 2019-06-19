@@ -63,6 +63,7 @@
     "@types/express-jwt": "0.0.41",
     "@types/jasmine": "^2.8.9",
     "@types/jasminewd2": "^2.0.5",
+    "@types/jsonwebtoken": "^8.3.2",
     "@types/node": "~8.9.4",
     "@types/source-map-support": "^0.5.0",
     "codelyzer": "~4.2.1",
