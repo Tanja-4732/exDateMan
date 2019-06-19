@@ -6,7 +6,7 @@ const PORT: string = process.env.PORT || 420 + "";
 process.env.EDM_ROOT_PATH = __dirname;
 
 log("Starting server...");
-import app from "./server/app";
+import app from "./app";
 app.listen(PORT, () => {
   log("Server listening on port " + PORT);
 });
