@@ -10,12 +10,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2018",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "noImplicitAny": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"]
   }
 }
