@@ -1,4 +1,5 @@
 {
+  "exclude": ["**.d.ts", "node_modules", "../node_modules/**"],
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
@@ -14,6 +15,5 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"]
   },
-  "include": ["."],
-  "exclude": ["**.d.ts", "node_modules", "../node_modules/**"]
+  "include": ["."]
 }
