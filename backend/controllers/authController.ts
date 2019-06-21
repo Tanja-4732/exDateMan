@@ -101,9 +101,6 @@ export default class AuthController {
 
     newUser.name = req.body.name;
 
-    // Testing... // TODO remove the following line
-    newUser.saltedPwdHash = "Hello World";
-
     // Calculate and set the hash
     const hashValue: string = hashSync(req.body.pwd, saltRounds);
 
