@@ -1,4 +1,3 @@
-import * as cors from "cors";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
@@ -8,48 +7,114 @@ import { log } from "util";
 
 import routes from "./routes/routes";
 import { readFileSync, writeFileSync } from "fs";
+import { Environment } from "./environments/environment";
 
 class App {
   public app: express.Application;
   public db: Connection;
 
   constructor() {
+    // Get environment configuration
+    const environment: Environment = App.getEnvironment();
+
     // Patch index.html
     this.patchIndexHtml();
 
+    // Initialize express
     this.app = express();
 
+    // Connect to the database
     this.dbSetup(1, 1).then((success: boolean) => {
       if (!success) {
+        // A failed connection attempt will log an error before shutting down the app
         log(
           "LETHAL ERROR - Couldn't establish database connection. Shutting down."
         );
         process.exit(1);
       }
-      this.serverConfig();
+
+      // After a db connection was established, express will be configured
+
+      // Cross origin resource sharing
+      this.app.use(
+        (
+          req: express.Request,
+          res: express.Response,
+          next: express.NextFunction
+        ) => {
+          // TODO remove
+          log("Origin=" + req.headers.origin);
+
+          // Check if the origin is acceptable
+          if (
+            environment.corsWhitelist.indexOf(req.headers.origin as string) !==
+            -1
+          ) {
+            // Acceptable origins get their origin added to the header
+            res.header("Access-Control-Allow-Origin", req.headers
+              .origin as string);
+
+            res.header(
+              "Access-Control-Allow-Headers",
+              "Origin, X-Requested-With, Content-Type, Accept"
+            );
+
+            // Keep the browser calm
+            res.header("Access-Control-Allow-Credentials", "true");
+          }
+          next();
+        }
+      );
+
+      this.app.options("*", (req: express.Request, res: express.Response) => {
+        res.status(204).send();
+      });
+
+      // cookie-parser is for cookies; and cookies is for JWT
+      this.app.use(cookieParser());
+
+      // application/json
+      this.app.use(bodyParser.json());
+
+      // application/x-www-form-urlencoded
+      this.app.use(bodyParser.urlencoded({ extended: true }));
+
+      // Enable static file serving
+      this.app.use(
+        express.static(
+          join(
+            // This is a "fake" env var, set in server.ts
+            process.env.EDM_WORKING_DIRECTORY + "/../exDateMan"
+          )
+        )
+      );
+
+      // Load all the routes (including all APIs)
+      this.app.use(routes);
     });
   }
 
-  private serverConfig(): void {
-    // Cross origin resource sharing
-    this.app.use(cors());
-
-    // cookie-parser is for cookies; and cookies is for JWT
-    this.app.use(cookieParser());
-
-    // application/json
-    this.app.use(bodyParser.json());
-
-    // application/x-www-form-urlencoded
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-
-    // Enable static file serving
-    this.app.use(
-      express.static(join(process.env.EDM_ROOT_PATH + "/dist/exDateMan"))
-    );
-
-    // Load all the routes
-    this.app.use(routes);
+  /**
+   * Get an environment of the backend depending on EDM_ENVIRONMENT
+   *
+   * @static
+   * @memberof App
+   */
+  public static getEnvironment(): Environment {
+    let environment: { environment: Environment };
+    switch (process.env.EDM_MODE) {
+      case "production":
+        environment = require("./environments/production");
+        break;
+      case "staging":
+        environment = require("./environments/staging");
+        break;
+      case "development":
+      default:
+        environment = require("./environments/development");
+    }
+    log("Env=" + JSON.stringify(environment.environment));
+    return environment.environment;
   }
 
   /**
@@ -72,7 +137,7 @@ class App {
         database: process.env.EDM_DB,
         ssl: true,
         entities: [__dirname + "/models/*"],
-        synchronize: process.env.EDM_MODE !== "production" || true,
+        synchronize: process.env.EDM_MODE === "development" || false,
         logging: process.env.EDM_LOG_DB === "3" ? true : ["error", "warn"],
         schema: process.env.EDM_SCHEMA || "edm_dev"
       } as ConnectionOptions);
@@ -115,7 +180,10 @@ class App {
   private patchIndexHtml(): void {
     const path: string = __dirname + "/../exDateMan/index.html";
     const fileContents: string = readFileSync(path, "utf8");
-    const targetContents: string = fileContents.replace(/\<base href\="\.\/"\>/g, "<base href=\"/\">");
+    const targetContents: string = fileContents.replace(
+      /\<base href\="\.\/"\>/g,
+      '<base href="/">'
+    );
     writeFileSync(path, targetContents, "utf8");
 
     log("Patched index.html");

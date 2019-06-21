@@ -3,7 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "../dist/server",
+    "outDir": "../dist/backend",
     "sourceMap": true,
     "declaration": true,
     "module": "commonjs",
