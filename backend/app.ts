@@ -7,7 +7,7 @@ import { log } from "util";
 
 import routes from "./routes/routes";
 import { readFileSync, writeFileSync } from "fs";
-import { Environment } from "./environments/environment";
+import { Environment } from "./environments/environment.d";
 
 class App {
   public app: express.Application;
@@ -42,9 +42,6 @@ class App {
           res: express.Response,
           next: express.NextFunction
         ) => {
-          // TODO remove
-          log("Origin=" + req.headers.origin);
-
           // Check if the origin is acceptable
           if (
             environment.corsWhitelist.indexOf(req.headers.origin as string) !==
@@ -113,7 +110,6 @@ class App {
       default:
         environment = require("./environments/development");
     }
-    log("Env=" + JSON.stringify(environment.environment));
     return environment.environment;
   }
 
