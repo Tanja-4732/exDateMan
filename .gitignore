@@ -44,3 +44,10 @@ Thumbs.db
 # ...except for the default one and the example one
 !/src/environments/environment.ts
 !/src/environments/environment.example.ts
+
+# Avoid server-side configuration files...
+/backend/environments/*
+
+# ...except for the default one and the example one
+!/backend/environments/environment.d.ts
+!/backend/environments/example.ts
