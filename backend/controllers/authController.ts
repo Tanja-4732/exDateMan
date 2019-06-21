@@ -5,7 +5,7 @@ import { readFileSync } from "fs";
 import { User } from "../models/userModel";
 import * as expressJwt from "express-jwt";
 import { log } from "util";
-import { hash, compareSync } from "bcrypt";
+import { hash, compareSync, hashSync, genSaltSync } from "bcrypt";
 import {
   InventoryUserAccessRightsEnum,
   InventoryUser,
@@ -105,45 +105,41 @@ export default class AuthController {
     newUser.saltedPwdHash = "Hello World";
 
     // Calculate and set the hash
-    await hash(
-      req.body.pwd,
-      saltRounds,
-      async (err: Error, hashValue: string) => {
-        // Add the user to the db
-        try {
-          newUser.saltedPwdHash = hashValue;
-          await UserController.addNewUserOrFail(newUser);
-        } catch (error) {
-          res.status(400).json({
-            status: 400,
-            error: "Email already in use or user data incomplete"
-          });
-          return;
-        }
+    const hashValue: string = hashSync(req.body.pwd, saltRounds);
 
-        // Login the new user
-        let jwtBearerToken: string;
-        try {
-          jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
-            algorithm: "RS256",
-            expiresIn: "10h",
-            subject: newUser.id + ""
-          });
-        } catch (error) {
-          console.error(error);
-        }
+    try {
+      // Add the user to the db
+      newUser.saltedPwdHash = hashValue;
+      await UserController.addNewUserOrFail(newUser);
+    } catch (error) {
+      res.status(400).json({
+        status: 400,
+        error: "Email already in use or user data incomplete"
+      });
+      return;
+    }
 
-        res
-          .status(201)
-          .cookie("JWT", jwtBearerToken, { httpOnly: true })
-          .json({
-            status: 201,
-            message: "Created new user",
-            email: newUser.email,
-            id: newUser.id
-          });
-      }
-    );
+    // Login the new user
+    let jwtBearerToken: string;
+    try {
+      jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
+        algorithm: "RS256",
+        expiresIn: "10h",
+        subject: newUser.id + ""
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
+    res
+      .status(201)
+      .cookie("JWT", jwtBearerToken, { httpOnly: true })
+      .json({
+        status: 201,
+        message: "Created new user",
+        email: newUser.email,
+        id: newUser.id
+      });
   }
 
   /**

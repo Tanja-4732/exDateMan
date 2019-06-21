@@ -1,6 +1,6 @@
 {
   "name": "ex-date-man",
-  "version": "0.1.0",
+  "version": "0.11.0",
   "description": "Manages expiration dates",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "serve": "ng serve --host 0.0.0.0 --configuration=development"
+    "watch": "ng build --output-path dist/exDateMan --watch --configuration=development"
   },
   "private": true,
   "dependencies": {

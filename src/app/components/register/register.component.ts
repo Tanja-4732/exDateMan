@@ -15,7 +15,6 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup;
 
-
   constructor(
     private as: AuthService,
     private router: Router,
@@ -24,17 +23,20 @@ export class RegisterComponent implements OnInit {
     private cvs: CustomValidatorsService
   ) {
     this.createForm();
-    this.form.patchValue({email: this.route.snapshot.params["email"]});
+    this.form.patchValue({ email: this.route.snapshot.params["email"] });
   }
 
   createForm(): void {
     this.form = this.fb.group({
       name: ["", [Validators.required]],
       email: ["", [Validators.required]],
-      passwords: this.fb.group({
-        password: ["", [Validators.required]],
-        repeat_password: ["", [Validators.required]]
-      }, {validators: CustomValidatorsService.childrenEqual})
+      passwords: this.fb.group(
+        {
+          password: ["", [Validators.required]],
+          repeat_password: ["", [Validators.required]]
+        },
+        { validators: CustomValidatorsService.childrenEqual }
+      )
     });
   }
 
@@ -49,12 +51,12 @@ export class RegisterComponent implements OnInit {
   }
 
   async register(): Promise<void> {
-    if (this.form.value.password !== this.form.value.repeat_password) {
-      alert("Passwords don't match!");
-      return;
-    }
     try {
-      await this.as.register(this.form.value.email, this.form.value.password, this.form.value.name);
+      await this.as.register(
+        this.form.value.email,
+        this.form.value.passwords.password,
+        this.form.value.name
+      );
       this.oof = false;
     } catch (error) {
       this.oof = true;
