@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "description": "Manages expiration dates",
   "scripts": {
-    "dev": "nodemon -e ts -w ./server -w ./server.ts -x ts-node ./server.ts",
     "ng": "ng",
-    "start": "node ./dist/server/server.js",
-    "build": "ng build --prod && tsc -p server/tsconfig.json",
+    "start": "node ./dist/backend/server.js",
+    "build": "ng build --prod && tsc -p backend/tsconfig.json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
