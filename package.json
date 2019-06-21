@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node ./dist/backend/server.js",
-    "build": "ng build --prod && tsc -p backend/tsconfig.json",
+    "build": "ng build --prod && tsc -p backend/tsconfig.json || true",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
