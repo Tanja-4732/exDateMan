@@ -44,6 +44,7 @@ import { EditInventoryComponent } from "./components/edit-inventory/edit-invento
 import { AddInventoryComponent } from "./components/add-inventory/add-inventory.component";
 import { InventoryCardComponent } from "./components/inventory-card/inventory-card.component";
 import { DeleteConfirmationDialogComponent } from "./components/delete-confirmation-dialog/delete-confirmation-dialog.component";
+import { AccountComponent } from "./components/account/account.component";
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { DeleteConfirmationDialogComponent } from "./components/delete-confirmat
     EditInventoryComponent,
     AddInventoryComponent,
     InventoryCardComponent,
-    DeleteConfirmationDialogComponent
+    DeleteConfirmationDialogComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

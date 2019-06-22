@@ -14,6 +14,7 @@ import { InventoriesComponent } from "./components/inventories/inventories.compo
 import { EditInventoryComponent } from "./components/edit-inventory/edit-inventory.component";
 import { AddInventoryComponent } from "./components/add-inventory/add-inventory.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
+import { AccountComponent } from "./components/account/account.component";
 
 const routes: Routes = [
   // Default route
@@ -37,6 +38,9 @@ const routes: Routes = [
       { path: ":email", component: RegisterComponent }
     ]
   },
+
+  // Account
+  { path: "account", component: AccountComponent },
 
   // Inventories
   {
