@@ -8,7 +8,7 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="CategoryId" id="ED87DCDD-A719-FD4D-EF6F-70D7773327D8">
+<Column name="CategoryNumber" id="ED87DCDD-A719-FD4D-EF6F-70D7773327D8">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 20:39:04 UTC</createdTime>
 <generatorID>F7AC200A-778D-68A4-1D2B-F2278E1F1D2D</generatorID>
@@ -30,6 +30,21 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="Inventory_InventoryId" id="2E6B004E-6348-B376-6555-DDA9271FD9AA">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<generatorID>2B513495-32E7-C02D-6901-7807743013EE</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E7E29ED9-3289-F990-9ED4-D33842E0044D" referredColumn="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
+</associations>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="6126B2EE-3833-D060-FFF3-92A2B5BB3657" name="Category_PK">
@@ -42,6 +57,18 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="ED87DCDD-A719-FD4D-EF6F-70D7773327D8"/>
+<colUsage columnID="2E6B004E-6348-B376-6555-DDA9271FD9AA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="4D11A00C-42F2-F4DE-F37E-276DEBC28F74" name="Category_Inventory_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:21 UTC</createdTime>
+<generatorID>C53F2E86-1897-4DF5-DBCC-61BD80CE1661</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="2E6B004E-6348-B376-6555-DDA9271FD9AA"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

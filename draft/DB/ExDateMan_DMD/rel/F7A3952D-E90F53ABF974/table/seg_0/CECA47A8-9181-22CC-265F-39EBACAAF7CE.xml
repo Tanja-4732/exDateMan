@@ -57,11 +57,8 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="C01E3AD9-BF22-4462-48C4-AD760DACF376" referredColumn="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
-</associations>
 </Column>
-<Column name="ThingNo" id="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008">
+<Column name="ThingNumber" id="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-14 07:03:37 UTC</createdTime>
 <generatorID>F8494C40-E8DA-7888-295B-315C289C4AD8</generatorID>
@@ -83,9 +80,8 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="1499398F-A1F2-6DDE-BAA1-A0216C78D99C"/>
 <colUsage columnID="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
-<colUsage columnID="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+<colUsage columnID="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="CCDCCD62-C69B-A3E7-9656-742B890EEC51" name="Thing_Inventory_FK">
@@ -97,7 +93,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="320C6566-FD4B-DD52-7811-A6458C3C67F2"/>
-<colUsage columnID="A9616D43-502F-29FB-E059-F07345FB6B02"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

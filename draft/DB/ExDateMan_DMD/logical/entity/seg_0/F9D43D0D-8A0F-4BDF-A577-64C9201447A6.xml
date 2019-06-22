@@ -63,18 +63,6 @@
 <logicalDatatype>LOGDT040</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="UserPwdHashSalt" id="AAC14D36-EAAF-5569-5089-4C33D755F98F">
-<createdBy>Bernd</createdBy>
-<createdTime>2019-01-13 20:04:48 UTC</createdTime>
-<ownerDesignName>ExDateMan_DMD</ownerDesignName>
-<engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT040</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="UserCreatedOn" id="4CBDC032-7410-CDFA-E7F0-DECA476F2D12">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 20:14:46 UTC</createdTime>
@@ -93,8 +81,9 @@
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 20:03:37 UTC</createdTime>
 <ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

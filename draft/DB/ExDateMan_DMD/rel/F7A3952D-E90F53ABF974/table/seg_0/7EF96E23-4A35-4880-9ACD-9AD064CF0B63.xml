@@ -1,0 +1,92 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7EF96E23-4A35-4880-9ACD-9AD064CF0B63" name="InventoryUser">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<generatorID>0DA44B02-CFAC-C6B7-49A8-DDFAB632317B</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="InventoryUserAccessRights" id="AB91CF87-B9E0-0D2C-C608-FD2593CC917D">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<comment>OWNER&lt;br/&gt;ADMIN&lt;br/&gt;WRITE&lt;br/&gt;READ</comment>
+<generatorID>B3DB4A30-7181-9E6B-40FF-FDE484D4149B</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="User_UserId" id="87967058-AED3-5684-4FAE-3739C9B3EEC4">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<generatorID>88E0F297-1BBA-4864-7320-A03446A246DB</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="AC8A4831-4A36-0A30-70F5-5A5168CD2AEB" referredColumn="0C77F159-6298-7E02-D789-15E4CF76F042"/>
+</associations>
+</Column>
+<Column name="Inventory_InventoryId" id="1AD1263A-F946-262C-655B-4816665F4756">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<generatorID>AFD0C6AB-8181-FA76-240F-68A1EB80EAA2</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B761EB1B-6388-718E-440D-67C2326C0D3D" referredColumn="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="507EEBB2-A0A1-8A5C-4BC9-ACA4457FA390" name="InventoryUser_PK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:20 UTC</createdTime>
+<generatorID>373228E6-3A5B-E879-6495-8ED7743CA208</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="87967058-AED3-5684-4FAE-3739C9B3EEC4"/>
+<colUsage columnID="1AD1263A-F946-262C-655B-4816665F4756"/>
+<colUsage columnID="AB91CF87-B9E0-0D2C-C608-FD2593CC917D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5A5A4A09-5771-1B17-A8C1-C9CD78E15D61" name="InventoryUser_Inventory_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:21 UTC</createdTime>
+<generatorID>EDEABAC3-7CC7-9B2E-829A-11356192F82B</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="1AD1263A-F946-262C-655B-4816665F4756"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A7643341-AEDF-DF1A-7781-98B7094235A6" name="InventoryUser_User_FK">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:21 UTC</createdTime>
+<generatorID>934F1303-71F8-8F2E-9216-5BF0304E9442</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="87967058-AED3-5684-4FAE-3739C9B3EEC4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

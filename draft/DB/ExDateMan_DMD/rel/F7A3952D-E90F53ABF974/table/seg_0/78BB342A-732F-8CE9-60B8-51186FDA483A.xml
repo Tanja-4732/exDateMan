@@ -19,7 +19,7 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="StockNo" id="6E9B11A0-AE75-382B-F521-582CBD8D18EC">
+<Column name="StockNumber" id="6E9B11A0-AE75-382B-F521-582CBD8D18EC">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 20:39:09 UTC</createdTime>
 <generatorID>02729BE2-C3D3-D45B-F512-48F89742F4BF</generatorID>
@@ -39,12 +39,9 @@
 <use>1</use>
 <logicalDatatype>LOGDT057</logicalDatatype>
 <dataTypeSize>10 BYTE</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="1499398F-A1F2-6DDE-BAA1-A0216C78D99C"/>
-</associations>
 </Column>
 <Column name="StockAddedOn" id="0A1CF551-DA81-FE1B-35F5-80CF894D058C">
 <createdBy>Bernd</createdBy>
@@ -131,8 +128,32 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="StockOpenedOn" id="7D728880-008C-09C2-25C4-CAB3CC803A23">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:21 UTC</createdTime>
+<generatorID>0873DF05-34E9-1803-C4A6-25DC53C77A86</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ThingNumber" id="D0EDB620-6DEC-E73F-24B8-3B81DB8E7915">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 15:33:41 UTC</createdTime>
+<generatorID>03039910-C546-ECDD-4C7E-00E03147B90F</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="A9616D43-502F-29FB-E059-F07345FB6B02"/>
+<colAssociation fkAssociation="FEBE74E5-83C3-4A6E-E625-598C2D55C9E5" referredColumn="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008"/>
 </associations>
 </Column>
 </columns>
@@ -146,10 +167,9 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="193D30B2-B99F-5BF1-6508-E6569F405E65"/>
 <colUsage columnID="648BDA21-EB2F-6326-617F-081A45C33755"/>
-<colUsage columnID="CCC07F7B-AEFE-43B9-BAC4-DCBCD0F64888"/>
-<colUsage columnID="AED1BB64-A5B4-BC98-DA07-E04E7E1859D5"/>
+<colUsage columnID="D0EDB620-6DEC-E73F-24B8-3B81DB8E7915"/>
+<colUsage columnID="6E9B11A0-AE75-382B-F521-582CBD8D18EC"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="5FB84B27-6A38-6238-A272-EA8E66F82AC2" name="Stock_Thing_FK">
@@ -160,9 +180,8 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="193D30B2-B99F-5BF1-6508-E6569F405E65"/>
 <colUsage columnID="648BDA21-EB2F-6326-617F-081A45C33755"/>
-<colUsage columnID="CCC07F7B-AEFE-43B9-BAC4-DCBCD0F64888"/>
+<colUsage columnID="D0EDB620-6DEC-E73F-24B8-3B81DB8E7915"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
