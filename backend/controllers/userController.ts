@@ -11,6 +11,12 @@ import AuthController from "./authController";
  * should be implemented here.
  */
 export default class UserController {
+  public static async saveUser(user: User): Promise<void> {
+    const mgr: EntityManager = getManager();
+
+    await mgr.save(user);
+  }
+
   /**
    * Finds and returns a user form the db
    * based on the email or throws an exception
@@ -57,15 +63,18 @@ export default class UserController {
     throw new Error("duplicate/unique");
   }
 
-  public static async getUserByEmail(req: Request, res: Response): Promise<void> {
+  public static async getUserByEmail(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     const entityManager: EntityManager = getManager();
     let user: User;
     try {
       user = await entityManager.findOneOrFail(User, {
-      where: {
-        email: req.params.email as string
-    }});
-
+        where: {
+          email: req.params.email as string
+        }
+      });
     } catch (error) {
       res.status(404).json({
         error: "We couldn't find that user"

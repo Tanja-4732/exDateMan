@@ -1,7 +1,9 @@
 {
   "cSpell.words": [
+    "OTPs",
     "TOTP",
     "jasminewd",
+    "otpauth",
     "typeorm"
   ]
 }

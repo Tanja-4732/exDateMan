@@ -28,6 +28,30 @@ export class User {
   @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.user)
   inventoryUsers: InventoryUser[];
 
+  /**
+   * Whether or not to enable 2FA
+   *
+   * @type {boolean}
+   * @memberof User
+   */
+  @Column({ default: false })
+  tfaEnabled: boolean;
+
+  /**
+   * The secret used to generate 2FA OTPs
+   *
+   * @type {string}
+   * @memberof User
+   */
   @Column({ nullable: true })
   tfaSecret: string;
+
+  /**
+   * The URL used to add a 2FA OTP to such an app
+   *
+   * @type {string}
+   * @memberof User
+   */
+  @Column({ nullable: true })
+  tfaUrl: string;
 }

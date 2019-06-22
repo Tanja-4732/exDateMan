@@ -1,10 +1,8 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { AppRoutingModule } from "./app-routing.module";
 import { HttpClientModule } from "@angular/common/http";
-
-import { FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   MatCheckboxModule,
   MatCardModule,
@@ -22,13 +20,16 @@ import {
   MatChipsModule
 } from "@angular/material";
 
+import { QRCodeModule } from "angularx-qrcode";
+
+import { AppRoutingModule } from "./app-routing.module";
+
 import { AppComponent } from "./app.component";
 import { ThingCardComponent } from "./components/thing-card/thing-card.component";
 import { StockCardComponent } from "./components/stock-card/stock-card.component";
 import { ThingsComponent } from "./components/things/things.component";
 import { AddThingComponent } from "./components/add-thing/add-thing.component";
 import { AddStockComponent } from "./components/add-stock/add-stock.component";
-
 import { StocksComponent } from "./components/stocks/stocks.component";
 import { EditStockComponent } from "./components/edit-stock/edit-stock.component";
 import { EditThingComponent } from "./components/edit-thing/edit-thing.component";
@@ -87,7 +88,8 @@ import { DeleteConfirmationDialogComponent } from "./components/delete-confirmat
     MatIconModule,
     MatListModule,
     MatChipsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    QRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent],

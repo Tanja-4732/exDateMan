@@ -1,4 +1,4 @@
 {
   "watch": ["dist/backend/*"],
-  "ignore": ["*.ts", "dist/exDateMan/*"]
+  "ignore": ["*.ts"]
 }

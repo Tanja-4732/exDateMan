@@ -14,7 +14,7 @@ import {
 import { Inventory } from "./../models/inventoryModel";
 import InventoryController from "./inventoryController";
 import { EntityManager, getManager } from "typeorm";
-import { totp } from "speakeasy";
+import { totp, generateSecret, GeneratedSecret } from "speakeasy";
 
 /**
  * The private key either as a string or a buffer
@@ -30,10 +30,49 @@ const PUBLIC_KEY: string | Buffer =
   process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
 export default class AuthController {
-  static getAuthDetails(req: Request, res: Response): any {
+  /**
+   * Generates and adds 2FA TOTP data to a user
+   *
+   * @param user The actingUser
+   */
+  static async addNewSecretToUser(user: User): Promise<any> {
+    const secret: GeneratedSecret = generateSecret({
+      name: "ExDateMan (" + user.email + ")",
+      length: 32
+    });
+
+    user.tfaSecret = secret.base32;
+    user.tfaUrl = secret.otpauth_url;
+
+    // Save the generated result to the db
+    await UserController.saveUser(user);
+  }
+
+  /**
+   * Responds with all non-sensitive user data.
+   * If 2FA is disabled and no secret exists, one will be created.
+   */
+  static async getAuthDetails(req: Request, res: Response): Promise<void> {
     const actingUser: User = res.locals.actingUser;
+
+    // Check if the user has 2FA enabled
+    if (actingUser.tfaEnabled) {
+      // If the user has 2FA enabled, hide the 2FA data
+      delete actingUser.tfaSecret;
+      delete actingUser.tfaUrl;
+    } else {
+      // If the user lacks 2FA data, generate it
+      if (actingUser.tfaSecret == null || actingUser.tfaUrl == null) {
+        await AuthController.addNewSecretToUser(actingUser);
+      }
+    }
+
+    // Hide the users inventories
     delete actingUser.inventoryUsers;
+
+    // Hide salted & hashed password
     delete actingUser.saltedPwdHash;
+
     res.status(200).json({
       status: "Authenticated",
       user: actingUser
@@ -50,13 +89,15 @@ export default class AuthController {
     inventory: Inventory,
     desiredAccess: InventoryUserAccessRightsEnum
   ): Promise<boolean> {
-    // const user: User = await UserController.getUserByIdOrFail(userId);
-    // const inventory: Inventory = await InventoryController.getInventoryOrFail(
-    //   inventoryId
-    // );
+    /**
+     * The inventoryUser to check permissions for
+     */
     let inventoryUser: InventoryUser;
     try {
+      // Get the TypeORM entity manager
       const entityManager: EntityManager = getManager();
+
+      // Try to get an inventoryUser matching both the user and the inventory specified
       inventoryUser = await entityManager.findOneOrFail(InventoryUser, {
         where: {
           user: user,
@@ -78,7 +119,7 @@ export default class AuthController {
   }
 
   /**
-   * Registers new users
+   * Registers a new user
    */
   public static async register(
     req: Request,
@@ -100,6 +141,7 @@ export default class AuthController {
     // The current date
     newUser.createdOn = new Date(new Date().setHours(0, 0, 0, 0));
 
+    // The name of the new user
     newUser.name = req.body.name;
 
     // Calculate and set the hash
@@ -163,7 +205,7 @@ export default class AuthController {
     const tfa: string | undefined = req.body.tfa;
 
     /**
-     * Try to get the acting user (the one making the request) and set its res.locals field to it.
+     * Try to get the acting user (the one making the request) from the db
      * Returns a 400 status code when the user couldn't be found
      */
     let actingUser: User;
@@ -186,7 +228,7 @@ export default class AuthController {
     }
 
     // Check for 2FA
-    if (actingUser.tfaSecret != null) {
+    if (actingUser.tfaEnabled) {
       if (
         !totp.verify({
           token: tfa,
@@ -300,4 +342,30 @@ export default class AuthController {
       return;
     }
   }
+
+  /**
+   * This method alters a users account
+   * @param req
+   * @param res
+   * @param next
+   */
+  public static async changeUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {}
+
+  public static async enable2FA(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    totp;
+  }
+
+  public static async get2FA(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {}
 }

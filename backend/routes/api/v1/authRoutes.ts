@@ -13,4 +13,7 @@ authRoutes.post("/login", AuthController.login);
 // Handle registration requests
 authRoutes.post("/register", AuthController.register);
 
+// Modify the user
+authRoutes.put("/", AuthController.changeUser);
+
 export default authRoutes;
