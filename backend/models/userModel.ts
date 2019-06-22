@@ -15,7 +15,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -27,4 +27,7 @@ export class User {
 
   @OneToMany(type => InventoryUser, inventoryUser => inventoryUser.user)
   inventoryUsers: InventoryUser[];
+
+  @Column({ nullable: true })
+  tfaSecret: string;
 }

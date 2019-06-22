@@ -14,6 +14,7 @@ import {
 import { Inventory } from "./../models/inventoryModel";
 import InventoryController from "./inventoryController";
 import { EntityManager, getManager } from "typeorm";
+import { totp } from "speakeasy";
 
 /**
  * The private key either as a string or a buffer
@@ -157,6 +158,11 @@ export default class AuthController {
     const password: string = req.body.pwd;
 
     /**
+     * The 2FA TOTP code provided in the login request (may be undefined)
+     */
+    const tfa: string | undefined = req.body.tfa;
+
+    /**
      * Try to get the acting user (the one making the request) and set its res.locals field to it.
      * Returns a 400 status code when the user couldn't be found
      */
@@ -179,6 +185,25 @@ export default class AuthController {
       return;
     }
 
+    // Check for 2FA
+    if (actingUser.tfaSecret != null) {
+      if (
+        !totp.verify({
+          token: tfa,
+          encoding: "base32",
+          secret: actingUser.tfaSecret
+        })
+      ) {
+        // On failed TOTP authentication
+        res.status(401).json({
+          error: "Invalid TOTP token"
+        });
+        return;
+      }
+      // On successful TOTP authentication
+    }
+
+    // Generate a JWT
     let jwtBearerToken: string;
     try {
       jwtBearerToken = jwt.sign({}, RSA_PRIVATE_KEY, {
@@ -190,6 +215,7 @@ export default class AuthController {
       console.error(error);
     }
 
+    // Send the token back to the user
     res
       .status(200)
       .cookie("JWT", jwtBearerToken, {

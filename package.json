@@ -48,6 +48,7 @@
     "protractor": "^5.4.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
+    "speakeasy": "^2.0.0",
     "typeorm": "^0.2.13",
     "typescript": "~3.2.2",
     "zone.js": "~0.8.27"
@@ -64,6 +65,7 @@
     "@types/jsonwebtoken": "^8.3.2",
     "@types/node": "~8.9.4",
     "@types/source-map-support": "^0.5.0",
+    "@types/speakeasy": "^2.0.4",
     "codelyzer": "~4.2.1",
     "coveralls": "^3.0.2",
     "enhanced-resolve": "3.3.0",
