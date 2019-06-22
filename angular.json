@@ -35,6 +35,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "./",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -52,6 +53,7 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
+              "baseHref": "./",
               "sourceMap": true
             }
           }
@@ -59,7 +61,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "baseHref": "/",
+            "baseHref": "./",
             "browserTarget": "exDateMan:build"
           },
           "configurations": {
