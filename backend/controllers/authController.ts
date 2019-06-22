@@ -192,7 +192,10 @@ export default class AuthController {
 
     res
       .status(200)
-      .cookie("JWT", jwtBearerToken, { httpOnly: true })
+      .cookie("JWT", jwtBearerToken, {
+        httpOnly: true,
+        secure: process.env.EDM_MODE !== "development"
+      })
       .json({
         status: 200,
         user: actingUser.name
