@@ -43,6 +43,12 @@ export class AuthService {
       .post<RegisterResponse>(this.baseUrl + "/auth/register", req)
       .toPromise();
   }
+
+  async getUser(): Promise<User> {
+    return (await this.http
+      .get<{ status: string; user: User }>(this.baseUrl + "/auth/")
+      .toPromise()).user;
+  }
 }
 
 /**

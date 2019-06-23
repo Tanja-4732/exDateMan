@@ -4,6 +4,7 @@
     "TOTP",
     "jasminewd",
     "otpauth",
+    "phonelink",
     "typeorm"
   ]
 }
