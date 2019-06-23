@@ -54,4 +54,10 @@ export class User {
    */
   @Column({ nullable: true })
   tfaUrl: string;
+
+  // Not part of the db; this is only used by the API
+  pwd: string;
+
+  // Not part of the db; this is only used by the API
+  tfaToken: string;
 }

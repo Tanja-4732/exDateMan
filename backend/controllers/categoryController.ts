@@ -1,6 +1,6 @@
 import { Category } from "../models/categoryModel";
 import { getManager, EntityManager } from "typeorm";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { Request, Response, NextFunction } from "express";
 import { Inventory } from "../models/inventoryModel";
@@ -44,7 +44,7 @@ export default class CategoryController {
     // const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     // Write the child categories as numbers in an array // TODO maybe change to let
     const childrenNumbers: number[] = [];
@@ -77,7 +77,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     let categories: Category[] = [];
     try {
@@ -107,7 +107,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // TODO check if category is form this inventory
 
@@ -153,7 +153,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the category to be updated
     const catToUpdate: Category = res.locals.category;
@@ -204,7 +204,7 @@ export default class CategoryController {
     const entityManager: EntityManager = getManager();
 
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Check if already present
     let goAhead: boolean = true as boolean;

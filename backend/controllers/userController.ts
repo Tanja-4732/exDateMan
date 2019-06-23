@@ -2,7 +2,7 @@ import { EntityManager, getManager } from "typeorm";
 import { User } from "../models/userModel";
 import { log } from "util";
 import { Request, Response } from "express";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 
 /**
  * Contains db handling code for User-class operations
@@ -14,7 +14,7 @@ export default class UserController {
   public static async saveUser(user: User): Promise<void> {
     const mgr: EntityManager = getManager();
 
-    await mgr.save(user);
+    await mgr.save(User, user);
   }
 
   /**

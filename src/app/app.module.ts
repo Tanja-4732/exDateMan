@@ -17,7 +17,8 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatChipsModule
+  MatChipsModule,
+  MatSlideToggleModule
 } from "@angular/material";
 
 import { QRCodeModule } from "angularx-qrcode";
@@ -91,7 +92,8 @@ import { AccountComponent } from "./components/account/account.component";
     MatListModule,
     MatChipsModule,
     ReactiveFormsModule,
-    QRCodeModule
+    QRCodeModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent],

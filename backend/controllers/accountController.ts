@@ -11,7 +11,7 @@ import {
   InventoryUser,
   compareInventoryUserAccessRights
 } from "../models/inventoryUserModel";
-import { Inventory } from "./../models/inventoryModel";
+import { Inventory } from "../models/inventoryModel";
 import InventoryController from "./inventoryController";
 import { EntityManager, getManager } from "typeorm";
 import { totp, generateSecret, GeneratedSecret } from "speakeasy";
@@ -29,7 +29,7 @@ const RSA_PRIVATE_KEY: string | Buffer =
 const PUBLIC_KEY: string | Buffer =
   process.env.EDM_PUBLIC_KEY_VAL || readFileSync(process.env.EDM_PUBLIC_KEY);
 
-export default class AuthController {
+export default class AccountController {
   /**
    * Generates and adds 2FA TOTP data to a user
    *
@@ -63,7 +63,7 @@ export default class AuthController {
     } else {
       // If the user lacks 2FA data, generate it
       if (actingUser.tfaSecret == null || actingUser.tfaUrl == null) {
-        await AuthController.addNewSecretToUser(actingUser);
+        await AccountController.addNewSecretToUser(actingUser);
       }
     }
 
@@ -127,11 +127,6 @@ export default class AuthController {
     next: NextFunction
   ): Promise<any> {
     /**
-     * The number of rounds the passwords hash will be salted for
-     */
-    const saltRounds: number = 10 as number;
-
-    /**
      * The user to be added to the db
      */
     const newUser: User = new User();
@@ -144,12 +139,9 @@ export default class AuthController {
     // The name of the new user
     newUser.name = req.body.name;
 
-    // Calculate and set the hash
-    const hashValue: string = hashSync(req.body.pwd, saltRounds);
-
     try {
       // Add the user to the db
-      newUser.saltedPwdHash = hashValue;
+      newUser.saltedPwdHash = AccountController.makePwdHash(req.body.pwd);
       await UserController.addNewUserOrFail(newUser);
     } catch (error) {
       res.status(400).json({
@@ -180,6 +172,16 @@ export default class AuthController {
         email: newUser.email,
         id: newUser.id
       });
+  }
+
+  private static makePwdHash(pwd: string): string {
+    /**
+     * The number of rounds the passwords hash will be salted for
+     */
+    const saltRounds: number = 10 as number;
+
+    // Calculate and set the hash
+    return hashSync(pwd, saltRounds);
   }
 
   /**
@@ -326,7 +328,7 @@ export default class AuthController {
     accessRights: InventoryUserAccessRightsEnum
   ): Promise<void> {
     if (
-      !(await AuthController.isAuthorized(
+      !(await AccountController.isAuthorized(
         res.locals.actingUser,
         res.locals.inventory as Inventory,
         accessRights
@@ -349,23 +351,91 @@ export default class AuthController {
    * @param res
    * @param next
    */
-  public static async changeUser(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {}
-
-  public static async enable2FA(
+  public static async alterUser(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    totp;
+    /**
+     * The user to alter and subsequently save to the db
+     */
+    const alteredUser: User = req.body;
+
+    // Check if the acting user is the one to be altered
+    if ((res.locals.actingUser as User).id !== alteredUser.id) {
+      res.status(403).json({ error: "Cannot alter other user" });
+      return;
+    }
+
+    // Return error on bad request
+    if (
+      alteredUser.tfaEnabled == null ||
+      alteredUser.name == null ||
+      alteredUser.name === "" ||
+      alteredUser.email == null ||
+      alteredUser.email === ""
+    ) {
+      res.status(400).json({ error: "Bad request" });
+    }
+
+    // Change the password if desired
+    if (alteredUser.pwd === "" || alteredUser.pwd == null) {
+      // Do not change the password
+    } else {
+      // Change password
+      alteredUser.saltedPwdHash = this.makePwdHash(alteredUser.pwd);
+    }
+
+    // Check for existing 2FA
+    if ((res.locals.actingUser as User).tfaEnabled) {
+      // Disable 2FA if desired
+      alteredUser.tfaEnabled = (res.locals.actingUser as User).tfaEnabled;
+    } else {
+      // Check if enabling 2FA is desired
+      if (alteredUser.tfaEnabled) {
+        // Try enabling 2FA
+        if (
+          totp.verify({
+            secret: (res.locals.actingUser as User).tfaSecret,
+            encoding: "base32",
+            token: alteredUser.tfaToken
+          })
+        ) {
+          // Enable 2FA
+          alteredUser.tfaEnabled = true;
+        } else {
+          // Return error because 2FA was wrong
+          res.status(400).json({ error: "Invalid 2FA token" });
+          return;
+        }
+      }
+    }
+
+    // Clean the request
+    delete alteredUser.createdOn;
+    delete alteredUser.inventoryUsers;
+    delete alteredUser.pwd;
+    delete alteredUser.tfaToken;
+    delete alteredUser.tfaSecret;
+    delete alteredUser.tfaUrl;
+
+    try {
+      await UserController.saveUser(alteredUser);
+    } catch (error) {
+      // Report duplicate email
+      res.status(400).json({ error: "Email already in use" });
+      return;
+    }
+
+    // Return auth details on success
+    AccountController.getAuthDetails(req, res);
   }
 
-  public static async get2FA(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {}
+  static logout(req: Request, res: Response): void {
+    res
+      .clearCookie("JWT")
+      .status(200)
+      .json({ message: "Logout successful" });
+    return;
+  }
 }

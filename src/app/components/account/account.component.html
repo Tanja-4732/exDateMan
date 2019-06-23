@@ -97,19 +97,41 @@
           field below. If you can't scan the QR code, enter the value bellow the
           QR code into your 2FA app manually.
         </p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Enable 2FA</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="267829"
+            formControlName="tfa"
+          />
+          <i matSuffix class="material-icons">phonelink_lock</i>
+        </mat-form-field>
       </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Enable 2FA</mat-label>
-        <input
-          matInput
-          type="text"
-          placeholder="267829"
-          formControlName="tfa"
-        />
-        <i matSuffix class="material-icons">phonelink_lock</i>
-      </mat-form-field>
+      <div *ngIf="user.tfaEnabled">
+        <p>Two factor authentication is enabled.</p>
+        <mat-slide-toggle [checked]="true" color="accent">
+          Use 2FA
+        </mat-slide-toggle>
+      </div>
+
       <br />
+
+      <h1 *ngIf="oof">Error</h1>
+      <ng-container [ngSwitch]="error">
+        <p *ngSwitchCase="'Email already in use'">
+          Email already in use. <br />
+          Please use a different one.
+        </p>
+        <p *ngSwitchCase="'Invalid 2FA token'">
+          The 2FA token entered is invalid. <br />
+          Make sure to enter the token while it's valid. <br />
+          Tokens have a validity time of 30 seconds (see your 2FA app for the
+          timer).
+        </p>
+      </ng-container>
 
       <button
         mat-raised-button

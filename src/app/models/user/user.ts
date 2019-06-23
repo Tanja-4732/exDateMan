@@ -3,6 +3,8 @@ export class User {
   name: string;
   email: string;
   tfaEnabled: boolean;
-  tfaSecret: string;
-  tfaUrl: string;
+  tfaSecret?: string;
+  tfaUrl?: string;
+  tfaToken?: string;
+  pwd?: string;
 }

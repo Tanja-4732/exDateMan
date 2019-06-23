@@ -3,7 +3,7 @@ import { log } from "util";
 import { Response, Request } from "express";
 import { Stock } from "../models/stockModel";
 import { Thing } from "../models/thingModel";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 import { Inventory } from "../models/inventoryModel";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { NextFunction } from "connect";
@@ -25,7 +25,7 @@ export interface StockRequest {
 export default class StockController {
   public static async getStocks(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    await AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     const entityManager: EntityManager = getManager();
 
@@ -50,7 +50,7 @@ export default class StockController {
 
   public static async addStock(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    await AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     const entityManager: EntityManager = getManager();
 
@@ -146,13 +146,13 @@ export default class StockController {
   }
 
   public static async getStock(req: Request, res: Response): Promise<void> {
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
     res.status(200).json(res.locals.stock as Stock);
   }
 
   public static async updateStock(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;
@@ -192,7 +192,7 @@ export default class StockController {
   }
 
   public static async removeStock(req: Request, res: Response): Promise<void> {
-    await AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;

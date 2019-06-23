@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { AuthService } from "../../services/auth/auth.service";
-import { Router } from "express-serve-static-core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { CustomValidatorsService } from "../../services/CustomValidators/custom-validators.service";
 import { User } from "../../models/user/user";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -20,13 +19,14 @@ export class AccountComponent implements OnInit {
   user: User;
 
   form: FormGroup;
+  error: { status: string; user: User };
+  disable2FA: boolean = false;
 
   constructor(
     private as: AuthService,
-    // private router: Router,
+    private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private cvs: CustomValidatorsService
+    private fb: FormBuilder
   ) {
     this.createForm();
     this.form.patchValue({ email: this.route.snapshot.params["email"] });
@@ -73,22 +73,28 @@ export class AccountComponent implements OnInit {
   }
 
   onSave(): void {
-    this.register().then(() => {
+    this.save().then(() => {
       if (!this.oof) {
-        // this.router.navigate(["/login"], { relativeTo: this.route });
+        this.router.navigate(["/inventories"], { relativeTo: this.route });
       }
     });
   }
 
-  async register(): Promise<void> {
+  async save(): Promise<void> {
     try {
-      await this.as.register(
-        this.form.value.email,
-        this.form.value.passwords.password,
-        this.form.value.name
-      );
+      this.error = await this.as.saveUser({
+        id: this.user.id,
+        name: this.form.value.name,
+        email: this.form.value.email,
+        pwd: this.form.value.passwords.password,
+        tfaToken: this.form.value.tfa,
+        tfaEnabled: this.user.tfaEnabled
+          ? this.disable2FA
+          : this.form.value.tfa !== ""
+      });
       this.oof = false;
     } catch (error) {
+      this.error = error.error.error; // This works
       this.oof = true;
     }
   }
