@@ -22,7 +22,7 @@ export class AuthService {
   async login(
     email: string,
     pwd: string,
-    totp?: string
+    tfaToken?: string
   ): Promise<LoginResponse> {
     const user: LoginResponse | any = await this.http
       .post<JSON>(
@@ -30,7 +30,7 @@ export class AuthService {
         {
           email: email,
           pwd: pwd,
-          totp
+          tfaToken
         },
         { withCredentials: true }
       )

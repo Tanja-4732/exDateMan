@@ -111,10 +111,17 @@
       </div>
 
       <div *ngIf="user.tfaEnabled">
-        <p>Two factor authentication is enabled.</p>
-        <mat-slide-toggle [checked]="true" color="accent">
-          Use 2FA
+        <mat-slide-toggle color="accent" formControlName="use2FA">
+          Enable two factor authentication
         </mat-slide-toggle>
+        <br />
+        <br />
+        <p>
+          2FA is an optional process which enhances your security by requiring
+          any login attempt to type in a timed code from your phone. This way, a
+          password alone is not sufficient for an attacker, as they'd also
+          access to your phone.
+        </p>
       </div>
 
       <br />

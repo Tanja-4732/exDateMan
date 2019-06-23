@@ -46,7 +46,8 @@ export class AccountComponent implements OnInit {
         },
         { validators: CustomValidatorsService.childrenEqual }
       ),
-      tfa: ["", []]
+      tfa: ["", []],
+      use2FA: [true, []]
     });
   }
 
@@ -89,7 +90,7 @@ export class AccountComponent implements OnInit {
         pwd: this.form.value.passwords.password,
         tfaToken: this.form.value.tfa,
         tfaEnabled: this.user.tfaEnabled
-          ? this.disable2FA
+          ? this.form.value.use2FA
           : this.form.value.tfa !== ""
       });
       this.oof = false;

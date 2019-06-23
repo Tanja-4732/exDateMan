@@ -204,7 +204,7 @@ export default class AccountController {
     /**
      * The 2FA TOTP code provided in the login request (may be undefined)
      */
-    const tfa: string | undefined = req.body.tfa;
+    const tfaToken: string | undefined = req.body.tfaToken;
 
     /**
      * Try to get the acting user (the one making the request) from the db
@@ -233,7 +233,7 @@ export default class AccountController {
     if (actingUser.tfaEnabled) {
       if (
         !totp.verify({
-          token: tfa,
+          token: tfaToken,
           encoding: "base32",
           secret: actingUser.tfaSecret
         })
@@ -383,13 +383,19 @@ export default class AccountController {
       // Do not change the password
     } else {
       // Change password
-      alteredUser.saltedPwdHash = this.makePwdHash(alteredUser.pwd);
+      alteredUser.saltedPwdHash = AccountController.makePwdHash(
+        alteredUser.pwd
+      );
     }
 
     // Check for existing 2FA
     if ((res.locals.actingUser as User).tfaEnabled) {
       // Disable 2FA if desired
-      alteredUser.tfaEnabled = (res.locals.actingUser as User).tfaEnabled;
+      if (!alteredUser.tfaEnabled) {
+        // Regenerate the 2FA secret
+        await AccountController.addNewSecretToUser(res.locals
+          .actingUser as User);
+      }
     } else {
       // Check if enabling 2FA is desired
       if (alteredUser.tfaEnabled) {

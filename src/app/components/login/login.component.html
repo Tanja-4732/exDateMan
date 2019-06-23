@@ -24,6 +24,16 @@
 
 <br />
 
+<mat-form-field appearance="outline">
+  <mat-label>2FA token</mat-label>
+  <mat-hint>Only required when 2FA is activated</mat-hint>
+  <input matInput type="text" placeholder="267829" [(ngModel)]="tfaToken" />
+  <i matSuffix class="material-icons">phonelink_lock</i>
+</mat-form-field>
+
+<br />
+<br />
+
 <button mat-raised-button (click)="onLogin()" color="accent">Login</button>
 &nbsp;
 <button mat-stroked-button routerLink="/register/{{ email }}" color="">
