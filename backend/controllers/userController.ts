@@ -85,6 +85,9 @@ export default class UserController {
     delete user.saltedPwdHash;
     delete user.inventoryUsers;
     delete user.createdOn;
+    delete user.tfaEnabled;
+    delete user.tfaSecret;
+    delete user.tfaUrl;
 
     res.status(200).json(user);
   }
