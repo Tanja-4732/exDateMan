@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref": "./",
+            "baseHref": "/",
             "outputPath": "dist/exDateMan",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -35,7 +35,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "baseHref": "./",
+              "baseHref": "/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -44,7 +44,7 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": false
             },
             "development": {
               "fileReplacements": [
@@ -53,7 +53,7 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ],
-              "baseHref": "./",
+              "baseHref": "/",
               "sourceMap": true
             }
           }
@@ -61,7 +61,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "baseHref": "./",
+            "baseHref": "/",
             "browserTarget": "exDateMan:build"
           },
           "configurations": {
