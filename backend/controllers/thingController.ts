@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { EntityManager, getManager, In } from "typeorm";
 import { Thing } from "../models/thingModel";
 import { Inventory } from "../models/inventoryModel";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 import { InventoryUserAccessRightsEnum } from "../models/inventoryUserModel";
 import { Category } from "../models/categoryModel";
 import { log } from "util";
@@ -66,7 +66,7 @@ export class ThingController {
     res: Response
   ): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the entity manager
     const entityManager: EntityManager = getManager();
@@ -155,7 +155,7 @@ export class ThingController {
 
   public static async getAllThings(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     // Get the things
     const entityManager: EntityManager = getManager();
@@ -184,14 +184,14 @@ export class ThingController {
 
   public static async getThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     res.status(200).json(res.locals.thing as Thing);
   }
 
   public static async replaceThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get the entity manager
     const entityManager: EntityManager = getManager();
@@ -248,7 +248,7 @@ export class ThingController {
 
   public static async deleteThing(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AuthController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
 
     // Get entityManager
     const entityManager: EntityManager = getManager();

@@ -15,19 +15,7 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="StockId" id="1FCF7251-183C-CEB6-237A-3D06216F1079">
-<createdBy>Bernd</createdBy>
-<createdTime>2019-01-13 13:44:32 UTC</createdTime>
-<ownerDesignName>ExDateMan_DMD</ownerDesignName>
-<engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
-</engineerTo>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT057</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="StockNo" id="02729BE2-C3D3-D45B-F512-48F89742F4BF">
+<Attribute name="StockNumber" id="02729BE2-C3D3-D45B-F512-48F89742F4BF">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 13:44:54 UTC</createdTime>
 <ownerDesignName>ExDateMan_DMD</ownerDesignName>
@@ -38,21 +26,6 @@
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="ThingId" id="B540683E-EBFF-3972-48BF-38D3E23CDC47">
-<createdBy>Bernd</createdBy>
-<createdTime>2019-01-13 20:02:06 UTC</createdTime>
-<generatorID>D4A2A61F-43C7-28C4-4D29-90974C8DFED4</generatorID>
-<ownerDesignName>ExDateMan_DMD</ownerDesignName>
-<engineerTo>
-<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
-</engineerTo>
-<referedAttribute>35540F58-0E1D-F28F-E086-032D4F5FB221</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT057</logicalDatatype>
-<dataTypeSize>10 BYTE</dataTypeSize>
-<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="StockAddedOn" id="55EB1BA8-71B3-FFA0-E21C-9DBC522684C9">
 <createdBy>Bernd</createdBy>
@@ -145,6 +118,20 @@
 <logicalDatatype>LOGDT057</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="ThingNumber" id="03039910-C546-ECDD-4C7E-00E03147B90F">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 15:19:56 UTC</createdTime>
+<generatorID>D4A2A61F-43C7-28C4-4D29-90974C8DFED4</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<referedAttribute>F8494C40-E8DA-7888-295B-315C289C4AD8</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="0009D96B-6A8F-2491-6FCA-9528FB216069" name="Stock PK">
@@ -156,9 +143,9 @@
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>
-<attributeRef>B540683E-EBFF-3972-48BF-38D3E23CDC47</attributeRef>
 <attributeRef>5FAEEED6-6FD2-305A-E2E5-802EC24D90FF</attributeRef>
-<attributeRef>1FCF7251-183C-CEB6-237A-3D06216F1079</attributeRef>
+<attributeRef>02729BE2-C3D3-D45B-F512-48F89742F4BF</attributeRef>
+<attributeRef>03039910-C546-ECDD-4C7E-00E03147B90F</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

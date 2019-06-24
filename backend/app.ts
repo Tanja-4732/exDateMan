@@ -18,7 +18,7 @@ class App {
     const environment: Environment = App.getEnvironment();
 
     // Patch index.html
-    this.patchIndexHtml();
+    // this.patchIndexHtml();
 
     // Initialize express
     this.app = express();

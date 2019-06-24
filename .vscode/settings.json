@@ -1,6 +1,14 @@
 {
   "cSpell.words": [
+    "Authy",
+    "OTPs",
+    "TOTP",
+    "iface",
+    "ifaces",
+    "ifname",
     "jasminewd",
+    "otpauth",
+    "phonelink",
     "typeorm"
   ]
 }

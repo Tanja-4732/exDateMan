@@ -15,7 +15,7 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="CategoryId" id="F7AC200A-778D-68A4-1D2B-F2278E1F1D2D">
+<Attribute name="CategoryNumber" id="F7AC200A-778D-68A4-1D2B-F2278E1F1D2D">
 <createdBy>Bernd</createdBy>
 <createdTime>2019-01-13 13:37:00 UTC</createdTime>
 <ownerDesignName>ExDateMan_DMD</ownerDesignName>
@@ -39,6 +39,20 @@
 <logicalDatatype>LOGDT040</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="InventoryId" id="2B513495-32E7-C02D-6901-7807743013EE">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:56:15 UTC</createdTime>
+<generatorID>C53F2E86-1897-4DF5-DBCC-61BD80CE1661</generatorID>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<engineerTo>
+<item key="F7A3952D-60F0-8818-A9A4-E90F53ABF974" value="true"/>
+</engineerTo>
+<referedAttribute>89DDD5A0-7850-3CB8-3FDC-3460D62F2714</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="5EEFB281-F2DD-EBD1-EC46-EFCA6F267540" name="Category PK">
@@ -51,6 +65,7 @@
 <pk>true</pk>
 <usedAttributes>
 <attributeRef>F7AC200A-778D-68A4-1D2B-F2278E1F1D2D</attributeRef>
+<attributeRef>2B513495-32E7-C02D-6901-7807743013EE</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

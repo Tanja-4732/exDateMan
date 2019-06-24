@@ -7,7 +7,7 @@ import {
   InventoryUser,
   InventoryUserAccessRightsEnum
 } from "../models/inventoryUserModel";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 import UserController from "./userController";
 import { Thing } from "../models/thingModel";
 import { Stock } from "../models/stockModel";
@@ -103,7 +103,7 @@ export default class InventoryController {
   ): Promise<void> {
     // Check for authorization: READ
     if (
-      (await AuthController.isAuthorized(
+      (await AccountController.isAuthorized(
         res.locals.actingUser,
         res.locals.inventory,
         InventoryUserAccessRightsEnum.READ
@@ -191,7 +191,7 @@ export default class InventoryController {
 
     // Check authorization
     if (
-      !(await AuthController.isAuthorized(
+      !(await AccountController.isAuthorized(
         res.locals.actingUser,
         invToEdit,
         InventoryUserAccessRightsEnum.ADMIN
@@ -255,7 +255,7 @@ export default class InventoryController {
 
     // Check authorization
     if (
-      !(await AuthController.isAuthorized(
+      !(await AccountController.isAuthorized(
         res.locals.actingUser,
         res.locals.inventory as Inventory,
         InventoryUserAccessRightsEnum.ADMIN

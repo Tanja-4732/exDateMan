@@ -3,12 +3,8 @@ import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialog,
-  MatSliderChange
-} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material/dialog";
+import { MatSliderChange } from "@angular/material/slider";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 

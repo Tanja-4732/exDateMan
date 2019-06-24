@@ -19,18 +19,32 @@ export class AuthService {
    * @returns {Promise<User>}
    * @memberof AuthService
    */
-  async login(email: string, pwd: string): Promise<LoginResponse> {
+  async login(
+    email: string,
+    pwd: string,
+    tfaToken?: string
+  ): Promise<LoginResponse> {
     const user: LoginResponse | any = await this.http
       .post<JSON>(
-        this.baseUrl + "/auth/login",
+        this.baseUrl + "/login",
         {
           email: email,
-          pwd: pwd
+          pwd: pwd,
+          tfaToken
         },
         { withCredentials: true }
       )
       .toPromise();
     return user;
+  }
+
+  /**
+   * Perform a logout request
+   *
+   * This will remove the JWT thus signing out the user.
+   */
+  async logout(): Promise<any> {
+    return await this.http.post(this.baseUrl + "/logout", null).toPromise();
   }
 
   async register(
@@ -40,7 +54,24 @@ export class AuthService {
   ): Promise<RegisterResponse> {
     const req: RegisterRequest = { email, pwd, name } as RegisterRequest;
     return await this.http
-      .post<RegisterResponse>(this.baseUrl + "/auth/register", req)
+      .post<RegisterResponse>(this.baseUrl + "/account", req)
+      .toPromise();
+  }
+
+  async getUser(): Promise<User> {
+    const res: { status: string; user: User } = await this.http
+      .get<{ status: string; user: User }>(this.baseUrl + "/account")
+      .toPromise();
+
+    if (res.status !== "Authenticated") {
+      throw new Error("Not signed in");
+    }
+    return res.user;
+  }
+
+  async saveUser(user: User): Promise<{ status: string; user: User }> {
+    return await this.http
+      .put<{ status: string; user: User }>(this.baseUrl + "/account", user)
       .toPromise();
   }
 }

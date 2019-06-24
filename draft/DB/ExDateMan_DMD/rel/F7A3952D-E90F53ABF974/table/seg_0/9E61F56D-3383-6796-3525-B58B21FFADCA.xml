@@ -29,7 +29,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT057</logicalDatatype>
 <dataTypeSize>10 BYTE</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
@@ -64,6 +64,36 @@
 <colAssociation fkAssociation="477AAA3C-0895-75F8-B592-924D34BFB43C" referredColumn="A9616D43-502F-29FB-E059-F07345FB6B02"/>
 </associations>
 </Column>
+<Column name="Category_InventoryId" id="E46C0CD1-B590-7AED-E19A-510CA50593E1">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 14:57:21 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="79881EE7-58D5-F32B-DF88-B5183C9E500C" referredColumn="2E6B004E-6348-B376-6555-DDA9271FD9AA"/>
+</associations>
+</Column>
+<Column name="Thing_ThingNumber" id="31CF517A-E16C-1A70-6D80-2BE41117BC0F">
+<createdBy>Bernd</createdBy>
+<createdTime>2019-06-22 15:33:41 UTC</createdTime>
+<ownerDesignName>ExDateMan_DMD</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="477AAA3C-0895-75F8-B592-924D34BFB43C" referredColumn="B7BE2811-CEC0-DB7C-7DB2-DB62B70A3008"/>
+</associations>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="866A8792-D2A8-0821-976C-1BC47884C480" name="Category_Thing_PK">
@@ -78,6 +108,8 @@
 <colUsage columnID="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA"/>
 <colUsage columnID="2804A7AB-095E-FACD-09ED-DC345E80BB01"/>
 <colUsage columnID="47667607-BE37-8A7A-31C3-E3C0286ABEFC"/>
+<colUsage columnID="E46C0CD1-B590-7AED-E19A-510CA50593E1"/>
+<colUsage columnID="31CF517A-E16C-1A70-6D80-2BE41117BC0F"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="4DB0D08E-3E5A-0878-7751-54FBBDD13EB0" name="Category_Thing_Category_FK">
@@ -89,6 +121,7 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="D4300468-B73D-D83B-DBDE-61B5E7F40491"/>
+<colUsage columnID="E46C0CD1-B590-7AED-E19A-510CA50593E1"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="07F48CC6-A5D9-40C0-EF3C-DB722346A885" name="Category_Thing_Thing_FK">
@@ -99,8 +132,9 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA"/>
 <colUsage columnID="2804A7AB-095E-FACD-09ED-DC345E80BB01"/>
+<colUsage columnID="31CF517A-E16C-1A70-6D80-2BE41117BC0F"/>
+<colUsage columnID="4D503FDE-BCDE-CBBE-384D-E88AC2CF06DA"/>
 <colUsage columnID="47667607-BE37-8A7A-31C3-E3C0286ABEFC"/>
 </indexColumnUsage>
 </ind_PK_UK>

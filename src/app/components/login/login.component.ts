@@ -10,6 +10,7 @@ import { AuthService, LoginResponse } from "../../services/auth/auth.service";
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
+  tfaToken: string;
 
   // true, when the login data was incorrect
   oof: boolean = false;
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
 
   async onLogin(): Promise<void> {
     this.auth
-      .login(this.email, this.password)
+      .login(this.email, this.password, this.tfaToken)
       .then((response: LoginResponse) => {
         if (response.status === 200) {
           this.oof = false;

@@ -2,7 +2,7 @@ import { EntityManager, getManager } from "typeorm";
 import { User } from "../models/userModel";
 import { log } from "util";
 import { Request, Response } from "express";
-import AuthController from "./authController";
+import AccountController from "./accountController";
 
 /**
  * Contains db handling code for User-class operations
@@ -11,6 +11,12 @@ import AuthController from "./authController";
  * should be implemented here.
  */
 export default class UserController {
+  public static async saveUser(user: User): Promise<void> {
+    const mgr: EntityManager = getManager();
+
+    await mgr.save(User, user);
+  }
+
   /**
    * Finds and returns a user form the db
    * based on the email or throws an exception
@@ -57,15 +63,18 @@ export default class UserController {
     throw new Error("duplicate/unique");
   }
 
-  public static async getUserByEmail(req: Request, res: Response): Promise<void> {
+  public static async getUserByEmail(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     const entityManager: EntityManager = getManager();
     let user: User;
     try {
       user = await entityManager.findOneOrFail(User, {
-      where: {
-        email: req.params.email as string
-    }});
-
+        where: {
+          email: req.params.email as string
+        }
+      });
     } catch (error) {
       res.status(404).json({
         error: "We couldn't find that user"
@@ -76,6 +85,9 @@ export default class UserController {
     delete user.saltedPwdHash;
     delete user.inventoryUsers;
     delete user.createdOn;
+    delete user.tfaEnabled;
+    delete user.tfaSecret;
+    delete user.tfaUrl;
 
     res.status(200).json(user);
   }

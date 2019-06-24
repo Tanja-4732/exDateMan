@@ -1,3 +1,4 @@
 {
+  "watch": ["dist/backend/*"],
   "ignore": ["*.ts"]
 }

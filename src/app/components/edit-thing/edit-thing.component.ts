@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, Inject } from "@angular/core";
-import { MatDialog, MatDialogRef } from "@angular/material";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
 import { HttpErrorResponse } from "@angular/common/http";

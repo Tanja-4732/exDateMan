@@ -35,7 +35,6 @@
 <createdTime>2019-01-13 20:39:09 UTC</createdTime>
 <generatorID>1F468DCE-0C8E-FA64-C7B7-0A028D52CB75</generatorID>
 <ownerDesignName>ExDateMan_DMD</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
@@ -69,7 +68,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="A1B60C81-63D9-4B79-BA58-25A371A4FD53"/>
-<colUsage columnID="4B4E8F37-6FC3-D172-77EE-72B3C40D72A2"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="449541EA-207C-7213-0210-D71DE9938015" name="Inventory_User_FK">

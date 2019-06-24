@@ -6,18 +6,50 @@
 
   <h2>Important notice</h2>
   <p>
-    This service is not meant to be used by the public. This is a private service used by a select group of
-    people. Unauthorized usage (usage without express written permission) is not allowed!
+    This service is not meant to be used by the public. This is a private
+    service used by a select group of people. Unauthorized usage (usage without
+    express written permission) is not allowed!
   </p>
 
   <h2>Start</h2>
-  <p>Until the navigation overhaul is completed, please use the buttons below to get to your inventories/log
-    in/register.</p>
-  <button mat-raised-button routerLink="/inventories" color="accent">Inventories</button> &nbsp;
-  <button mat-raised-button routerLink="/login" color="primary">Login</button> &nbsp;
-  <button mat-stroked-button routerLink="/register" color="basic">Register</button> &nbsp;
-  <br>
-  <br>
+  <p>
+    Until the navigation overhaul is completed, please use the buttons below to
+    get to your inventories, log in, register, log out & manage your account.
+  </p>
+  <ng-container *ngIf="!loading">
+    <ng-container *ngIf="loggedIn">
+      <p>Logged in as {{ user.name }} ({{ user.email }}).</p>
+      <button mat-raised-button routerLink="/inventories" color="accent">
+        Inventories
+      </button>
+      &nbsp;
+      <button mat-raised-button routerLink="/account" color="primary">
+        Account
+      </button>
+      &nbsp;
+      <button mat-stroked-button (click)="onLogout()" color="basic">
+        Logout
+      </button>
+      &nbsp;
+    </ng-container>
+
+    <ng-container *ngIf="!loggedIn">
+      <p>Not logged in.</p>
+      <button mat-raised-button routerLink="/login" color="accent">
+        Login
+      </button>
+      &nbsp;
+      <button mat-raised-button routerLink="/register" color="primary">
+        Register
+      </button>
+      &nbsp;
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="loading">Please wait...</ng-container>
+
+  <br />
+  <br />
 
   <h2>Usage</h2>
   <p>Using ExDateMan is easy. Just follow these steps:</p>
@@ -32,10 +64,11 @@
 
   <h3>Inventory</h3>
   <p>
-    The term Inventory refers to a distinct collection of things which is defined by its unique set of owners.
-    <br>
-    Each inventory has an owner. Other users may also be allowed to view or edit the inventory or its contents,
-    depending on their role in a given inventory.
+    The term Inventory refers to a distinct collection of things which is
+    defined by its unique set of owners.
+    <br />
+    Each inventory has an owner. Other users may also be allowed to view or edit
+    the inventory or its contents, depending on their role in a given inventory.
   </p>
 
   <h3>User</h3>
@@ -46,25 +79,28 @@
     <li>A passphrase (stored securely; used for authentication)</li>
   </ul>
   <p>
-    Furthermore, each user can have one relation per inventory, which is governed by the users role in said
-    inventory.
+    Furthermore, each user can have one relation per inventory, which is
+    governed by the users role in said inventory.
   </p>
 
   <h3>Role</h3>
   <p>
-    A role governs a users rights in any given inventory. A user may have one or zero roles per inventory. <br>
-    If a user doesn't have a role in an inventory, the inventory doesn't get displayed to the user.
+    A role governs a users rights in any given inventory. A user may have one or
+    zero roles per inventory. <br />
+    If a user doesn't have a role in an inventory, the inventory doesn't get
+    displayed to the user.
   </p>
 
   <h3>Thing</h3>
   <p>
-    The term thing refers to something stored in an inventory, though not as a piece.
+    The term thing refers to something stored in an inventory, though not as a
+    piece.
   </p>
 
   <h3>Stock</h3>
   <p>
-    Every stock is an instance of a thing, and associated with one. One thing can have as many or as little (including
-    0) stocks as needed. <br>
+    Every stock is an instance of a thing, and associated with one. One thing
+    can have as many or as little (including 0) stocks as needed. <br />
     Each stock has:
   </p>
   <ul>
@@ -77,27 +113,30 @@
 
   <h3>Category</h3>
   <p>
-    Every inventory can have categories. Every category can be the parent of other categories, allowing for the
-    formation of sub- and super-category structures.
+    Every inventory can have categories. Every category can be the parent of
+    other categories, allowing for the formation of sub- and super-category
+    structures.
   </p>
 
   <h2>GitHub repository</h2>
   <p>
-    This project is open-source, meaning anyone may have a look
-    at the <a href="https://github.com/Bernd-L/ExDateMan"> source code</a> used for both the server and the client.
+    This project is open-source, meaning anyone may have a look at the
+    <a href="https://github.com/Bernd-L/ExDateMan"> source code</a> used for
+    both the server and the client.
   </p>
 
   <h2>Cookie notice</h2>
   <p>
-    This service uses cookies to keep users logged in. <br>
-    They are used for authentication purposes (and thus are able to identify a user). <br>
-    They are only used for this purpose, as this service doesn't utilize any tracking techniques.
+    This service uses cookies to keep users logged in. <br />
+    They are used for authentication purposes (and thus are able to identify a
+    user). <br />
+    They are only used for this purpose, as this service doesn't utilize any
+    tracking techniques.
   </p>
 
   <h2>Copyright notice</h2>
   <p>
-    Copyright 2018-2019 Bernd. <br>
+    Copyright 2018-2019 Bernd. <br />
     All rights reserved.
   </p>
-
 </div>
