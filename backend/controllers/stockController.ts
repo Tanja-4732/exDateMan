@@ -25,7 +25,10 @@ export interface StockRequest {
 export default class StockController {
   public static async getStocks(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
+    await AccountController.authOrError(
+      res,
+      InventoryUserAccessRightsEnum.READ
+    );
 
     const entityManager: EntityManager = getManager();
 
@@ -50,7 +53,10 @@ export default class StockController {
 
   public static async addStock(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    await AccountController.authOrError(
+      res,
+      InventoryUserAccessRightsEnum.WRITE
+    );
 
     const entityManager: EntityManager = getManager();
 
@@ -68,7 +74,8 @@ export default class StockController {
       const schema: string = process.env.EDM_SCHEMA || "edm_dev";
       const numberSuggestion: {
         the_number: number;
-      }[] = await entityManager.query( // TODO add one more collumn (addedOn)
+      }[] = await entityManager.query(
+        // TODO add one more collumn (addedOn)
         // Get the first gap or 1
         `
         SELECT  "number" + 1 AS the_number
@@ -157,25 +164,17 @@ export default class StockController {
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;
 
-    stockToUpdate.exDate = (req.body as StockRequest).exDate
-      ? new Date((req.body as StockRequest).exDate)
-      : stockToUpdate.exDate;
+    stockToUpdate.exDate = new Date((req.body as StockRequest).exDate);
 
-      stockToUpdate.openedOn = (req.body as StockRequest).openedOn
-      ? new Date((req.body as StockRequest).openedOn)
-      : stockToUpdate.openedOn;
+    // Set openedOn according to the value of percentLeft
+    stockToUpdate.openedOn =
+      (req.body as StockRequest).percentLeft === 100 ? null : new Date();
 
-    stockToUpdate.percentLeft = (req.body as StockRequest).percentLeft
-      ? (req.body as StockRequest).percentLeft
-      : stockToUpdate.percentLeft;
+    stockToUpdate.percentLeft = (req.body as StockRequest).percentLeft;
 
-    stockToUpdate.quantity = (req.body as StockRequest).quantity
-      ? (req.body as StockRequest).quantity
-      : stockToUpdate.quantity;
+    stockToUpdate.quantity = (req.body as StockRequest).quantity;
 
-    stockToUpdate.useUpIn = (req.body as StockRequest).useUpIn
-      ? (req.body as StockRequest).useUpIn
-      : stockToUpdate.useUpIn;
+    stockToUpdate.useUpIn = (req.body as StockRequest).useUpIn;
 
     try {
       entityManager.save(stockToUpdate);
@@ -192,7 +191,10 @@ export default class StockController {
   }
 
   public static async removeStock(req: Request, res: Response): Promise<void> {
-    await AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    await AccountController.authOrError(
+      res,
+      InventoryUserAccessRightsEnum.WRITE
+    );
 
     const entityManager: EntityManager = getManager();
     const stockToUpdate: Stock = res.locals.stock as Stock;

@@ -117,6 +117,8 @@ export class StockService {
   }
 
   calculateExDate(stock: Stock): Date {
+    console.log(stock);
+
     if (stock.useUpIn != null && stock.openedOn) {
       return (new Date().setDate(
         stock.openedOn.getDate() + stock.useUpIn
