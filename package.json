@@ -1,6 +1,6 @@
 {
   "name": "ex-date-man",
-  "version": "0.12.1",
+  "version": "1.0.0",
   "description": "Manages expiration dates",
   "scripts": {
     "ng": "ng",
