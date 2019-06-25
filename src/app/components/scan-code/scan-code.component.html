@@ -2,5 +2,7 @@
   scan-code works!
 </p>
 
-
-<zxing-scanner></zxing-scanner>
+<zxing-scanner
+  [formats]="allowedFormats"
+  (scanSuccess)="onScanSuccess($event)"
+></zxing-scanner>
