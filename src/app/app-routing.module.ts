@@ -15,6 +15,7 @@ import { EditInventoryComponent } from "./components/edit-inventory/edit-invento
 import { AddInventoryComponent } from "./components/add-inventory/add-inventory.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { AccountComponent } from "./components/account/account.component";
+import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
 
 const routes: Routes = [
   // Default route
@@ -41,6 +42,9 @@ const routes: Routes = [
 
   // Account
   { path: "account", component: AccountComponent },
+
+  // Scan
+  { path: "scan", component: ScanCodeComponent },
 
   // Inventories
   {

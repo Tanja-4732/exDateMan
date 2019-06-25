@@ -51,3 +51,7 @@ Thumbs.db
 # ...except for the default one and the example one
 !/backend/environments/environment.d.ts
 !/backend/environments/example.ts
+
+# Development keys
+/backend/keys/*
+!/backend/keys/keys-go-here
