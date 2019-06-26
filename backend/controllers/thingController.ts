@@ -275,17 +275,21 @@ export class ThingController {
 
   static async getByCode(req: Request, res: Response): Promise<void> {
     // Check for authorization
-    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.READ);
 
     // Get entityManager
-    const entityManager: EntityManager = getManager();
+    const mgr: EntityManager = getManager();
 
     // Find the thing in the db
     let theThing: Thing;
     try {
-      thing = await
+      theThing = await mgr.findOneOrFail(Thing, {
+        where: { code: req.params.code,
+          // FIXME this probably doesn't work
+          inventory: res.locals.inventory }
+      });
     } catch (error) {
-
+      res.status(404).json({ error: "The code couldn't be resolved." });
     }
   }
 }
