@@ -13,6 +13,9 @@ thingsRoutes.get("/", ThingController.getAllThings);
 // Create new thing
 thingsRoutes.post("/", ThingController.createNewThing);
 
+// Resolve barcode
+thingsRoutes.get("/code/:code", ThingController.getByCode);
+
 // Set the thingNo
 thingsRoutes.use("/:thingNo", ThingController.setThingInDotLocals);
 
@@ -21,7 +24,6 @@ thingsRoutes.use("/:thingNo/stocks", stocksRoutes);
 
 // Return one thing
 thingsRoutes.get("/:thingNo", ThingController.getThing);
-
 
 // Replace thing
 thingsRoutes.put("/:thingNo", ThingController.replaceThing);

@@ -272,4 +272,20 @@ export class ThingController {
       message: "Thing deleted"
     });
   }
+
+  static async getByCode(req: Request, res: Response): Promise<void> {
+    // Check for authorization
+    AccountController.authOrError(res, InventoryUserAccessRightsEnum.WRITE);
+
+    // Get entityManager
+    const entityManager: EntityManager = getManager();
+
+    // Find the thing in the db
+    let theThing: Thing;
+    try {
+      thing = await
+    } catch (error) {
+
+    }
+  }
 }

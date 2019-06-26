@@ -23,7 +23,7 @@ import app from "./app";
 import { resolve } from "path";
 
 // Check for development mode
-if (process.env.EDM_MODE !== "development") {
+if (true || process.env.EDM_MODE !== "development") {
   // Don't use SSL and let the host worry about that
   app.listen(PORT, () => {
     log("Server listening on port " + PORT);
