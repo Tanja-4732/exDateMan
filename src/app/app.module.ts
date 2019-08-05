@@ -20,6 +20,7 @@ import { MatSliderModule } from "@angular/material/slider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 
 import { QRCodeModule } from "angularx-qrcode";
+import { ZXingScannerModule } from "@zxing/ngx-scanner";
 
 import { AppRoutingModule } from "./app-routing.module";
 
@@ -44,6 +45,7 @@ import { AddInventoryComponent } from "./components/add-inventory/add-inventory.
 import { InventoryCardComponent } from "./components/inventory-card/inventory-card.component";
 import { DeleteConfirmationDialogComponent } from "./components/delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { AccountComponent } from "./components/account/account.component";
+import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
 
 @NgModule({
   declarations: [
@@ -66,7 +68,8 @@ import { AccountComponent } from "./components/account/account.component";
     AddInventoryComponent,
     InventoryCardComponent,
     DeleteConfirmationDialogComponent,
-    AccountComponent
+    AccountComponent,
+    ScanCodeComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +94,8 @@ import { AccountComponent } from "./components/account/account.component";
     MatChipsModule,
     ReactiveFormsModule,
     QRCodeModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    ZXingScannerModule
   ],
   providers: [],
   bootstrap: [AppComponent],

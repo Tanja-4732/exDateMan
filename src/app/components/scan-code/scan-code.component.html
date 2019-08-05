@@ -1,0 +1,8 @@
+<p>
+  scan-code works!
+</p>
+
+<zxing-scanner
+  [formats]="allowedFormats"
+  (scanSuccess)="onScanSuccess($event)"
+></zxing-scanner>

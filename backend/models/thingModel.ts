@@ -36,6 +36,12 @@ export class Thing {
   @JoinTable()
   categories: Category[];
 
+  @Column({ nullable: true })
+  /**
+   * The barcode of the thing
+   */
+  code: string;
+
   // TODO fix this #3
   @OneToMany(() => Stock, stock => stock.thing)
   stocks: Stock[];
