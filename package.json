@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node ./dist/backend/server.js",
+    "nm": "nodemon -w ./dist/backend ./dist/backend/server.js",
     "build": "ng build --prod && tsc -p backend/tsconfig.json || true",
     "test": "ng test",
     "lint": "ng lint",
