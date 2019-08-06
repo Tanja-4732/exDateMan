@@ -9,5 +9,10 @@
 		{
 			"path": "."
 		}
-	]
+  ],
+  "settings": {
+    "cSpell.words": [
+      "postgresql"
+    ]
+  }
 }
