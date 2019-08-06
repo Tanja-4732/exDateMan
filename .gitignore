@@ -47,12 +47,12 @@ Thumbs.db
 !/src/environments/environment.d.ts
 
 # Avoid server-side configuration files...
-/backend/environments/*
+/backend-old/environments/*
 
 # ...except for the default one and the example one
-!/backend/environments/environment.d.ts
-!/backend/environments/example.ts
+!/backend-old/environments/environment.d.ts
+!/backend-old/environments/example.ts
 
 # Development keys
-/backend/keys/*
-!/backend/keys/keys-go-here
+/backend-old/keys/*
+!/backend-old/keys/keys-go-here
