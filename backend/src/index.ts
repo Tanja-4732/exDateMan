@@ -1,10 +1,10 @@
-import {ExDateManApplication} from './application';
+import {ExdatemanApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
 
-export {ExDateManApplication};
+export {ExdatemanApplication};
 
 export async function main(options: ApplicationConfig = {}) {
-  const app = new ExDateManApplication(options);
+  const app = new ExdatemanApplication(options);
   await app.boot();
   await app.start();
 

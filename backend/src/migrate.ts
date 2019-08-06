@@ -1,10 +1,10 @@
-import {ExDateManApplication} from './application';
+import {ExdatemanApplication} from './application';
 
 export async function migrate(args: string[]) {
   const existingSchema = args.includes('--rebuild') ? 'drop' : 'alter';
   console.log('Migrating schemas (%s existing schema)', existingSchema);
 
-  const app = new ExDateManApplication();
+  const app = new ExdatemanApplication();
   await app.boot();
   await app.migrateSchema({existingSchema});
 

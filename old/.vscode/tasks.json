@@ -6,9 +6,8 @@
       "type": "typescript",
       "tsconfig": "backend/tsconfig.json",
       "option": "watch",
-      // "options": { "shell": { "executable": "powershell.exe" } },
       "problemMatcher": ["$tsc-watch"],
-      "group": "build"
+      "group": { "kind": "build", "isDefault": true }
     }
   ]
 }
