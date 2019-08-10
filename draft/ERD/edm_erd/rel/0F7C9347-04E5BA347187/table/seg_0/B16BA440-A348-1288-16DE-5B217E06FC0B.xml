@@ -1,0 +1,80 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="B16BA440-A348-1288-16DE-5B217E06FC0B" name="Thing">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:26:29 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<ordsAlias>table_4</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="0C1FDAE0-BEF8-6F55-AF21-716F6C76C6DA">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:28:43 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Inventory_id" id="D3B83D7C-388D-955A-A90D-FB2E21454DB0">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:11 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9C5AD32C-5B04-E50B-D99D-0BAF12B697DA" referredColumn="BAFBEA3C-B3C3-EC2F-C840-AF502DFFFCC0"/>
+</associations>
+</Column>
+<Column name="code" id="95370AC8-AA6F-B8C6-41AE-CDD884EA4356">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:41:57 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="name" id="B31332F4-B06C-DC5C-2AC8-4066B05EA22D">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:41:47 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="3412CA3C-EB06-CB24-4299-6C989FD580B8" name="Thing_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:28:43 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0C1FDAE0-BEF8-6F55-AF21-716F6C76C6DA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="526218CA-D773-68CF-B6C9-F720A64AF414" name="Thing_Inventory_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:11 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D3B83D7C-388D-955A-A90D-FB2E21454DB0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

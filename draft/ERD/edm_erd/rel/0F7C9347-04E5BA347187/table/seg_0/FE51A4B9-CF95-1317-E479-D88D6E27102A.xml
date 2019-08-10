@@ -1,0 +1,108 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FE51A4B9-CF95-1317-E479-D88D6E27102A" name="User">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:54:13 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<ordsAlias>table_1</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="F9CFEC33-6788-C366-150E-660F882BF9C4">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:55:08 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="name" id="5A6E2402-4AB5-F531-8E76-D43BCC204A77">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:56:13 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="email" id="94E55863-3BB7-D4DD-C6C5-872B25842F94">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:56:36 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="saltedPwdHash" id="E4CAC413-66C8-B4CF-4528-0A7BFBB860E8">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:24:52 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tfaEnabled" id="15CCA95F-64E6-EE9C-6CF0-B8AF860B6A90">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:56:53 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="createdOn" id="A8230E42-4827-0907-EB24-96ABDC9645F5">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:25:12 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tfaSecret" id="BA413EEF-09AE-A6EF-0587-ABF03490039A">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:25:28 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tfaUrl" id="2D45337A-49DB-8163-0CFD-EC03243455A2">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:25:47 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="403BCCB1-0AFB-4CE3-14AF-33683C281C2B" name="User_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 18:55:08 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9CFEC33-6788-C366-150E-660F882BF9C4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
