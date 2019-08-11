@@ -48,6 +48,13 @@ export class ExpressServer {
 
   /**
    * Start the server either with or without SSL
+   *
+   * Checks if SSL is desired using the `EDM_SSL` environment variable.
+   *
+   * The SSL parameters specified in the environment are either taken out of
+   * their direct value representation (e.g. `EDM_SSL_PK_VAL`), otherwise the
+   * files of the paths specified in them (e.g. `EDM_SSL_PK`) will be read and
+   * used.
    */
   async start() {
     // Set the ports

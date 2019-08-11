@@ -9,8 +9,7 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import {join} from 'path';
 import {MySequence} from './sequence';
-// import {Router} from 'express';
-// import * as express from 'express';
+import {AuthenticationComponent} from '@loopback/authentication';
 
 export class ExdatemanApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -29,6 +28,9 @@ export class ExdatemanApplication extends BootMixin(
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    // Bind authentication component related elements
+    this.component(AuthenticationComponent);
 
     this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
