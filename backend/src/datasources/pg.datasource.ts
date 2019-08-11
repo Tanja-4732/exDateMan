@@ -1,6 +1,5 @@
 import {inject} from '@loopback/core';
 import {juggler} from '@loopback/repository';
-// import * as config from './pg.datasource.json';
 
 export class PgDataSource extends juggler.DataSource {
   static dataSourceName = 'pg';
@@ -11,12 +10,13 @@ export class PgDataSource extends juggler.DataSource {
       name: 'pg',
       connector: 'postgresql',
       url: '',
-      host: process.env.EDM_HOST,
-      port: parseInt(process.env.EDM_PORT + '', 10),
-      user: process.env.EDM_USER,
-      password: process.env.EDM_PWD,
-      database: process.env.EDM_DB,
+      host: process.env.EDM_DB_HOST,
+      port: parseInt(process.env.EDM_DB_PORT + '', 10),
+      user: process.env.EDM_DB_USER,
+      password: process.env.EDM_DB_PWD,
+      database: process.env.EDM_DB_DB,
       ssl: true,
+      schema: process.env.EDM_DB_SCHEMA,
     },
   ) {
     super(dsConfig);

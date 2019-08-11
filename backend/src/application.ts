@@ -7,8 +7,10 @@ import {
 import {RepositoryMixin} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
-import * as path from 'path';
+import {join} from 'path';
 import {MySequence} from './sequence';
+// import {Router} from 'express';
+// import * as express from 'express';
 
 export class ExdatemanApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -19,8 +21,19 @@ export class ExdatemanApplication extends BootMixin(
     // Set up the custom sequence
     this.sequence(MySequence);
 
+    // // Set the basePath to /api/v2
+    // this.basePath('/api/v2');
+
+    // // Set up the frontend
+    // this.mountExpressRouter(
+    //   '../../',
+    //   Router().use(
+    //     express.static(join(__dirname, '../../frontend/dist/exdateman')),
+    //   ),
+    // );
+
     // Set up default home page
-    this.static('/', path.join(__dirname, '../public'));
+    this.static('/', join(__dirname, '../public'));
 
     // Customize @loopback/rest-explorer configuration here
     this.bind(RestExplorerBindings.CONFIG).to({

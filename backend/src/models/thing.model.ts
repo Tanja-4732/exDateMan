@@ -1,4 +1,5 @@
 import {Entity, model, property} from '@loopback/repository';
+import {InventoryWithRelations} from './inventory.model';
 
 @model({settings: {}})
 export class Thing extends Entity {
@@ -26,14 +27,13 @@ export class Thing extends Entity {
   })
   code?: string;
 
-
   constructor(data?: Partial<Thing>) {
     super(data);
   }
 }
 
 export interface ThingRelations {
-  // describe navigational properties here
+  inventory?: InventoryWithRelations;
 }
 
 export type ThingWithRelations = Thing & ThingRelations;
