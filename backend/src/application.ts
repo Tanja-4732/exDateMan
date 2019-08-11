@@ -21,25 +21,6 @@ export class ExdatemanApplication extends BootMixin(
     // Set up the custom sequence
     this.sequence(MySequence);
 
-    // // Set the basePath to /api/v2
-    // this.basePath('/api/v2');
-
-    // Set up the frontend
-    // this.mountExpressRouter(
-    //   '/',
-    //   Router()
-    //     .get(
-    //       '/',
-    //       express.static(join(__dirname, '../../frontend/dist/exdateman')),
-    //     )
-    //     .use((req: express.Request, res: express.Response) =>
-    //       res.sendFile(
-    //         join(__dirname, '../../frontend/dist/exdateman/index.html'),
-    //       ),
-    //     ),
-    // );
-    // this.static('/.*', join(__dirname, '../../frontend/dist/exdateman'));
-
     // Set up default home page
     this.static('/', join(__dirname, '../public'));
 

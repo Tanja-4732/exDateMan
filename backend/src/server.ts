@@ -5,9 +5,8 @@ import * as express from 'express';
 import {join} from 'path';
 import pEvent from 'p-event';
 import {readFileSync} from 'fs';
-import * as https from 'https';
-import * as http from 'http';
 import {log} from 'console';
+import {createServer} from 'https';
 
 /**
  * This is the main Express server.
@@ -91,19 +90,16 @@ export class ExpressServer {
 
       // Create the https app server
       await pEvent(
-        https.createServer(credentials, this.app).listen(PORT),
+        createServer(credentials, this.app).listen(PORT),
         'listening',
       );
       log('HTTPS app server listening on port ' + PORT);
 
       // Create the http redirect server
-
-      http
-        .createServer(
-          express().use('*', (req, res) => {
-            res.redirect('https://' + req.headers.host + req.url);
-          }),
-        )
+      express()
+        .use('*', (req, res) => {
+          res.redirect('https://' + req.headers.host + req.url);
+        })
         .listen(INSECURE_PORT);
       log('HTTP redirect server listening on port ' + INSECURE_PORT);
     } else {
