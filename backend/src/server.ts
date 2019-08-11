@@ -1,8 +1,13 @@
+/* eslint-disable no-case-declarations */
 import {ExdatemanApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
 import * as express from 'express';
 import {join} from 'path';
 import pEvent from 'p-event';
+import {readFileSync} from 'fs';
+import * as https from 'https';
+import * as http from 'http';
+import {log} from 'console';
 
 /**
  * This is the main Express server.
@@ -43,12 +48,69 @@ export class ExpressServer {
   }
 
   /**
-   * Start the API
+   * Start the server either with or without SSL
    */
   async start() {
-    const port = this.lbApp.restServer.config.port || 3000;
-    const host = this.lbApp.restServer.config.host || '127.0.0.1';
-    const server = this.app.listen(port, host);
-    await pEvent(server, 'listening');
+    // Set the ports
+    const PORT: string = process.env.PORT || 443 + '';
+    const INSECURE_PORT: string = process.env.INSECURE_PORT || 80 + '';
+
+    // Check if SSL is desired
+    if (process.env.EDM_SSL === 'true') {
+      // Use SSL
+
+      /**
+       * The private key for SSL
+       */
+      const privateKey: string =
+        process.env.EDM_SSL_PK_VAL ||
+        readFileSync(process.env.EDM_SSL_PK + '', 'utf8');
+
+      /**
+       * The certificate for SSL
+       */
+      const certificate: string =
+        process.env.EDM_SSL_CERT_VAL ||
+        readFileSync(process.env.EDM_SSL_CERT + '', 'utf8');
+
+      /**
+       * The certificate authority chain for SSL
+       */
+      const ca: string =
+        process.env.EDM_SSL_CA_VAL ||
+        readFileSync(process.env.EDM_SSL_CA + '', 'utf8');
+
+      /**
+       * The credentials as one object for SSL
+       */
+      const credentials = {
+        key: privateKey,
+        cert: certificate,
+        ca,
+      };
+
+      // Create the https app server
+      await pEvent(
+        https.createServer(credentials, this.app).listen(PORT),
+        'listening',
+      );
+      log('HTTPS app server listening on port ' + PORT);
+
+      // Create the http redirect server
+
+      http
+        .createServer(
+          express().use('*', (req, res) => {
+            res.redirect('https://' + req.headers.host + req.url);
+          }),
+        )
+        .listen(INSECURE_PORT);
+      log('HTTP redirect server listening on port ' + INSECURE_PORT);
+    } else {
+      // Don't use SSL
+      // Start the http app server
+      await pEvent(this.app.listen(process.env.PORT || 80 + ''), 'listening');
+      log('HTTP app server listening on port ' + process.env.PORT || 80 + '');
+    }
   }
 }
