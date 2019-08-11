@@ -8,9 +8,7 @@ export class ThingRepository extends DefaultCrudRepository<
   typeof Thing.prototype.id,
   ThingRelations
 > {
-  constructor(
-    @inject('datasources.pg') dataSource: PgDataSource,
-  ) {
+  constructor(@inject('datasources.pg') dataSource: PgDataSource) {
     super(Thing, dataSource);
   }
 }

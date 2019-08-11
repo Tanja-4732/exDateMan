@@ -23,7 +23,7 @@ import {ThingRepository} from '../repositories';
 export class ThingController {
   constructor(
     @repository(ThingRepository)
-    public thingRepository : ThingRepository,
+    public thingRepository: ThingRepository,
   ) {}
 
   @post('/things', {
@@ -74,7 +74,8 @@ export class ThingController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Thing)) filter?: Filter<Thing>,
+    @param.query.object('filter', getFilterSchemaFor(Thing))
+    filter?: Filter<Thing>,
   ): Promise<Thing[]> {
     return this.thingRepository.find(filter);
   }
