@@ -1,4 +1,11 @@
-import {Entity, model, property} from '@loopback/repository';
+import {
+  Entity,
+  model,
+  property,
+  belongsTo,
+  hasMany,
+} from '@loopback/repository';
+import {Inventory} from './inventory.model';
 
 @model({settings: {}})
 export class Category extends Entity {
@@ -15,17 +22,14 @@ export class Category extends Entity {
   })
   name: string;
 
-  @property({
-    type: 'number',
-    required: true,
-  })
+  @belongsTo(() => Inventory)
   inventoryId: number;
 
-  @property({
-    type: 'number',
-  })
+  @belongsTo(() => Category)
   parent?: number;
 
+  @hasMany(() => Category)
+  children?: Category[];
 
   constructor(data?: Partial<Category>) {
     super(data);
@@ -33,7 +37,8 @@ export class Category extends Entity {
 }
 
 export interface CategoryRelations {
-  // describe navigational properties here
+  parent?: CategoryWithRelations;
+  children?: CategoryWithRelations[];
 }
 
 export type CategoryWithRelations = Category & CategoryRelations;

@@ -1,5 +1,6 @@
 import {Entity, model, property, hasMany} from '@loopback/repository';
 import {Thing, ThingWithRelations} from './thing.model';
+import {Category, CategoryWithRelations} from './category.model';
 
 @model({settings: {}})
 export class Inventory extends Entity {
@@ -25,6 +26,9 @@ export class Inventory extends Entity {
   @hasMany(() => Thing)
   things?: Thing[];
 
+  @hasMany(() => Category)
+  categories?: Category[];
+
   constructor(data?: Partial<Inventory>) {
     super(data);
   }
@@ -32,6 +36,7 @@ export class Inventory extends Entity {
 
 export interface InventoryRelations {
   things?: ThingWithRelations[];
+  categories?: CategoryWithRelations[];
 }
 
 export type InventoryWithRelations = Inventory & InventoryRelations;

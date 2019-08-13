@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Thing, ThingWithRelations} from './thing.model';
 
 @model({settings: {}})
 export class Stock extends Entity {
@@ -9,10 +10,7 @@ export class Stock extends Entity {
   })
   id: number;
 
-  @property({
-    type: 'number',
-    required: true,
-  })
+  @belongsTo(() => Thing)
   thingId: number;
 
   @property({
@@ -48,14 +46,13 @@ export class Stock extends Entity {
   })
   addedOn: string;
 
-
   constructor(data?: Partial<Stock>) {
     super(data);
   }
 }
 
 export interface StockRelations {
-  // describe navigational properties here
+  thing?: ThingWithRelations;
 }
 
 export type StockWithRelations = Stock & StockRelations;
