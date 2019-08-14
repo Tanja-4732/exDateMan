@@ -1,14 +1,31 @@
-import {DefaultCrudRepository} from '@loopback/repository';
+import {
+  DefaultCrudRepository,
+  repository,
+  HasManyRepositoryFactory,
+} from '@loopback/repository';
 import {Category, CategoryRelations} from '../models';
 import {PgDataSource} from '../datasources';
-import {inject} from '@loopback/core';
+import {inject, Getter} from '@loopback/core';
 
 export class CategoryRepository extends DefaultCrudRepository<
   Category,
   typeof Category.prototype.id,
   CategoryRelations
 > {
-  constructor(@inject('datasources.pg') dataSource: PgDataSource) {
+  public readonly categories: HasManyRepositoryFactory<
+    Category,
+    typeof Category.prototype.id
+  >;
+
+  constructor(
+    @inject('datasources.pg') dataSource: PgDataSource,
+    @repository.getter('CategoryRepository')
+    protected categoryRepositoryGetter: Getter<CategoryRepository>,
+  ) {
     super(Category, dataSource);
+    this.categories = this.createHasManyRepositoryFactoryFor(
+      'categories',
+      categoryRepositoryGetter,
+    );
   }
 }

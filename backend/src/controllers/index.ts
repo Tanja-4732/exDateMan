@@ -7,3 +7,5 @@ export * from './inventory-inventory-user.controller';
 export * from './inventory-category.controller';
 export * from './inventory-thing.controller';
 export * from './thing-stock.controller';
+export * from './category-category.controller';
+export * from './inventory.controller';
