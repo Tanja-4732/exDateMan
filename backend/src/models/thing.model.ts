@@ -1,12 +1,4 @@
-import {
-  Entity,
-  model,
-  property,
-  belongsTo,
-  hasMany,
-} from '@loopback/repository';
-import {InventoryWithRelations, Inventory} from './inventory.model';
-import {Stock, StockWithRelations} from './stock.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {}})
 export class Thing extends Entity {
@@ -16,9 +8,6 @@ export class Thing extends Entity {
     required: true,
   })
   id: number;
-
-  @belongsTo(() => Inventory)
-  inventoryId: number;
 
   @property({
     type: 'string',
@@ -31,17 +20,11 @@ export class Thing extends Entity {
   })
   code?: string;
 
-  @hasMany(() => Stock)
-  stocks?: Stock[];
-
   constructor(data?: Partial<Thing>) {
     super(data);
   }
 }
 
-export interface ThingRelations {
-  inventory?: InventoryWithRelations;
-  stocks?: StockWithRelations[];
-}
+export interface ThingRelations {}
 
 export type ThingWithRelations = Thing & ThingRelations;

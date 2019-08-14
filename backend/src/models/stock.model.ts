@@ -1,5 +1,4 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {Thing, ThingWithRelations} from './thing.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {}})
 export class Stock extends Entity {
@@ -9,9 +8,6 @@ export class Stock extends Entity {
     required: true,
   })
   id: number;
-
-  @belongsTo(() => Thing)
-  thingId: number;
 
   @property({
     type: 'date',
@@ -51,8 +47,6 @@ export class Stock extends Entity {
   }
 }
 
-export interface StockRelations {
-  thing?: ThingWithRelations;
-}
+export interface StockRelations {}
 
 export type StockWithRelations = Stock & StockRelations;

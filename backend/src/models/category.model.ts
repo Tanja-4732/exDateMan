@@ -1,11 +1,4 @@
-import {
-  Entity,
-  model,
-  property,
-  belongsTo,
-  hasMany,
-} from '@loopback/repository';
-import {Inventory} from './inventory.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model({settings: {}})
 export class Category extends Entity {
@@ -22,23 +15,11 @@ export class Category extends Entity {
   })
   name: string;
 
-  @belongsTo(() => Inventory)
-  inventoryId: number;
-
-  @belongsTo(() => Category)
-  parent?: number;
-
-  @hasMany(() => Category)
-  children?: Category[];
-
   constructor(data?: Partial<Category>) {
     super(data);
   }
 }
 
-export interface CategoryRelations {
-  parent?: CategoryWithRelations;
-  children?: CategoryWithRelations[];
-}
+export interface CategoryRelations {}
 
 export type CategoryWithRelations = Category & CategoryRelations;
