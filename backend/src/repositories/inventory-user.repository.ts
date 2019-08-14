@@ -8,9 +8,7 @@ export class InventoryUserRepository extends DefaultCrudRepository<
   typeof InventoryUser.prototype.id,
   InventoryUserRelations
 > {
-  constructor(
-    @inject('datasources.pg') dataSource: PgDataSource,
-  ) {
+  constructor(@inject('datasources.pg') dataSource: PgDataSource) {
     super(InventoryUser, dataSource);
   }
 }
