@@ -2,3 +2,8 @@ export * from './ping.controller';
 export * from './thing.controller';
 export * from './stock.controller';
 export * from './category.controller';
+export * from './user-inventory-user.controller';
+export * from './inventory-inventory-user.controller';
+export * from './inventory-category.controller';
+export * from './inventory-thing.controller';
+export * from './thing-stock.controller';

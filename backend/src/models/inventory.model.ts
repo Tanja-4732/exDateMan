@@ -1,4 +1,7 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {InventoryUser} from './inventory-user.model';
+import {Category} from './category.model';
+import {Thing} from './thing.model';
 
 @model({settings: {}})
 export class Inventory extends Entity {
@@ -20,6 +23,15 @@ export class Inventory extends Entity {
     required: true,
   })
   createdOn: string;
+
+  @hasMany(() => InventoryUser)
+  inventoryUsers: InventoryUser[];
+
+  @hasMany(() => Category)
+  categories: Category[];
+
+  @hasMany(() => Thing)
+  things: Thing[];
 
   constructor(data?: Partial<Inventory>) {
     super(data);

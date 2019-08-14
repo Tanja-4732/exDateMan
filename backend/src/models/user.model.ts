@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {InventoryUser} from './inventory-user.model';
 
 @model({settings: {}})
 export class User extends Entity {
@@ -50,6 +51,8 @@ export class User extends Entity {
   })
   tfaUrl?: string;
 
+  @hasMany(() => InventoryUser)
+  inventoryUsers: InventoryUser[];
 
   constructor(data?: Partial<User>) {
     super(data);

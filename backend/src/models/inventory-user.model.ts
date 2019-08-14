@@ -15,6 +15,16 @@ export class InventoryUser extends Entity {
   })
   accessRights: number;
 
+  @property({
+    type: 'number',
+  })
+  userId?: number;
+
+  @property({
+    type: 'number',
+  })
+  inventoryId?: number;
+
   constructor(data?: Partial<InventoryUser>) {
     super(data);
   }

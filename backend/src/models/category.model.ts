@@ -15,6 +15,11 @@ export class Category extends Entity {
   })
   name: string;
 
+  @property({
+    type: 'number',
+  })
+  inventoryId?: number;
+
   constructor(data?: Partial<Category>) {
     super(data);
   }

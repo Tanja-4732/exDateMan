@@ -42,6 +42,11 @@ export class Stock extends Entity {
   })
   addedOn: string;
 
+  @property({
+    type: 'number',
+  })
+  thingId?: number;
+
   constructor(data?: Partial<Stock>) {
     super(data);
   }
