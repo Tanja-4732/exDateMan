@@ -14,38 +14,42 @@ export class ThingService {
   async getThing(inventoryId: number, thingNumber: number): Promise<Thing> {
     return await this.http
       .get<Thing>(
-        this.baseUrl + "/inv/" + inventoryId + "/things/" + thingNumber
+        this.baseUrl + "/inventories/" + inventoryId + "/things/" + thingNumber
       )
       .toPromise();
   }
 
   async getThings(inventoryId: number): Promise<Thing[]> {
     return await this.http
-      .get<Thing[]>(this.baseUrl + "/inv/" + inventoryId + "/things")
+      .get<Thing[]>(this.baseUrl + "/inventories/" + inventoryId + "/things")
       .toPromise();
   }
 
   async newThing(thing: Thing, inventoryId: number): Promise<Thing> {
     const categoryNumbers: number[] = [];
 
-    if (thing.categories != null) {
-      for (const category of thing.categories) {
-        categoryNumbers.push(category.number);
-      }
-    }
+    // if (thing.categories != null) {
+    //   for (const category of thing.categories) {
+    //     categoryNumbers.push(category.number);
+    //   }
+    // }
 
     return await this.http
-      .post<Thing>(this.baseUrl + "/inv/" + inventoryId + "/things", {
-        name: thing.name,
-        categories: categoryNumbers
-      } as AddThingRequest)
+      .post<Thing>(
+        this.baseUrl + "/inventories/" + inventoryId + "/things",
+        thing
+      )
       .toPromise();
   }
 
   async updateThing(thing: Thing, inventoryId: number): Promise<Thing> {
     return await this.http
       .put<Thing>(
-        this.baseUrl + "/inv/" + inventoryId + "/things/" + thing.number,
+        this.baseUrl +
+          "/inventories/" +
+          inventoryId +
+          "/things/" +
+          thing.number,
         thing
       )
       .toPromise();
@@ -54,14 +58,9 @@ export class ThingService {
   async removeThing(thing: Thing, inventoryId: number): Promise<unknown> {
     const qRes: unknown = this.http
       .delete<Thing>(
-        this.baseUrl + "/inv/" + inventoryId + "/things/" + thing.number
+        this.baseUrl + "/inventories/" + inventoryId + "/things/" + thing.number
       )
       .toPromise();
     return qRes;
   }
-}
-
-interface AddThingRequest {
-  name: string;
-  categories: number[];
 }

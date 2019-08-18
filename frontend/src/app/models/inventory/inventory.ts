@@ -5,7 +5,7 @@ import { InventoryUser } from "../inventory-user/inventory-user";
 export class Inventory {
   id: number;
   name: string;
-  createdOn?: Date;
+  createdOn: Date;
   inventoryUsers?: InventoryUser[];
   categories?: Category[];
 }

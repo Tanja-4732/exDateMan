@@ -14,17 +14,17 @@ export class InventoryService {
   constructor(private http: HttpClient) {}
 
   async getInventories(): Promise<Inventory[]> {
-    const response: GetInventoriesResponse = await this.http
-      .get<GetInventoriesResponse>(this.baseUrl + "/inv")
+    const response = await this.http
+      .get<Inventory[]>(this.baseUrl + "/inventories")
       .toPromise();
 
-    // Convert the date strings to dates
-    for (const inventory of response.inventories) {
-      inventory.createdOn = new Date(
-        (inventory.createdOn as unknown) as string
-      );
-    }
-    return response.inventories;
+    // // Convert the date strings to dates
+    // for (const inventory of response.inventories) {
+    //   inventory.createdOn = new Date(
+    //     (inventory.createdOn as unknown) as string
+    //   );
+    // }
+    return response;
   }
 
   async newInventory(
@@ -58,7 +58,7 @@ export class InventoryService {
 
     // Request & Response
     const response: NewInventoryResponse = await this.http
-      .post<NewInventoryResponse>(this.baseUrl + "/inv", {
+      .post<NewInventoryResponse>(this.baseUrl + "/inventories", {
         name,
         admins: adminIds,
         writeables: writeableIds,
@@ -71,7 +71,7 @@ export class InventoryService {
 
   async getInventory(inventoryId: number): Promise<Inventory> {
     return await this.http
-      .get<Inventory>(this.baseUrl + "/inv/" + inventoryId)
+      .get<Inventory>(this.baseUrl + "/inventories/" + inventoryId)
       .toPromise();
   }
 
@@ -109,7 +109,7 @@ export class InventoryService {
     } as UpdateInventoryRequest;
 
     const qRes: any = await this.http
-      .put<Inventory>(this.baseUrl + "/inv/" + inventory.id, qReq)
+      .put<Inventory>(this.baseUrl + "/inventories/" + inventory.id, qReq)
       .toPromise();
 
       return qRes;
@@ -117,17 +117,13 @@ export class InventoryService {
 
   async deleteInventory(inventory: Inventory): Promise<unknown> {
     const qRes: unknown = this.http
-      .delete<Inventory>(this.baseUrl + "/inv/" + inventory.id)
+      .delete<Inventory>(this.baseUrl + "/inventories/" + inventory.id)
       .toPromise();
     return qRes;
   }
 }
 
-interface GetInventoriesResponse {
-  status: number;
-  message: string;
-  inventories: Inventory[];
-}
+
 
 interface NewInventoryRequest {
   name: string;
