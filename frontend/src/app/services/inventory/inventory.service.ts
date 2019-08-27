@@ -51,6 +51,9 @@ export class InventoryService {
       }
     } */
 
+    // Add the inventories createdOn date
+    inventory.createdOn = new Date();
+
     // Request & Response
     return await this.http
       .post<Inventory>(this.baseUrl + "/inventories", inventory)
