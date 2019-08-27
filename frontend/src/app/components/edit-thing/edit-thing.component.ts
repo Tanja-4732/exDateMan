@@ -56,7 +56,7 @@ export class EditThingComponent implements OnInit {
 
   private copyData(): void {
     this.thing = this.form.value;
-    this.thing.number = this.thingNumber;
+    this.thing.id = this.thingNumber;
   }
 
   getIds(): void {

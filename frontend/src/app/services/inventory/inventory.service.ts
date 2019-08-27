@@ -27,13 +27,8 @@ export class InventoryService {
     return response;
   }
 
-  async newInventory(
-    name: string,
-    admins?: User[],
-    writeables?: User[],
-    readables?: User[]
-  ): Promise<Inventory> {
-    const adminIds: number[] = [];
+  async newInventory(inventory: Inventory): Promise<Inventory> {
+    /* const adminIds: number[] = [];
     const writeableIds: number[] = [];
     const readableIds: number[] = [];
 
@@ -54,19 +49,12 @@ export class InventoryService {
       for (const readable of readables) {
         readableIds.push(readable.id);
       }
-    }
+    } */
 
     // Request & Response
-    const response: NewInventoryResponse = await this.http
-      .post<NewInventoryResponse>(this.baseUrl + "/inventories", {
-        name,
-        admins: adminIds,
-        writeables: writeableIds,
-        readables: readableIds
-      } as NewInventoryRequest)
+    return await this.http
+      .post<Inventory>(this.baseUrl + "/inventories", inventory)
       .toPromise();
-
-    return response.inventory;
   }
 
   async getInventory(inventoryId: number): Promise<Inventory> {
@@ -76,12 +64,14 @@ export class InventoryService {
   }
 
   async updateInventory(inventory: Inventory): Promise<Inventory> {
+    // TODO implement access rights #91
+    /*
     let owner: number;
     const admins: number[] = [];
     const writeables: number[] = [];
     const readables: number[] = [];
 
-    for (const inventoryUser of inventory.inventoryUsers) {
+       for (const inventoryUser of inventory.inventoryUsers) {
       switch (inventoryUser.InventoryUserAccessRights) {
         case InventoryUserAccess.OWNER:
           owner = inventoryUser.user.id;
@@ -98,21 +88,11 @@ export class InventoryService {
         default:
           throw new Error("mapUsers fallThrough error");
       }
-    }
+    } */
 
-    const qReq: UpdateInventoryRequest = {
-      owner,
-      admins,
-      readables,
-      writeables,
-      name: inventory.name
-    } as UpdateInventoryRequest;
-
-    const qRes: any = await this.http
-      .put<Inventory>(this.baseUrl + "/inventories/" + inventory.id, qReq)
+    return await this.http
+      .put<Inventory>(this.baseUrl + "/inventories/" + inventory.id, inventory)
       .toPromise();
-
-      return qRes;
   }
 
   async deleteInventory(inventory: Inventory): Promise<unknown> {
@@ -121,26 +101,4 @@ export class InventoryService {
       .toPromise();
     return qRes;
   }
-}
-
-
-
-interface NewInventoryRequest {
-  name: string;
-  admins: number[];
-  writeables: number[];
-  readables: number[];
-}
-
-interface NewInventoryResponse {
-  message: string;
-  inventory: Inventory;
-}
-
-interface UpdateInventoryRequest {
-  name: string;
-  owner?: number;
-  admins: number[];
-  writeables: number[];
-  readables: number[];
 }

@@ -38,7 +38,7 @@ export class ThingCardComponent implements OnInit {
     try {
       this.stocks = await this.ss.getStocks(
         this.inventoryId,
-        this.thing.number
+        this.thing.id
       );
       this.loading = false;
     } catch (error) {

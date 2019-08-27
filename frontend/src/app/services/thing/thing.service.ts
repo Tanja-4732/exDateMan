@@ -49,7 +49,7 @@ export class ThingService {
           "/inventories/" +
           inventoryId +
           "/things/" +
-          thing.number,
+          thing.id,
         thing
       )
       .toPromise();
@@ -58,7 +58,7 @@ export class ThingService {
   async removeThing(thing: Thing, inventoryId: number): Promise<unknown> {
     const qRes: unknown = this.http
       .delete<Thing>(
-        this.baseUrl + "/inventories/" + inventoryId + "/things/" + thing.number
+        this.baseUrl + "/inventories/" + inventoryId + "/things/" + thing.id
       )
       .toPromise();
     return qRes;

@@ -9,8 +9,8 @@ import { Router } from "@angular/router";
   styleUrls: ["./add-inventory.component.scss"]
 })
 export class AddInventoryComponent implements OnInit {
-  name: string = "";
-  oof: boolean = false; // Error flag
+  name = "";
+  oof = false; // Error flag
 
   // TODO add support for shared inventories
 
@@ -20,7 +20,7 @@ export class AddInventoryComponent implements OnInit {
 
   onAdd(): void {
     this.inv
-      .newInventory(this.name)
+      .newInventory({ name: this.name, createdOn: new Date() } as Inventory)
       .then((inventory: Inventory) => {
         this.oof = false;
         this.router.navigate(["/inventories"]);
