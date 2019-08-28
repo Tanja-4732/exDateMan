@@ -1,12 +1,6 @@
-import {ExdatemanApplication} from './application';
-import {ExpressServer} from './server';
-import {ApplicationConfig} from '@loopback/core';
+import { ExpressServer } from "./server";
+import { log } from "console";
 
-export {ExpressServer, ExdatemanApplication};
-
-export async function main(options: ApplicationConfig = {}) {
-  const server = new ExpressServer(options);
-  await server.boot();
-  await server.start();
-  console.log('Server started');
-}
+const server: ExpressServer = new ExpressServer();
+server.start();
+log("Server started.");

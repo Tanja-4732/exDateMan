@@ -4,15 +4,6 @@
   "editor.tabSize": 2,
   "editor.trimAutoWhitespace": true,
   "editor.formatOnSave": true,
-
-  "files.exclude": {
-    "**/.DS_Store": true,
-    "**/.git": true,
-    "**/.hg": true,
-    "**/.svn": true,
-    "**/CVS": true,
-    "dist": true,
-  },
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
 

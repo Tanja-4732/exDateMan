@@ -1,49 +1,40 @@
 /* eslint-disable no-case-declarations */
-import {ExdatemanApplication} from './application';
-import {ApplicationConfig} from '@loopback/core';
-import * as express from 'express';
-import {join} from 'path';
-import pEvent from 'p-event';
-import {readFileSync} from 'fs';
-import {log} from 'console';
-import {createServer} from 'https';
+
+import * as express from "express";
+import { join } from "path";
+import pEvent from "p-event";
+import { readFileSync } from "fs";
+import { log } from "console";
+import { createServer } from "https";
+import { ExdatemanApplication } from "./application";
 
 /**
- * This is the main Express server.
- *
- * It serves static files (the Angular frontend), and starts the API.
+ * Handles SSL setup and starts the Express server, mounts the API application
+ * and serves static files
  */
 export class ExpressServer {
+  /**
+   * The Express server
+   */
   private app: express.Application;
-  private lbApp: ExdatemanApplication;
 
-  constructor(options: ApplicationConfig = {}) {
-    // Initiate an Express server
+  constructor() {
+    // Initiate the Express server
     this.app = express();
 
-    // Initiate the API
-    this.lbApp = new ExdatemanApplication(options);
-
-    // Route the API
-    this.app.use('/api/v2', this.lbApp.requestHandler);
+    // Instantiate the API and mount it
+    this.app.use("/api/v2", new ExdatemanApplication().applicationRoutes);
 
     // Serve all frontend files
     this.app.use(
-      express.static(join(__dirname, '../../frontend/dist/exdateman')),
+      express.static(join(__dirname, "../../frontend/dist/exdateman")),
     );
 
     // Serve main page
     this.app.use((req: express.Request, res: express.Response) => {
       // Don't redirect to preserve the Angular routes
-      res.sendFile(join(__dirname, '../../frontend/dist/exdateman/index.html'));
+      res.sendFile(join(__dirname, "../../frontend/dist/exdateman/index.html"));
     });
-  }
-
-  /**
-   * Boot the API
-   */
-  async boot() {
-    await this.lbApp.boot();
   }
 
   /**
@@ -58,11 +49,11 @@ export class ExpressServer {
    */
   async start() {
     // Set the ports
-    const PORT: string = process.env.PORT || 443 + '';
-    const INSECURE_PORT: string = process.env.INSECURE_PORT || 80 + '';
+    const PORT: string = process.env.PORT || 443 + "";
+    const INSECURE_PORT: string = process.env.INSECURE_PORT || 80 + "";
 
     // Check if SSL is desired
-    if (process.env.EDM_SSL === 'true') {
+    if (process.env.EDM_SSL === "true") {
       // Use SSL
 
       /**
@@ -70,21 +61,21 @@ export class ExpressServer {
        */
       const privateKey: string =
         process.env.EDM_SSL_PK_VAL ||
-        readFileSync(process.env.EDM_SSL_PK + '', 'utf8');
+        readFileSync(process.env.EDM_SSL_PK + "", "utf8");
 
       /**
        * The certificate for SSL
        */
       const certificate: string =
         process.env.EDM_SSL_CERT_VAL ||
-        readFileSync(process.env.EDM_SSL_CERT + '', 'utf8');
+        readFileSync(process.env.EDM_SSL_CERT + "", "utf8");
 
       /**
        * The certificate authority chain for SSL
        */
       const ca: string =
         process.env.EDM_SSL_CA_VAL ||
-        readFileSync(process.env.EDM_SSL_CA + '', 'utf8');
+        readFileSync(process.env.EDM_SSL_CA + "", "utf8");
 
       /**
        * The credentials as one object for SSL
@@ -98,22 +89,22 @@ export class ExpressServer {
       // Create the https app server
       await pEvent(
         createServer(credentials, this.app).listen(PORT),
-        'listening',
+        "listening",
       );
-      log('HTTPS app server listening on port ' + PORT);
+      log("HTTPS app server listening on port " + PORT);
 
       // Create the http redirect server
       express()
-        .use('*', (req, res) => {
-          res.redirect('https://' + req.headers.host + req.url);
+        .use("*", (req, res) => {
+          res.redirect("https://" + req.headers.host + req.url);
         })
         .listen(INSECURE_PORT);
-      log('HTTP redirect server listening on port ' + INSECURE_PORT);
+      log("HTTP redirect server listening on port " + INSECURE_PORT);
     } else {
       // Don't use SSL
       // Start the http app server
-      await pEvent(this.app.listen(process.env.PORT || 80 + ''), 'listening');
-      log('HTTP app server listening on port ' + process.env.PORT || 80 + '');
+      await pEvent(this.app.listen(process.env.PORT || 80 + ""), "listening");
+      log("HTTP app server listening on port " + process.env.PORT || 80 + "");
     }
   }
 }
