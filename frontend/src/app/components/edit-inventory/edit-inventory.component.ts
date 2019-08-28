@@ -23,17 +23,17 @@ export interface Fruit {
   styleUrls: ["./edit-inventory.component.scss"]
 })
 export class EditInventoryComponent implements OnInit {
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
-  oof: boolean = false;
-  reallyDelete: boolean = false;
-  userNotFound: boolean = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
+  oof = false;
+  reallyDelete = false;
+  userNotFound = false;
 
-  visible: boolean = true;
-  selectable: boolean = false;
-  removable: boolean = true;
-  addOnBlur: boolean = true;
+  visible = true;
+  selectable = false;
+  removable = true;
+  addOnBlur = true;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -44,7 +44,10 @@ export class EditInventoryComponent implements OnInit {
 
   inventory: Inventory = new Inventory();
 
-  ownerEmail: FormControl = new FormControl('', [Validators.required, Validators.email]);
+  ownerEmail: FormControl = new FormControl("", [
+    Validators.required,
+    Validators.email
+  ]);
 
   constructor(
     private is: InventoryService,
@@ -55,13 +58,15 @@ export class EditInventoryComponent implements OnInit {
   ) {}
 
   getErrorMessage(): string {
-    return this.ownerEmail.hasError('required') ? 'You must enter a value' :
-        this.ownerEmail.hasError('email') ? 'Not a valid email' :
-            '';
+    return this.ownerEmail.hasError("required")
+      ? "You must enter a value"
+      : this.ownerEmail.hasError("email")
+      ? "Not a valid email"
+      : "";
   }
 
   ngOnInit(): void {
-    this.inventory.id = this.route.snapshot.params["inventoryId"];
+    this.inventory.id = this.route.snapshot.params.inventoryId;
     this.getInventory().then(() => {
       setTimeout(() => {
         if (this.unauthorized) {

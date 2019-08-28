@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, DefaultIterableDiffer } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Inventory } from "../../models/inventory/inventory";
 import { environment } from "../../../environments/environment";
