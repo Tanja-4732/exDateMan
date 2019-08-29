@@ -19,7 +19,7 @@ export class ExdatemanApplication {
     this.routes = Router();
 
     // Mount the API routes
-    this.routes.use("/inventory-events", new Events().routes);
+    this.routes.use("/events", new Events().routes);
     this.routes.use("/authentication", new Authentication().routes);
   }
 }

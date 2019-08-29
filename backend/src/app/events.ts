@@ -70,7 +70,11 @@ export class Events {
       res.json(result.rows);
     } catch (err) {
       error(err);
-      res.status(500).json({ oof: true });
+      res.status(400).json({
+        message: "That didn't work",
+        oof: true,
+      });
+      return;
     }
   }
 
@@ -92,7 +96,11 @@ export class Events {
       res.json(result);
     } catch (err) {
       error(err);
-      res.status(500).json({ oof: true });
+      res.status(400).json({
+        message: "That didn't work",
+        oof: true,
+      });
+      return;
     }
   }
 }

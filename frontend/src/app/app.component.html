@@ -1,15 +1,25 @@
-<mat-toolbar routerLink="/welcome" color="primary" class="">
-  <i class="material-icons">home</i>
-  &nbsp;
-  {{title}}
-</mat-toolbar>
-<br>
+<mat-sidenav-container class="sidenav">
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="">
+      <!-- button -->
+      <button mat-icon-button (click)="sidenav.toggle()" color="basic">
+        <i class="material-icons">menu</i>
+      </button>
+      <!-- buttonn't -->
 
+      &nbsp;
+      {{ title }}
+    </mat-toolbar>
+    <br />
 
-<!-- <app-main-nav> -->
+    <div class="defaultMargin">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
 
-<div class="defaultMargin">
-  <router-outlet></router-outlet>
-</div>
-
-<!-- </app-main-nav> -->
+  <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpenEd">
+    <button mat-raised-button routerLink="/welcome" color="basic">
+      <i class="material-icons">home</i> Home
+    </button>
+  </mat-sidenav>
+</mat-sidenav-container>
