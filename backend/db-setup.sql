@@ -10,11 +10,11 @@ ALTER SEQUENCE edm_dev."Events_streamId_seq" OWNER TO yourusername;
 -- Table: edm_dev."Events"
  -- DROP TABLE edm_dev."Events";
 
-CREATE TABLE edm_dev."Events" ("occurredAt" timestamp with time zone NOT NULL, --
+CREATE TABLE edm_dev.events (date timestamp with time zone NOT NULL, --
  "streamId" bigint NOT NULL DEFAULT nextval('edm_dev."Events_streamId_seq"'::regclass),--
- "eventData" jsonb NOT NULL,--
- CONSTRAINT "Events_pkey" PRIMARY KEY ("occurredAt",--
- "streamId")) WITH (OIDS = FALSE) TABLESPACE pg_default;--
+ data jsonb NOT NULL,--
+ CONSTRAINT "Events_pkey" PRIMARY KEY (date, stream_id)--
+) WITH (OIDS = FALSE) TABLESPACE pg_default;--
 
 
 ALTER TABLE edm_dev."Events" OWNER to yourusername;
