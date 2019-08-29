@@ -37,7 +37,6 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
 import { InventoriesComponent } from "./components/inventories/inventories.component";
-import { MainNavComponent } from "./components/main-nav/main-nav.component";
 import { LayoutModule } from "@angular/cdk/layout";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { EditInventoryComponent } from "./components/edit-inventory/edit-inventory.component";
@@ -63,7 +62,6 @@ import { SideNavComponent } from "./components/side-nav/side-nav.component";
     RegisterComponent,
     PageNotFoundComponent,
     InventoriesComponent,
-    MainNavComponent,
     WelcomeComponent,
     EditInventoryComponent,
     AddInventoryComponent,

@@ -1,28 +1,34 @@
-<mat-sidenav-container class="sidenav">
-  <!-- The main content (not the sidenav) -->
-  <mat-sidenav-content>
-    <!-- Navigation toolbar -->
-    <mat-toolbar color="primary" class="">
-      <!-- Sidenav toggle button -->
-      <button mat-icon-button (click)="sidenav.toggle()" color="basic">
-        <!-- Burger icon -->
-        <i class="material-icons">menu</i>
-      </button>
-      <!-- Navigation bar heading -->
-      {{ title }}
-    </mat-toolbar>
-    <br />
+<div class="wrap">
+  <!-- Navigation toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <!-- Sidenav toggle button -->
+    <button mat-icon-button (click)="sidenav.toggle()" color="basic">
+      <!-- Burger icon -->
+      <mat-icon>menu</mat-icon>
+    </button>
+    <!-- Navigation bar heading -->
+    {{ title }}
+  </mat-toolbar>
 
-    <!-- Add a bit of space around the edges -->
-    <div class="defaultMargin">
-      <!-- Main app content -->
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
+  <mat-sidenav-container class="sidenav-container">
+    <!-- The main content (not the sidenav) -->
+    <mat-sidenav-content>
+      <!-- Add a bit of space around the edges -->
+      <div class="defaultMargin">
+        <!-- Main app content -->
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
 
-  <!-- The sidenav content -->
-  <mat-sidenav #sidenav mode="side" [(opened)]="sideNavOpened">
-    <!-- The SideNav component -->
-    <app-side-nav></app-side-nav>
-  </mat-sidenav>
-</mat-sidenav-container>
+    <!-- The sidenav content -->
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      [(opened)]="sideNavOpened"
+      class="sidenav-main"
+    >
+      <!-- The SideNav component -->
+      <app-side-nav></app-side-nav>
+    </mat-sidenav>
+  </mat-sidenav-container>
+</div>

@@ -1,7 +1,16 @@
-.sidenav {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.wrap {
+  // Use the entire page
+  height: 100%;
+
+  // Put the toolbar above (north of) everything else
+  display: flex;
+
+  // Orient vertically (don't put the toolbar next to the rest)
+  flex-direction: column;
+}
+
+// The stuff below (south of) the toolbar
+.sidenav-container {
+  // Use the entire page
+  height: 100%;
 }
