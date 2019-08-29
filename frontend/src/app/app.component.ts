@@ -7,5 +7,20 @@ import { Component } from "@angular/core";
 })
 export class AppComponent {
   title = "Expiration date manager";
-  sideNavOpenEd = false;
+
+  get sideNavOpened(): boolean {
+    switch (window.localStorage.getItem("sideNavOpened")) {
+      case "true":
+        return true;
+      case "false":
+        return false;
+      case null:
+        this.sideNavOpened = false;
+        return false;
+    }
+  }
+
+  set sideNavOpened(value: boolean) {
+    window.localStorage.setItem("sideNavOpened", value + "");
+  }
 }

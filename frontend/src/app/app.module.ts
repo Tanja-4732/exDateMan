@@ -46,6 +46,7 @@ import { InventoryCardComponent } from "./components/inventory-card/inventory-ca
 import { DeleteConfirmationDialogComponent } from "./components/delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { AccountComponent } from "./components/account/account.component";
 import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
+import { SideNavComponent } from "./components/side-nav/side-nav.component";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
     InventoryCardComponent,
     DeleteConfirmationDialogComponent,
     AccountComponent,
-    ScanCodeComponent
+    ScanCodeComponent,
+    SideNavComponent
   ],
   imports: [
     BrowserModule,
