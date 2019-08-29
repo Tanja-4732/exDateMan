@@ -2,7 +2,9 @@
   "$schema": "http://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "sourceMap": true,
+    "target": "es5",
   },
   "include": ["src"]
 }

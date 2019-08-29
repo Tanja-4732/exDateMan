@@ -1,12 +1,14 @@
-/* eslint-disable no-case-declarations */
-
 import * as express from "express";
 import { join } from "path";
 import pEvent from "p-event";
 import { readFileSync } from "fs";
 import { log } from "console";
 import { createServer } from "https";
-import { ExdatemanApplication } from "./application";
+import { ExdatemanApplication } from "./app/application";
+import { json, urlencoded } from "body-parser";
+import * as cookieParser from "cookie-parser";
+import { Client } from "pg";
+import * as st from "sessionstorage";
 
 /**
  * Handles SSL setup and starts the Express server, mounts the API application
@@ -22,8 +24,18 @@ export class ExpressServer {
     // Initiate the Express server
     this.app = express();
 
+    // Parse cookies
+    // cookie-parser is for cookies; and cookies are for JWT
+    this.app.use(cookieParser());
+
+    // Parse application/json
+    this.app.use(json());
+
+    // Parse application/x-www-form-urlencoded
+    this.app.use(urlencoded({ extended: true }));
+
     // Instantiate the API and mount it
-    this.app.use("/api/v2", new ExdatemanApplication().applicationRoutes);
+    this.app.use("/api/v2", new ExdatemanApplication().routes);
 
     // Serve all frontend files
     this.app.use(
@@ -48,6 +60,9 @@ export class ExpressServer {
    * used.
    */
   async start() {
+    // Connect to the db
+    await this.dbConnect();
+
     // Set the ports
     const PORT: string = process.env.PORT || 443 + "";
     const INSECURE_PORT: string = process.env.INSECURE_PORT || 80 + "";
@@ -106,5 +121,23 @@ export class ExpressServer {
       await pEvent(this.app.listen(process.env.PORT || 80 + ""), "listening");
       log("HTTP app server listening on port " + process.env.PORT || 80 + "");
     }
+  }
+
+  /**
+   * Connects to the PostgreSLQ DB
+   */
+  private async dbConnect() {
+    log("Connecting to DB");
+    const client = new Client({
+      user: process.env.EDM_DB_USER,
+      host: process.env.EDM_DB_HOST,
+      database: process.env.EDM_DB_DB,
+      password: process.env.EDM_DB_PWD,
+      port: parseInt(process.env.EDM_DB_PORT),
+      ssl: process.env.EDM_DB_SSL === "true",
+    });
+    await client.connect();
+    log("Connected to the DB");
+    st.setItem("client", client);
   }
 }

@@ -12,9 +12,11 @@
   ],
   "settings": {
     "cSpell.words": [
+      "AGPL",
       "Booter",
       "postgresql",
-      "prestart"
+      "prestart",
+      "sessionstorage"
     ],
     "editor.formatOnSave": true
   }
