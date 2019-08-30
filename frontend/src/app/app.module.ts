@@ -46,6 +46,7 @@ import { DeleteConfirmationDialogComponent } from "./components/delete-confirmat
 import { AccountComponent } from "./components/account/account.component";
 import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
 import { SideNavComponent } from "./components/side-nav/side-nav.component";
+import { EventsComponent } from './components/events/events.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { SideNavComponent } from "./components/side-nav/side-nav.component";
     DeleteConfirmationDialogComponent,
     AccountComponent,
     ScanCodeComponent,
-    SideNavComponent
+    SideNavComponent,
+    EventsComponent
   ],
   imports: [
     BrowserModule,
