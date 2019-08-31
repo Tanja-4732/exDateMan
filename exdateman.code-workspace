@@ -14,10 +14,13 @@
     "cSpell.words": [
       "AGPL",
       "Booter",
+      "Uuids",
       "ZXing",
       "postgresql",
       "prestart",
-      "sessionstorage"
+      "readables",
+      "sessionstorage",
+      "writeables"
     ],
     "editor.formatOnSave": true
   }
