@@ -1,6 +1,6 @@
 import { join } from "path";
 import { Router, RouterOptions } from "express";
-import { Events } from "./events";
+import { Events } from "./client-events";
 import { Authentication } from "./authentication";
 
 /**
