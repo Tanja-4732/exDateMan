@@ -52,23 +52,28 @@ interface Event {
    * The date of the event
    */
   date: Date;
+
   /**
    * The uuid of the item this event is about
    * This information is redundant (but still required) on inventory events
    */
   uuid: string;
+
   /**
    * The uuid of the user who issued this event
    */
   userUuid: string;
+
   /**
    * Defines what type of item is this event about
    */
   itemType: itemType;
+
   /**
    * Defines what type of operation was performed
    */
   crudType: crudType;
+
   /**
    * The inventory-specific data (if this event is about an inventory)
    */
@@ -77,22 +82,27 @@ interface Event {
      * The name of this inventory
      */
     name?: string;
+
     /**
      * The uuid of the owner of this inventory
      */
     ownerUuid?: string;
+
     /**
      * An array of users who have the admin privilege for this inventory
      */
     adminsUuids?: string[];
+
     /**
      * An array of user uuids who have the write privilege for this inventory
      */
     writeablesUuids?: string[];
+
     /**
      * An array of user uuids who have the read privilege for this inventory
      */
     readablesUuids?: string[];
+
     /**
      * The date of the creation of this inventory
      *
@@ -108,12 +118,14 @@ interface Event {
      * The name of the category
      */
     name?: string;
+
     /**
      * The parent-category of this category
      *
      * Top-level categories are their own parent
      */
     parentUuid?: string;
+
     /**
      * The date of the creation of this category
      *
@@ -121,6 +133,7 @@ interface Event {
      */
     createdOn?: Date;
   };
+
   /**
    * The thing-specific data (if this event is about a thing)
    */
@@ -129,6 +142,7 @@ interface Event {
      * The name of the thing
      */
     name: string;
+
     /**
      * The date of the creation of this category
      *
@@ -136,6 +150,7 @@ interface Event {
      */
     createdOn?: Date;
   };
+
   /**
    * The stock-specific data (if this event is about a stock)
    */
@@ -144,18 +159,22 @@ interface Event {
      * The expiration date of the stock
      */
     exDate?: Date;
+
     /**
      * How many days after the opening of this stock is it still usable?
      */
     useUpIn?: number;
+
     /**
      * Text description of the quantity of the stock
      */
     quantity?: string;
+
     /**
      * When was this stock opened?
      */
     openedOn: Date;
+
     /**
      * The date of the creation of this category
      *
