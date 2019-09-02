@@ -53,6 +53,14 @@
   </ng-container>
   <br />
 
+  <div class="mat-typography" *ngIf="emailInUse">
+    <h2>Error</h2>
+    <p>
+      The email address "<code>{{ emailAddress }}</code
+      >" is already in use. Please use the login form to log in, or create an
+      account using a different email address.
+    </p>
+  </div>
   <div class="mat-typography">
     <h2>Important notice</h2>
     <p>

@@ -8,7 +8,7 @@ import { ExdatemanApplication } from "./app/application";
 import { json, urlencoded } from "body-parser";
 import * as cookieParser from "cookie-parser";
 import { Client } from "pg";
-import * as st from "sessionstorage";
+import db from "./app/db";
 
 /**
  * Handles SSL setup and starts the Express server, mounts the API application
@@ -61,7 +61,7 @@ export class ExpressServer {
    */
   async start() {
     // Connect to the db
-    await this.dbConnect();
+    await db();
 
     // Set the ports
     const PORT: string = process.env.PORT || 443 + "";
@@ -121,23 +121,5 @@ export class ExpressServer {
       await pEvent(this.app.listen(process.env.PORT || 80 + ""), "listening");
       log("HTTP app server listening on port " + process.env.PORT || 80 + "");
     }
-  }
-
-  /**
-   * Connects to the PostgreSLQ DB
-   */
-  private async dbConnect() {
-    log("Connecting to DB");
-    const client = new Client({
-      user: process.env.EDM_DB_USER,
-      host: process.env.EDM_DB_HOST,
-      database: process.env.EDM_DB_DB,
-      password: process.env.EDM_DB_PWD,
-      port: parseInt(process.env.EDM_DB_PORT),
-      ssl: process.env.EDM_DB_SSL === "true",
-    });
-    await client.connect();
-    log("Connected to the DB");
-    st.setItem("client", client);
   }
 }

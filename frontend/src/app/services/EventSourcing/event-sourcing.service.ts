@@ -14,6 +14,7 @@ export class EventSourcingService {
     let les: LocalEventStorage;
 
     les.inventories;
+    // TODO
 
     return les;
   }

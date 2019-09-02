@@ -14,10 +14,8 @@ export class AuthService {
   /**
    * Logs in the user
    *
-   * @param {string} email The email address of the user to be logged in
-   * @param {string} pwd The password of the user to be logged in
-   * @returns {Promise<User>}
-   * @memberof AuthService
+   * @param email The email address of the user to be logged in
+   * @param pwd The password of the user to be logged in
    */
   async login(
     email: string,
@@ -26,10 +24,10 @@ export class AuthService {
   ): Promise<LoginResponse> {
     const user: LoginResponse | any = await this.http
       .post<JSON>(
-        this.baseUrl + "/login",
+        this.baseUrl + "authentication/login",
         {
-          email: email,
-          pwd: pwd,
+          email,
+          pwd,
           tfaToken
         },
         { withCredentials: true }
@@ -44,9 +42,17 @@ export class AuthService {
    * This will remove the JWT thus signing out the user.
    */
   async logout(): Promise<any> {
-    return await this.http.post(this.baseUrl + "/logout", null).toPromise();
+    return await this.http
+      .post(this.baseUrl + "/authentication/logout", null)
+      .toPromise();
   }
 
+  /**
+   * Issues a request to the server to create a new account
+   * @param email The desired email
+   * @param pwd The desired password
+   * @param name The desired friendly name
+   */
   async register(
     email: string,
     pwd: string,
@@ -54,7 +60,7 @@ export class AuthService {
   ): Promise<RegisterResponse> {
     const req: RegisterRequest = { email, pwd, name } as RegisterRequest;
     return await this.http
-      .post<RegisterResponse>(this.baseUrl + "/account", req)
+      .post<RegisterResponse>(this.baseUrl + "/authentication/register", req)
       .toPromise();
   }
 

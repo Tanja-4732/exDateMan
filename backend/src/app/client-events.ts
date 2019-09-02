@@ -56,7 +56,7 @@ export class Events {
 
     try {
       // Get the events from the db
-      const result = await db().query(
+      const result = await (await db()).query(
         `
         SELECT date, data
           FROM ${process.env.EDM_DB_SCHEMA}.events
@@ -83,7 +83,7 @@ export class Events {
 
     try {
       // Get the events from the db
-      const result = await db().query(
+      const result = await (await db()).query(
         `
         INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
          (stream_id, date, data)

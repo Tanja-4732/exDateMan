@@ -1,6 +1,5 @@
 import { User } from "./authentication";
 import db from "./db";
-import * as st from "sessionstorage";
 import { inspect } from "util";
 import { log, error } from "console";
 
@@ -30,21 +29,25 @@ export class ServerEvents {
   /**
    * The parsed authentication events
    */
-  private authenticationEvents: AuthenticationEvent[];
+  private static authenticationEvents: AuthenticationEvent[];
 
   /**
    * The current state of users (projection from authenticationEventStream)
    */
-  private _users: User[];
+  private static _users: User[];
 
   /**
    * The current state of users (projection from authenticationEventStream)
    */
   public get users(): User[] {
-    return this._users;
+    return ServerEvents._users;
   }
 
-  constructor() {}
+  constructor() {
+    if (ServerEvents._users == null) {
+      this.fetchAuthenticationStream();
+    }
+  }
 
   /**
    * Obtains the authentication event stream from the db and parses it
@@ -52,7 +55,7 @@ export class ServerEvents {
   private async fetchAuthenticationStream(): Promise<void> {
     try {
       // Get the events from the db
-      const result = await db().query(
+      const result = await (await db()).query(
         `
         SELECT date, data
           FROM ${process.env.EDM_DB_SCHEMA}.events
@@ -62,12 +65,15 @@ export class ServerEvents {
         [ServerEvents.authenticationEventStreamUuid],
       );
 
-      // Parse the result
-      this._users = result.rows;
+      // Initialize the array
+      ServerEvents._users = [];
 
-      // TODO remove
-      log(inspect(this._users));
+      // Iterate over all events from the db
+      for (const event of result.rows) {
+        ServerEvents.updateUsersProjection(event);
+      }
     } catch (err) {
+      error("Couldn't fetch authentication stream:");
       error(err);
     }
   }
@@ -78,12 +84,12 @@ export class ServerEvents {
    *
    * @param event The event to be appended
    */
-  public async appendAuthenticationEvent(
+  public static async appendAuthenticationEvent(
     event: AuthenticationEvent,
   ): Promise<void> {
     try {
       // Insert the event into the db
-      const result = await db().query(
+      const result = await (await db()).query(
         `
         INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
          (stream_id, date, data)
@@ -93,10 +99,10 @@ export class ServerEvents {
       );
 
       // Append to the cached event log
-      this.authenticationEvents.push(event);
+      ServerEvents.authenticationEvents.push(event);
 
       // Update users projection
-      this.updateUsersProjection(event);
+      ServerEvents.updateUsersProjection(event);
     } catch (err) {
       throw new Error("Couldn't append event; " + err);
     }
@@ -107,15 +113,41 @@ export class ServerEvents {
    *
    * @param event The event to be used to update the projection with
    */
-  updateUsersProjection(event: AuthenticationEvent) {
+  private static updateUsersProjection(event: AuthenticationEvent) {
+    const index = ServerEvents._users.findIndex(
+      (user: User) => user.uuid === event.data.userUuid,
+    );
+
     switch (event.data.crudType) {
       case crudType.CREATE:
-        this._users.push({
-          uuid: event.data.userUid,
+        ServerEvents._users.push({
+          uuid: event.data.userUuid,
           email: event.data.email,
           saltedPwdHash: event.data.saltedPwdHash,
           totpSecret: event.data.totpSecret,
+          name: event.data.name,
         });
+        break;
+
+      case crudType.UPDATE:
+        // Make temporary object
+        var temp = {
+          email: event.data.email,
+          name: event.data.name,
+          saltedPwdHash: event.data.saltedPwdHash,
+          totpSecret: event.data.totpSecret,
+        } as User;
+
+        // Delete all null values
+        Object.keys(temp).forEach(key => temp[key] == null && delete temp[key]);
+
+        // Assign the changed values
+        Object.assign(this._users[index], temp);
+        break;
+
+      case crudType.DELETE:
+        this._users.splice(index, 1);
+        break;
     }
   }
 }
@@ -133,7 +165,7 @@ export interface AuthenticationEvent {
     /**
      * The uid of the user this event is about
      */
-    userUid: string;
+    userUuid: string;
 
     /**
      * Defines what type of operation was performed
@@ -161,6 +193,11 @@ export interface AuthenticationEvent {
      * The secret used to generate the TOTP required to log in when using 2FA
      */
     totpSecret?: string | null;
+
+    /**
+     * A friendly name of the user
+     */
+    name?: string;
   };
 }
 
@@ -169,7 +206,7 @@ export interface AuthenticationEvent {
  *
  * (read is excluded from this list since it doesn't affect the data)
  */
-enum crudType {
+export enum crudType {
   CREATE = "create",
   UPDATE = "update",
   DELETE = "delete",

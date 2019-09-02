@@ -1,8 +1,12 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { readFileSync } from "fs";
 import * as jwt from "jsonwebtoken";
-import { ServerEvents } from "./server-events";
+import { ServerEvents, crudType } from "./server-events";
 import { hash, compareSync, hashSync, genSaltSync } from "bcrypt";
+import { v4 } from "uuid";
+import { log } from "console";
+import { totp } from "speakeasy";
+import { inspect } from "util";
 
 /**
  * The structure of the state of a user
@@ -27,6 +31,11 @@ export interface User {
    * The TOTP secret used to generate TOTP codes (used for 2FA)
    */
   totpSecret: string | null;
+
+  /**
+   * A friendly name for the user
+   */
+  name: string;
 }
 
 export class Authentication {
@@ -34,24 +43,38 @@ export class Authentication {
    * The authentication routes
    */
   public routes: Router;
+
   /**
    * The private key either as a string or a buffer
    */
-  private PRIVATE_KEY: string | Buffer;
+  private JWT_PRIVATE_KEY: string | Buffer;
 
   /**
    * The public key either as a string or a buffer
    */
-  private PUBLIC_KEY: string | Buffer;
+  private JWT_PUBLIC_KEY: string | Buffer;
+
+  /**
+   * A serverEvents instance
+   */
+  private es: ServerEvents;
 
   constructor() {
+    // Prepare a ServerEvents instance
+    this.es = new ServerEvents();
+
     // Instantiate the router
     this.routes = Router();
 
     // Mount the routes
     // Authentication
     this.routes.post("/login", this.login);
-    this.routes.post("/register", this.register);
+
+    this.routes.post("/register", (req: Request, res: Response) =>
+      this.register(req, res),
+    );
+
+    this.routes.post("/logout", Authentication.logout);
 
     // Setup JWT keys
     this.getJwtKeys();
@@ -64,10 +87,10 @@ export class Authentication {
    */
   private getJwtKeys(): void {
     try {
-      this.PRIVATE_KEY =
+      this.JWT_PRIVATE_KEY =
         process.env.EDM_JWT_PRIVATE_KEY_VAL ||
         readFileSync(process.env.EDM_JWT_PRIVATE_KEY);
-      this.PUBLIC_KEY =
+      this.JWT_PUBLIC_KEY =
         process.env.EDM_JWT_PUBLIC_KEY_VAL ||
         readFileSync(process.env.EDM_JWT_PUBLIC_KEY);
     } catch (err) {
@@ -82,50 +105,146 @@ export class Authentication {
    * provides JWTs for the authenticated users
    */
   private async login(req: Request, res: Response) {
-    /**
-     * The email address provided in the login request
-     */
-    const email: string = req.body.email;
-
-    /**
-     * The password provided in the login request
-     */
-    const password: string = req.body.pwd;
-
-    /**
-     * The 2FA TOTP code provided in the login request (may be undefined)
-     */
-    const totpToken: string | undefined = req.body.totpToken;
-
-    /**
-     * Try to get the details of the acting user from the parsed state
-     * Returns a 400 status code when the user couldn't be found
-     */
-    let actingUser: User;
     try {
-      actingUser = await ServerEvents.findUserByEmailOrFail(email);
+      /**
+       * The saltedPwdHash from the users projection
+       */
+      let user = this.es.users.find((user: User) => {
+        // Find the user in the projection with a matching email
+        return user.email === req.body.email;
+      });
+
+      // Credential validation, return 401 on invalid credentials
+      if (!compareSync(req.body.pwd, user.saltedPwdHash)) {
+        res.status(401).json({
+          error: "Invalid credentials",
+        });
+        return;
+      }
+
+      // Check for 2FA
+      if (user.totpSecret != null) {
+        if (
+          !totp.verify({
+            token: req.body.totpToken,
+            encoding: "base32",
+            secret: user.totpSecret,
+          })
+        ) {
+          // On failed TOTP authentication
+          res.status(401).json({
+            error: "Invalid TOTP token",
+          });
+          return;
+        }
+      }
+
+      // Issue a JWT
+      this.issueJWT(user.uuid, res);
     } catch (error) {
       res.status(400).json({
-        status: 400,
         error: "Couldn't find email address",
-      });
-      return;
-    }
-
-    // Credential validation, return 401 on invalid credentials
-    if (!compareSync(password, actingUser.saltedPwdHash)) {
-      res.status(401).json({
-        error: "Invalid credentials",
       });
       return;
     }
   }
 
-  private register(req: Request, res: Response) {}
+  /**
+   * Handles the API call to create a new user
+   */
+  private async register(req: Request, res: Response) {
+    // Check for duplicate email
+    if (
+      this.es.users.find((user: User) => {
+        return user.email === req.body.email;
+      })
+    ) {
+      // Return an error when the email was found
+      res.status(400).json({ error: "Email already in use" });
+      return;
+    }
+
+    try {
+      const userUuid = v4();
+      // Append the event
+      await ServerEvents.appendAuthenticationEvent({
+        date: new Date(),
+        data: {
+          createdOn: new Date(),
+          crudType: crudType.CREATE,
+          email: req.body.email,
+          saltedPwdHash: Authentication.makePwdHash(req.body.pwd),
+          totpSecret: null,
+          userUuid,
+        },
+      });
+
+      // Issue a JWT for the new user
+      this.issueJWT(userUuid, res);
+    } catch (err) {
+      log("Couldn't append user creation event; " + err);
+      res.status(400).json({ oof: true });
+      return;
+    }
+  }
+
+  /**
+   * Issues (and sends) a JWT for a user.
+   *
+   * @param user The user uuid for which to generate a token for
+   * @param res The Express response object
+   */
+  private issueJWT(userUuid: string, res: Response) {
+    // Generate a JWT
+    let jwtBearerToken: string;
+    try {
+      jwtBearerToken = jwt.sign({}, this.JWT_PRIVATE_KEY, {
+        algorithm: "RS256",
+        expiresIn: "10h",
+        subject: userUuid + "",
+      });
+    } catch (error) {
+      error("Couldn't sign JWT; " + error);
+    }
+
+    // Send the token back to the user
+    res
+      .cookie("JWT", jwtBearerToken, {
+        httpOnly: true,
+        secure: process.env.EDM_JWT_SECURE === "true",
+      })
+      .send();
+  }
+
+  /**
+   * Slats and hashes a password
+   *
+   * @param pwd The password to be hashed
+   */
+  private static makePwdHash(pwd: string): string {
+    /**
+     * The number of rounds the passwords hash will be salted for
+     */
+    const saltRounds = 10;
+
+    // Calculate and set the hash
+    return hashSync(pwd, saltRounds);
+  }
+
+  /**
+   * Removes the JWT cookie form the user
+   */
+  static logout(req: Request, res: Response): void {
+    res
+      .clearCookie("JWT")
+      .status(200)
+      .json({ message: "Logout successful" });
+    return;
+  }
 
   //
   //
-  // Old code below; try to reuse
+  // * Old code below; try to reuse
   //
   //
 
@@ -151,28 +270,28 @@ export class Authentication {
    * Responds with all non-sensitive user data.
    * If 2FA is disabled and no secret exists, one will be created.
    */
-  static async getAuthDetails(req: Request, res: Response): Promise<void> {
-    // const actingUser: User = res.locals.actingUser;
-    // // Check if the user has 2FA enabled
-    // if (actingUser.tfaEnabled) {
-    //   // If the user has 2FA enabled, hide the 2FA data
-    //   delete actingUser.tfaSecret;
-    //   delete actingUser.tfaUrl;
-    // } else {
-    //   // If the user lacks 2FA data, generate it
-    //   if (actingUser.tfaSecret == null || actingUser.tfaUrl == null) {
-    //     await AccountController.addNewSecretToUser(actingUser);
-    //   }
-    // }
-    // // Hide the users inventories
-    // delete actingUser.inventoryUsers;
-    // // Hide salted & hashed password
-    // delete actingUser.saltedPwdHash;
-    // res.status(200).json({
-    //   status: "Authenticated",
-    //   user: actingUser,
-    // });
-  }
+  // static async getAuthDetails(req: Request, res: Response): Promise<void> {
+  // const actingUser: User = res.locals.actingUser;
+  // // Check if the user has 2FA enabled
+  // if (actingUser.tfaEnabled) {
+  //   // If the user has 2FA enabled, hide the 2FA data
+  //   delete actingUser.tfaSecret;
+  //   delete actingUser.tfaUrl;
+  // } else {
+  //   // If the user lacks 2FA data, generate it
+  //   if (actingUser.tfaSecret == null || actingUser.tfaUrl == null) {
+  //     await AccountController.addNewSecretToUser(actingUser);
+  //   }
+  // }
+  // // Hide the users inventories
+  // delete actingUser.inventoryUsers;
+  // // Hide salted & hashed password
+  // delete actingUser.saltedPwdHash;
+  // res.status(200).json({
+  //   status: "Authenticated",
+  //   user: actingUser,
+  // });
+  // }
 
   // /**
   //  * Checks if a user is allowed to do something in a given inventory
@@ -191,7 +310,7 @@ export class Authentication {
   //   try {
   //     // Get the TypeORM entity manager
   //     const entityManager: EntityManager = getManager();
-
+  //
   //     // Try to get an inventoryUser matching both the user and the inventory specified
   //     inventoryUser = await entityManager.findOneOrFail(InventoryUser, {
   //       where: {
@@ -202,7 +321,7 @@ export class Authentication {
   //   } catch (error) {
   //     return false;
   //   }
-
+  //
   //   // Needs to have the same access level (0) or higher (1)
   //   return (
   //     -1 <
@@ -212,68 +331,7 @@ export class Authentication {
   //     )
   //   );
   // }
-
-  // TODO register
-  /**
-   * Registers a new user
-   */
-  public static async register(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<any> {
-    // /**
-    //  * The user to be added to the db
-    //  */
-    // const newUser: User = new User();
-    // newUser.email = req.body.email;
-    // // The current date
-    // newUser.createdOn = new Date(new Date().setHours(0, 0, 0, 0));
-    // // The name of the new user
-    // newUser.name = req.body.name;
-    // try {
-    //   // Add the user to the db
-    //   newUser.saltedPwdHash = AccountController.makePwdHash(req.body.pwd);
-    //   await UserController.addNewUserOrFail(newUser);
-    // } catch (error) {
-    //   res.status(400).json({
-    //     status: 400,
-    //     error: "Email already in use or user data incomplete",
-    //   });
-    //   return;
-    // }
-    // // Login the new user
-    // let jwtBearerToken: string;
-    // try {
-    //   jwtBearerToken = jwt.sign({}, PRIVATE_KEY, {
-    //     algorithm: "RS256",
-    //     expiresIn: "10h",
-    //     subject: newUser.id + "",
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    // res
-    //   .status(201)
-    //   .cookie("JWT", jwtBearerToken, { httpOnly: true })
-    //   .json({
-    //     status: 201,
-    //     message: "Created new user",
-    //     email: newUser.email,
-    //     id: newUser.id,
-    //   });
-  }
-
-  // private static makePwdHash(pwd: string): string {
-  //   /**
-  //    * The number of rounds the passwords hash will be salted for
-  //    */
-  //   const saltRounds: number = 10 as number;
-
-  //   // Calculate and set the hash
-  //   return hashSync(pwd, saltRounds);
-  // }
-
+  //
   //   // Check for 2FA
   //   if (actingUser.tfaEnabled) {
   //     if (
@@ -291,7 +349,7 @@ export class Authentication {
   //     }
   //     // On successful TOTP authentication
   //   }
-
+  //
   //   // Generate a JWT
   //   let jwtBearerToken: string;
   //   try {
@@ -303,7 +361,7 @@ export class Authentication {
   //   } catch (error) {
   //     console.error(error);
   //   }
-
+  //
   //   // Send the token back to the user
   //   res
   //     .status(200)
@@ -337,7 +395,7 @@ export class Authentication {
   //     });
   //     return;
   //   }
-
+  //
   //   // Load the user form the db
   //   try {
   //     res.locals.actingUser = await UserController.getUserByIdOrFail(
@@ -354,7 +412,7 @@ export class Authentication {
   //       });
   //     return;
   //   }
-
+  //
   //   // If the token is valid and the user was loaded
   //   next();
   // }
@@ -390,96 +448,88 @@ export class Authentication {
   //   }
   // }
 
-  /**
-   * This method alters a users account
-   * @param req
-   * @param res
-   * @param next
-   */
-  public static async alterUser(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> {
-    // /**
-    //  * The user to alter and subsequently save to the db
-    //  */
-    // const alteredUser: User = req.body;
-    // // Check if the acting user is the one to be altered
-    // if ((res.locals.actingUser as User).id !== alteredUser.id) {
-    //   res.status(403).json({ error: "Cannot alter other user" });
-    //   return;
-    // }
-    // // Return error on bad request
-    // if (
-    //   alteredUser.tfaEnabled == null ||
-    //   alteredUser.name == null ||
-    //   alteredUser.name === "" ||
-    //   alteredUser.email == null ||
-    //   alteredUser.email === ""
-    // ) {
-    //   res.status(400).json({ error: "Bad request" });
-    // }
-    // // Change the password if desired
-    // if (alteredUser.pwd === "" || alteredUser.pwd == null) {
-    //   // Do not change the password
-    // } else {
-    //   // Change password
-    //   alteredUser.saltedPwdHash = AccountController.makePwdHash(
-    //     alteredUser.pwd,
-    //   );
-    // }
-    // // Check for existing 2FA
-    // if ((res.locals.actingUser as User).tfaEnabled) {
-    //   // Disable 2FA if desired
-    //   if (!alteredUser.tfaEnabled) {
-    //     // Regenerate the 2FA secret
-    //     await AccountController.addNewSecretToUser(res.locals
-    //       .actingUser as User);
-    //   }
-    // } else {
-    //   // Check if enabling 2FA is desired
-    //   if (alteredUser.tfaEnabled) {
-    //     // Try enabling 2FA
-    //     if (
-    //       totp.verify({
-    //         secret: (res.locals.actingUser as User).tfaSecret,
-    //         encoding: "base32",
-    //         token: alteredUser.tfaToken,
-    //       })
-    //     ) {
-    //       // Enable 2FA
-    //       alteredUser.tfaEnabled = true;
-    //     } else {
-    //       // Return error because 2FA was wrong
-    //       res.status(400).json({ error: "Invalid 2FA token" });
-    //       return;
-    //     }
-    //   }
-    // }
-    // // Clean the request
-    // delete alteredUser.createdOn;
-    // delete alteredUser.inventoryUsers;
-    // delete alteredUser.pwd;
-    // delete alteredUser.tfaToken;
-    // delete alteredUser.tfaSecret;
-    // delete alteredUser.tfaUrl;
-    // try {
-    //   await UserController.saveUser(alteredUser);
-    // } catch (error) {
-    //   // Report duplicate email
-    //   res.status(400).json({ error: "Email already in use" });
-    //   return;
-    // }
-    // // Return auth details on success
-    // AccountController.getAuthDetails(req, res);
-  }
-
-  static logout(req: Request, res: Response): void {
-    res
-      .clearCookie("JWT")
-      .status(200)
-      .json({ message: "Logout successful" });
-    return;
-  }
+  // /**
+  //  * This method alters a users account
+  //  * @param req
+  //  * @param res
+  //  * @param next
+  //  */
+  // public static async alterUser(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<void> {
+  // /**
+  //  * The user to alter and subsequently save to the db
+  //  */
+  // const alteredUser: User = req.body;
+  // // Check if the acting user is the one to be altered
+  // if ((res.locals.actingUser as User).id !== alteredUser.id) {
+  //   res.status(403).json({ error: "Cannot alter other user" });
+  //   return;
+  // }
+  // // Return error on bad request
+  // if (
+  //   alteredUser.tfaEnabled == null ||
+  //   alteredUser.name == null ||
+  //   alteredUser.name === "" ||
+  //   alteredUser.email == null ||
+  //   alteredUser.email === ""
+  // ) {
+  //   res.status(400).json({ error: "Bad request" });
+  // }
+  // // Change the password if desired
+  // if (alteredUser.pwd === "" || alteredUser.pwd == null) {
+  //   // Do not change the password
+  // } else {
+  //   // Change password
+  //   alteredUser.saltedPwdHash = AccountController.makePwdHash(
+  //     alteredUser.pwd,
+  //   );
+  // }
+  // // Check for existing 2FA
+  // if ((res.locals.actingUser as User).tfaEnabled) {
+  //   // Disable 2FA if desired
+  //   if (!alteredUser.tfaEnabled) {
+  //     // Regenerate the 2FA secret
+  //     await AccountController.addNewSecretToUser(res.locals
+  //       .actingUser as User);
+  //   }
+  // } else {
+  //   // Check if enabling 2FA is desired
+  //   if (alteredUser.tfaEnabled) {
+  //     // Try enabling 2FA
+  //     if (
+  //       totp.verify({
+  //         secret: (res.locals.actingUser as User).tfaSecret,
+  //         encoding: "base32",
+  //         token: alteredUser.tfaToken,
+  //       })
+  //     ) {
+  //       // Enable 2FA
+  //       alteredUser.tfaEnabled = true;
+  //     } else {
+  //       // Return error because 2FA was wrong
+  //       res.status(400).json({ error: "Invalid 2FA token" });
+  //       return;
+  //     }
+  //   }
+  // }
+  // // Clean the request
+  // delete alteredUser.createdOn;
+  // delete alteredUser.inventoryUsers;
+  // delete alteredUser.pwd;
+  // delete alteredUser.tfaToken;
+  // delete alteredUser.tfaSecret;
+  // delete alteredUser.tfaUrl;
+  // try {
+  //   await UserController.saveUser(alteredUser);
+  // } catch (error) {
+  //   // Report duplicate email
+  //   res.status(400).json({ error: "Email already in use" });
+  //   return;
+  // }
+  // // Return auth details on success
+  // AccountController.getAuthDetails(req, res);
+  // }
 }

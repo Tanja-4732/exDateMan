@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
-import { group } from "@angular/animations";
 import { CustomValidatorsService } from "../../services/CustomValidators/custom-validators.service";
 
 @Component({
@@ -11,7 +10,9 @@ import { CustomValidatorsService } from "../../services/CustomValidators/custom-
   styleUrls: ["./register.component.scss"]
 })
 export class RegisterComponent implements OnInit {
-  oof: boolean = false;
+  oof = false;
+  emailInUse = false;
+  emailAddress: string;
 
   form: FormGroup;
 
@@ -23,7 +24,7 @@ export class RegisterComponent implements OnInit {
     private cvs: CustomValidatorsService
   ) {
     this.createForm();
-    this.form.patchValue({ email: this.route.snapshot.params["email"] });
+    this.form.patchValue({ email: this.route.snapshot.params.email });
   }
 
   createForm(): void {
@@ -51,6 +52,7 @@ export class RegisterComponent implements OnInit {
   }
 
   async register(): Promise<void> {
+    this.emailAddress = this.form.value.email;
     try {
       await this.as.register(
         this.form.value.email,
@@ -58,8 +60,12 @@ export class RegisterComponent implements OnInit {
         this.form.value.name
       );
       this.oof = false;
+      this.emailInUse = false;
     } catch (error) {
       this.oof = true;
+      this.emailInUse = error.error.error === "Email already in use";
+
+      console.error(error);
     }
   }
 }
