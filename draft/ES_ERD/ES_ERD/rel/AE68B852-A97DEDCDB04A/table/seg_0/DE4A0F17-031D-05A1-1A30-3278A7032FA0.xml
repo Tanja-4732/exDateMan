@@ -1,0 +1,54 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="DE4A0F17-031D-05A1-1A30-3278A7032FA0" name="Events">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-28 15:13:06 UTC</createdTime>
+<ownerDesignName>ES_ERD</ownerDesignName>
+<ordsAlias>table_1</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="occurredAt" id="F6AC35A9-56AA-0DD2-9EC4-6DB19C8B782B">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-28 15:18:22 UTC</createdTime>
+<ownerDesignName>ES_ERD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="streamId" id="1AEEA2DC-A96B-BCF1-D74F-19431DAAE601">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-28 15:18:52 UTC</createdTime>
+<ownerDesignName>ES_ERD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT057</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="eventData" id="5AA74EBF-CF95-9580-1923-7961F45879F8">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-28 15:19:21 UTC</createdTime>
+<ownerDesignName>ES_ERD</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D792D206-A42F-D468-DBC1-B8D956833FE5" name="Events_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-28 15:39:12 UTC</createdTime>
+<ownerDesignName>ES_ERD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F6AC35A9-56AA-0DD2-9EC4-6DB19C8B782B"/>
+<colUsage columnID="1AEEA2DC-A96B-BCF1-D74F-19431DAAE601"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

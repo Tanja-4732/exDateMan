@@ -1,0 +1,93 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="FA8B3947-A56A-5AD1-C412-A64F71E13265" name="Category">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:16 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<ordsAlias>table_7</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="0283E073-0AF5-DF93-B36C-05351BC755BE">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:37 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="name" id="86ED76CD-B949-598B-3B08-5EF46655A17D">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:44 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Category_id" id="6B2D17F8-EC5B-16C2-B764-624E4E0449B5">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:48 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="EFFCA590-B297-ECCA-2B5D-D8FE639C8155" referredColumn="0283E073-0AF5-DF93-B36C-05351BC755BE"/>
+</associations>
+</Column>
+<Column name="Inventory_id" id="BA8044B5-70A2-0064-6458-FEB102F6B71F">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:34:04 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="644E373E-ED45-4560-8645-036653807D42" referredColumn="BAFBEA3C-B3C3-EC2F-C840-AF502DFFFCC0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="022FA0C9-7C5F-5E48-8372-DE69010F29FA" name="Category_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:37 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0283E073-0AF5-DF93-B36C-05351BC755BE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="84A12F64-4C5C-18C2-BA32-71359784281A" name="Category_Category_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:33:48 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6B2D17F8-EC5B-16C2-B764-624E4E0449B5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BF16F360-917A-E979-B3DA-30D4AF0F866A" name="Category_Inventory_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:34:04 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BA8044B5-70A2-0064-6458-FEB102F6B71F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

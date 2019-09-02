@@ -1,0 +1,89 @@
+<form [formGroup]="form" (ngSubmit)="onRegister()">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input
+      matInput
+      type="name"
+      placeholder="Bob"
+      formControlName="name"
+      required
+    />
+    <i matSuffix class="material-icons">person</i>
+  </mat-form-field>
+  <br />
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      type="email"
+      placeholder="someone@example.com"
+      formControlName="email"
+      required
+    />
+    <i matSuffix class="material-icons">alternate_email</i>
+  </mat-form-field>
+  <br />
+
+  <ng-container formGroupName="passwords">
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="XWf%=7&eF8CxX_j^AC7x"
+        formControlName="password"
+        required
+      />
+      <i matSuffix class="material-icons">vpn_key</i>
+    </mat-form-field>
+    <br />
+
+    <mat-form-field appearance="outline">
+      <mat-label>Repeat password</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="XWf%=7&eF8CxX_j^AC7x"
+        formControlName="repeat_password"
+        required
+      />
+      <i matSuffix class="material-icons">lock</i>
+    </mat-form-field>
+  </ng-container>
+  <br />
+
+  <div class="mat-typography" *ngIf="emailInUse">
+    <h2>Error</h2>
+    <p>
+      The email address "<code>{{ emailAddress }}</code
+      >" is already in use. Please use the login form to log in, or create an
+      account using a different email address.
+    </p>
+  </div>
+  <div class="mat-typography">
+    <h2>Important notice</h2>
+    <p>
+      This service is not meant to be used by the public. This is a private
+      service used by a select group of people. Unauthorized usage (usage
+      without express written permission) is not allowed!
+    </p>
+  </div>
+
+  <button
+    mat-raised-button
+    type="submit"
+    color="accent"
+    [disabled]="!form.valid"
+  >
+    Register
+  </button>
+  &nbsp;
+  <button
+    mat-stroked-button
+    type="button"
+    routerLink="/login/{{ form.value.email }}"
+  >
+    Login
+  </button>
+</form>

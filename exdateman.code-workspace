@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "backend"
+		},
+		{
+			"path": "."
+		}
+  ],
+  "settings": {
+    "cSpell.words": [
+      "AGPL",
+      "Booter",
+      "TOTP",
+      "Uuids",
+      "ZXing",
+      "postgresql",
+      "prestart",
+      "readables",
+      "sessionstorage",
+      "writeables"
+    ],
+    "editor.formatOnSave": true
+  }
+}
