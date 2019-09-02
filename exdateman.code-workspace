@@ -1,14 +1,17 @@
 {
-	"folders": [
-		{
-			"path": "frontend"
-		},
-		{
-			"path": "backend"
-		},
-		{
-			"path": "."
-		}
+  "folders": [
+    {
+      "name": "Frontend (Angular)",
+      "path": "frontend"
+    },
+    {
+      "name": "Backend (Express)",
+      "path": "backend"
+    },
+    {
+      "name": "Project root",
+      "path": "."
+    }
   ],
   "settings": {
     "cSpell.words": [
@@ -17,12 +20,23 @@
       "TOTP",
       "Uuids",
       "ZXing",
+      "ngsw",
       "postgresql",
+      "prefetch",
       "prestart",
       "readables",
       "sessionstorage",
       "writeables"
     ],
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "frontend": true,
+      "backend": true,
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true
+    }
   }
 }

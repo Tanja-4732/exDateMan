@@ -1,13 +1,48 @@
 import { Injectable } from "@angular/core";
 import { v4 } from "uuid";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../environments/environment";
 
 @Injectable({
   providedIn: "root"
 })
 export class EventSourcingService {
-  constructor() {
+  constructor(private api: HttpClient) {
     console.log("Hello there");
     console.log(v4());
+  }
+
+  /**
+   * The event-logs (every inventory has its own)
+   */
+  private static eventLogs: { [uuid: string]: Event[] } = {};
+
+  /**
+   * The API base url
+   */
+  baseUrl: string = environment.baseUrl;
+
+  /**
+   * Fetches an inventories event-log and parses it.
+   *
+   * @param inventoryUuid The uuid of the inventory to be fetched
+   */
+  private async fetchInventoryEvents(inventoryUuid: string): Promise<void> {
+    const res: Event[] = await this.api
+      .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
+      .toPromise();
+
+    EventSourcingService.eventLogs[inventoryUuid] = res;
+  }
+
+  public async appendEventToInventoryStream(event: Event): Promise<void> {
+    try {
+      const res: Event[] = await this.api
+        .put<Event[]>(this.baseUrl + "/events/" + event.inventoryUuid, event)
+        .toPromise();
+
+      EventSourcingService.eventLogs[event.inventoryUuid].push(event);
+    } catch (err) {}
   }
 
   getAllLocalEventStreams(): LocalEventStorage {
@@ -55,133 +90,143 @@ interface Event {
   date: Date;
 
   /**
-   * The uuid of the item this event is about
-   * This information is redundant (but still required) on inventory events
+   * The uuid of the inventory-event-stream this event belongs to
    */
-  uuid: string;
+  inventoryUuid: string;
 
   /**
-   * The uuid of the user who issued this event
+   * The data of the event
    */
-  userUuid: string;
-
-  /**
-   * Defines what type of item is this event about
-   */
-  itemType: itemType;
-
-  /**
-   * Defines what type of operation was performed
-   */
-  crudType: crudType;
-
-  /**
-   * The inventory-specific data (if this event is about an inventory)
-   */
-  inventoryData?: {
+  data: {
     /**
-     * The name of this inventory
+     * The uuid of the item this event is about
+     * This information is redundant (but still required) on inventory events
      */
-    name?: string;
+    uuid: string;
 
     /**
-     * The uuid of the owner of this inventory
+     * The uuid of the user who issued this event
      */
-    ownerUuid?: string;
+    userUuid: string;
 
     /**
-     * An array of users who have the admin privilege for this inventory
+     * Defines what type of item is this event about
      */
-    adminsUuids?: string[];
+    itemType: itemType;
 
     /**
-     * An array of user uuids who have the write privilege for this inventory
+     * Defines what type of operation was performed
      */
-    writeablesUuids?: string[];
+    crudType: crudType;
 
     /**
-     * An array of user uuids who have the read privilege for this inventory
+     * The inventory-specific data (if this event is about an inventory)
      */
-    readablesUuids?: string[];
+    inventoryData?: {
+      /**
+       * The name of this inventory
+       */
+      name?: string;
+
+      /**
+       * The uuid of the owner of this inventory
+       */
+      ownerUuid?: string;
+
+      /**
+       * An array of users who have the admin privilege for this inventory
+       */
+      adminsUuids?: string[];
+
+      /**
+       * An array of user uuids who have the write privilege for this inventory
+       */
+      writeablesUuids?: string[];
+
+      /**
+       * An array of user uuids who have the read privilege for this inventory
+       */
+      readablesUuids?: string[];
+
+      /**
+       * The date of the creation of this inventory
+       *
+       * This field may only be set in an inventory-created event
+       */
+      createdOn?: Date;
+    };
+    /**
+     * The category-specific data (if this event is about a category)
+     */
+    categoryData?: {
+      /**
+       * The name of the category
+       */
+      name?: string;
+
+      /**
+       * The parent-category of this category
+       *
+       * Top-level categories are their own parent
+       */
+      parentUuid?: string;
+
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
 
     /**
-     * The date of the creation of this inventory
-     *
-     * This field may only be set in an inventory-created event
+     * The thing-specific data (if this event is about a thing)
      */
-    createdOn?: Date;
-  };
-  /**
-   * The category-specific data (if this event is about a category)
-   */
-  categoryData?: {
-    /**
-     * The name of the category
-     */
-    name?: string;
+    thingData?: {
+      /**
+       * The name of the thing
+       */
+      name: string;
+
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
 
     /**
-     * The parent-category of this category
-     *
-     * Top-level categories are their own parent
+     * The stock-specific data (if this event is about a stock)
      */
-    parentUuid?: string;
+    stockData?: {
+      /**
+       * The expiration date of the stock
+       */
+      exDate?: Date;
 
-    /**
-     * The date of the creation of this category
-     *
-     * This field may only be set in an category-created event
-     */
-    createdOn?: Date;
-  };
+      /**
+       * How many days after the opening of this stock is it still usable?
+       */
+      useUpIn?: number;
 
-  /**
-   * The thing-specific data (if this event is about a thing)
-   */
-  thingData?: {
-    /**
-     * The name of the thing
-     */
-    name: string;
+      /**
+       * Text description of the quantity of the stock
+       */
+      quantity?: string;
 
-    /**
-     * The date of the creation of this category
-     *
-     * This field may only be set in an category-created event
-     */
-    createdOn?: Date;
-  };
+      /**
+       * When was this stock opened?
+       */
+      openedOn: Date;
 
-  /**
-   * The stock-specific data (if this event is about a stock)
-   */
-  stockData?: {
-    /**
-     * The expiration date of the stock
-     */
-    exDate?: Date;
-
-    /**
-     * How many days after the opening of this stock is it still usable?
-     */
-    useUpIn?: number;
-
-    /**
-     * Text description of the quantity of the stock
-     */
-    quantity?: string;
-
-    /**
-     * When was this stock opened?
-     */
-    openedOn: Date;
-
-    /**
-     * The date of the creation of this category
-     *
-     * This field may only be set in an category-created event
-     */
-    createdOn?: Date;
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
   };
 }
 

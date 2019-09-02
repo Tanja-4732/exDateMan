@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { log, error } from "console";
 import db from "./db";
+import { ServerEvents } from "./server-events";
 
 export class Events {
   /**
@@ -13,13 +14,15 @@ export class Events {
     this.routes = Router();
 
     // Get the events of one inventory
-    this.routes.get("/:inventoryId", this.checkFor0, this.getInventoryEvents);
+    this.routes.get(
+      "/:inventoryUuid",
+      this.checkFor0,
+      (req: Request, res: Response) => this.getInventoryEvents(req, res),
+    );
 
     // Add an event to an inventory
-    this.routes.post(
-      "/:inventoryId",
-      this.checkFor0,
-      this.appendInventoryEvent,
+    this.routes.post("/", this.checkFor0, (req: Request, res: Response) =>
+      this.appendInventoryEvent(req, res),
     );
 
     // Return an error for an empty get
@@ -27,16 +30,17 @@ export class Events {
   }
 
   /**
-   * Check for the 0th inventory
+   * Check for the management inventory uuids
    */
   private checkFor0(req: Request, res: Response, next: NextFunction) {
-    const parsedId = parseInt(req.params.inventoryId, 10);
-    if (parsedId.toString() === "NaN") {
-      res.status(400).json({ error: "The ID must be numeric" });
-      return;
-    }
-    if (parsedId == 0) {
-      res.status(400).json({ error: "There is no 0th inventory" });
+    if (
+      req.body.inventoryUuid == ServerEvents.authorizationEventStreamUuid ||
+      req.body.inventoryUuid == ServerEvents.authenticationEventStreamUuid
+    ) {
+      res.status(403).json({
+        message: "You may not access that",
+        oof: true,
+      });
       return;
     } else {
       next();
@@ -52,6 +56,8 @@ export class Events {
   }
 
   private async getInventoryEvents(req: Request, res: Response) {
+    // Deny access to management event-logs
+
     // TODO check for read access #99
 
     try {
@@ -63,7 +69,7 @@ export class Events {
         WHERE stream_id = $1
         ORDER BY date ASC;
         `,
-        [req.params.inventoryId],
+        [req.params.inventoryUuid],
       );
 
       // Send the events back
@@ -89,7 +95,11 @@ export class Events {
          (stream_id, date, data)
         VALUES ($1, $2, $3)
         `,
-        [req.params.inventoryId, (req.body as ev).date, (req.body as ev).data],
+        [
+          req.params.inventoryUuid,
+          (req.body as ev).date,
+          (req.body as ev).data,
+        ],
       );
 
       // Send the events back

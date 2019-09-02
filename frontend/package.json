@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -21,7 +21,9 @@
     "@angular/material": "^8.1.2",
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
+    "@angular/pwa": "^0.803.2",
     "@angular/router": "~8.2.0",
+    "@angular/service-worker": "~8.2.0",
     "@zxing/ngx-scanner": "^2.0.1",
     "angularx-qrcode": "^1.6.4",
     "rxjs": "~6.4.0",
