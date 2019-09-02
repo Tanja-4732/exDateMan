@@ -55,7 +55,7 @@ export class ServerEvents {
   private async fetchAuthenticationStream(): Promise<void> {
     try {
       // Get the events from the db
-      const result = await (await db()).query(
+      ServerEvents.authenticationEvents = (await (await db()).query(
         `
         SELECT date, data
           FROM ${process.env.EDM_DB_SCHEMA}.events
@@ -63,13 +63,13 @@ export class ServerEvents {
         ORDER BY date ASC;
         `,
         [ServerEvents.authenticationEventStreamUuid],
-      );
+      )).rows;
 
       // Initialize the array
       ServerEvents._users = [];
 
-      // Iterate over all events from the db
-      for (const event of result.rows) {
+      // Iterate over all events
+      for (const event of ServerEvents.authenticationEvents) {
         ServerEvents.updateUsersProjection(event);
       }
     } catch (err) {
@@ -104,7 +104,8 @@ export class ServerEvents {
       // Update users projection
       ServerEvents.updateUsersProjection(event);
     } catch (err) {
-      throw new Error("Couldn't append event; " + err);
+      error("Couldn't append event:");
+      error(err);
     }
   }
 

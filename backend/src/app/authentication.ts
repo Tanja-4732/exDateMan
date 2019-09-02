@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { ServerEvents, crudType } from "./server-events";
 import { hash, compareSync, hashSync, genSaltSync } from "bcrypt";
 import { v4 } from "uuid";
-import { log } from "console";
+import { log, error } from "console";
 import { totp } from "speakeasy";
 import { inspect } from "util";
 
@@ -68,13 +68,17 @@ export class Authentication {
 
     // Mount the routes
     // Authentication
-    this.routes.post("/login", this.login);
+    this.routes.post("/login", (req: Request, res: Response) =>
+      this.login(req, res),
+    );
 
     this.routes.post("/register", (req: Request, res: Response) =>
       this.register(req, res),
     );
 
-    this.routes.post("/logout", Authentication.logout);
+    this.routes.post("/logout", (req: Request, res: Response) =>
+      Authentication.logout(req, res),
+    );
 
     // Setup JWT keys
     this.getJwtKeys();
@@ -141,7 +145,10 @@ export class Authentication {
 
       // Issue a JWT
       this.issueJWT(user.uuid, res);
-    } catch (error) {
+    } catch (err) {
+      // error("Couldn't log in:");
+      // error(err);
+
       res.status(400).json({
         error: "Couldn't find email address",
       });
@@ -176,13 +183,15 @@ export class Authentication {
           saltedPwdHash: Authentication.makePwdHash(req.body.pwd),
           totpSecret: null,
           userUuid,
+          name: req.body.name,
         },
       });
 
       // Issue a JWT for the new user
       this.issueJWT(userUuid, res);
     } catch (err) {
-      log("Couldn't append user creation event; " + err);
+      error("Couldn't append user creation event:");
+      error(err);
       res.status(400).json({ oof: true });
       return;
     }

@@ -24,7 +24,7 @@ export class AuthService {
   ): Promise<LoginResponse> {
     const user: LoginResponse | any = await this.http
       .post<JSON>(
-        this.baseUrl + "authentication/login",
+        this.baseUrl + "/authentication/login",
         {
           email,
           pwd,
@@ -84,9 +84,6 @@ export class AuthService {
 
 /**
  * This is the response form the server for the login route
- *
- * @export
- * @interface LoginResponse
  */
 export interface LoginResponse {
   // TODO redo

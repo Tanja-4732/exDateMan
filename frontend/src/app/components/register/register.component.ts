@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
   onRegister(): void {
     this.register().then(() => {
       if (!this.oof) {
-        this.router.navigate(["/login"], { relativeTo: this.route });
+        this.router.navigate(["/inventories"], { relativeTo: this.route });
       }
     });
   }
