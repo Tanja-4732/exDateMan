@@ -1,5 +1,5 @@
 export class User {
-  id: number;
+  uuid: number;
   name: string;
   email: string;
   tfaEnabled: boolean;

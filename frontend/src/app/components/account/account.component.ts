@@ -12,15 +12,15 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./account.component.scss"]
 })
 export class AccountComponent implements OnInit {
-  oof: boolean = false;
-  loading: boolean = true;
-  unauthorized: boolean = false;
+  oof = false;
+  loading = true;
+  unauthorized = false;
 
   user: User;
 
   form: FormGroup;
   error: { status: string; user: User };
-  disable2FA: boolean = false;
+  disable2FA = false;
 
   constructor(
     private as: AuthService,
@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.createForm();
-    this.form.patchValue({ email: this.route.snapshot.params["email"] });
+    this.form.patchValue({ email: this.route.snapshot.params.email });
   }
   ngOnInit(): void {
     this.loadUser().then();
@@ -53,7 +53,7 @@ export class AccountComponent implements OnInit {
 
   async loadUser(): Promise<void> {
     try {
-      this.user = await this.as.getUser();
+      this.user = ((await this.as.getUser()).user as unknown) as User; // TODO FixMe
       console.log(this.user);
 
       this.form.patchValue(this.user);
@@ -84,7 +84,7 @@ export class AccountComponent implements OnInit {
   async save(): Promise<void> {
     try {
       this.error = await this.as.saveUser({
-        id: this.user.id,
+        uuid: this.user.uuid,
         name: this.form.value.name,
         email: this.form.value.email,
         pwd: this.form.value.passwords.password,

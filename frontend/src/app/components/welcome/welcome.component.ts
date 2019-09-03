@@ -1,5 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../services/auth/auth.service";
+import {
+  AuthService,
+  GetStatusResponse
+} from "../../services/auth/auth.service";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { User } from "../../models/user/user";
 
@@ -12,9 +15,9 @@ export class WelcomeComponent implements OnInit {
   /**
    * If the user is logged in
    */
-  loggedIn: boolean = true;
-  loading: boolean = true;
-  user: User;
+  loggedIn = true;
+  loading = true;
+  user: { uuid: string; email: string; name?: string };
 
   constructor(private as: AuthService) {}
 
@@ -25,8 +28,12 @@ export class WelcomeComponent implements OnInit {
 
   async testLogin(): Promise<void> {
     try {
-      this.user = await this.as.getUser();
-      this.loggedIn = true;
+      console.log("hello?");
+      const res = await this.as.getUser();
+      console.log(res);
+
+      this.loggedIn = res.authorized;
+      this.user = res.user;
     } catch (error) {
       this.loggedIn = false;
     }

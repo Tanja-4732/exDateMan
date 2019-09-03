@@ -288,10 +288,13 @@ export class Authentication {
     /**
      * The user from the projection
      */
-    const user = this.es.users.find((user: User) => {
-      // Find the user in the projection with a matching email
-      return user.uuid === verified.sub;
-    });
+    const user = Object.assign(
+      {},
+      this.es.users.find((user: User) => {
+        // Find the user in the projection with a matching email
+        return user.uuid === verified.sub;
+      }),
+    );
 
     // Check for not logged in requests
     if (user == undefined) {

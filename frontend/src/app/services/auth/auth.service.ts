@@ -64,15 +64,13 @@ export class AuthService {
       .toPromise();
   }
 
-  async getUser(): Promise<User> {
-    const res: { status: string; user: User } = await this.http
-      .get<{ status: string; user: User }>(this.baseUrl + "/account")
+  /**
+   * Fetches info from the server about the current login status
+   */
+  async getUser(): Promise<GetStatusResponse> {
+    return await this.http
+      .get<GetStatusResponse>(this.baseUrl + "/authentication/status")
       .toPromise();
-
-    if (res.status !== "Authenticated") {
-      throw new Error("Not signed in");
-    }
-    return res.user;
   }
 
   async saveUser(user: User): Promise<{ status: string; user: User }> {
@@ -101,4 +99,13 @@ interface RegisterResponse {
   status: number;
   message: string;
   email: string;
+}
+
+export interface GetStatusResponse {
+  authorized: boolean;
+  user: {
+    uuid: string;
+    email: string;
+    name?: string;
+  };
 }
