@@ -39,9 +39,11 @@ export class AddInventoryComponent {
    */
   async onSubmit(formData: Inventory) {
     try {
-      const inventory: Inventory = await this.inv.newInventory(formData);
+      const inventoryUuid: string = await this.inv.createInventory(
+        formData.name
+      );
       this.oof = false;
-      this.router.navigate(["/inventories/" + inventory.id + "/things"]);
+      this.router.navigate(["/inventories/" + inventoryUuid + "/things"]);
     } catch (err) {
       this.oof = true;
     }

@@ -1,5 +1,5 @@
 import { ExpressServer } from "./server";
-import { log } from "console";
+import { log, error } from "console";
 
 /**
  * The main Express server
@@ -9,13 +9,8 @@ import { log } from "console";
 const server: ExpressServer = new ExpressServer();
 
 // Make the server listen based on config
-server
-  .start()
-  .then(() => {
-    // Log server started
-    log("Server started.");
-  })
-  .catch(() => {
-    // Log error
-    log("Couldn't start server.");
-  });
+server.start().catch(err => {
+  // Log error
+  log("Couldn't start server:");
+  error(err);
+});

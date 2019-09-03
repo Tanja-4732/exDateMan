@@ -8,8 +8,8 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
-    console.log("Hello there");
-    console.log(v4());
+    // this.fetchInventoryEvents()
+    // this.getAllLocalEventStreams(); // TODO implement
   }
 
   /**
@@ -35,6 +35,11 @@ export class EventSourcingService {
     EventSourcingService.eventLogs[inventoryUuid] = res;
   }
 
+  /**
+   * Appends an event to its corresponding event log
+   *
+   * @param event The event to be appended to its log
+   */
   public async appendEventToInventoryStream(event: Event): Promise<void> {
     try {
       const res: Event[] = await this.api
@@ -233,7 +238,7 @@ interface Event {
 /**
  * Used to describe on which type of item an operation was performed on
  */
-enum itemType {
+export enum itemType {
   INVENTORY = "inventory",
   CATEGORY = "category",
   THING = "thing",
@@ -245,7 +250,7 @@ enum itemType {
  *
  * (read is excluded from this list since it doesn't affect the data)
  */
-enum crudType {
+export enum crudType {
   CREATE = "create",
   UPDATE = "update",
   DELETE = "delete"

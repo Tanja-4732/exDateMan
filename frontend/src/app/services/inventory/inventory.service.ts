@@ -4,6 +4,13 @@ import { Inventory } from "../../models/inventory/inventory";
 import { environment } from "../../../environments/environment";
 import { User } from "../../models/user/user";
 import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
+import {
+  EventSourcingService,
+  crudType,
+  itemType
+} from "../EventSourcing/event-sourcing.service";
+import { v4 } from "uuid";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -11,7 +18,11 @@ import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 export class InventoryService {
   private baseUrl: string = environment.baseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private ess: EventSourcingService,
+    private as: AuthService
+  ) {}
 
   async getInventories(): Promise<Inventory[]> {
     const response = await this.http
@@ -27,37 +38,84 @@ export class InventoryService {
     return response;
   }
 
-  async newInventory(inventory: Inventory): Promise<Inventory> {
-    /* const adminIds: number[] = [];
-    const writeableIds: number[] = [];
-    const readableIds: number[] = [];
+  /**
+   * Creates an inventory by generating and issuing an appropriate event
+   *
+   * @param name The name of the new inventory
+   * @returns The uuid of the new inventory
+   */
+  async createInventory(name: string): Promise<string> {
+    /**
+     * The uuid for the new inventory
+     */
+    const newUuid = v4();
 
-    // Copy ids
-    if (admins) {
-      for (const admin of admins) {
-        adminIds.push(admin.id);
+    /**
+     * The uuid of the user
+     */
+    const myUuid = (await this.as.getUser()).user.uuid;
+
+    /**
+     * The current date (and time)
+     */
+    const currentDate = new Date();
+
+    // Append to the event log
+    await this.ess.appendEventToInventoryStream({
+      inventoryUuid: newUuid,
+      date: currentDate,
+      data: {
+        crudType: crudType.CREATE,
+        itemType: itemType.INVENTORY,
+        uuid: newUuid,
+        userUuid: myUuid,
+
+        // Core data
+        inventoryData: {
+          name,
+          createdOn: currentDate,
+          ownerUuid: myUuid,
+          adminsUuids: [],
+          writeablesUuids: [],
+          readablesUuids: []
+        }
       }
-    }
+    });
 
-    if (writeables) {
-      for (const writable of writeables) {
-        writeableIds.push(writable.id);
-      }
-    }
+    // Update the inventories projection
+    this.updateInventoriesProjection();
 
-    if (readables) {
-      for (const readable of readables) {
-        readableIds.push(readable.id);
-      }
-    } */
+    return newUuid;
 
-    // Add the inventories createdOn date
-    inventory.createdOn = new Date();
+    // /* const adminIds: number[] = [];
+    // const writeableIds: number[] = [];
+    // const readableIds: number[] = [];
+    // // Copy ids
+    // if (admins) {
+    //   for (const admin of admins) {
+    //     adminIds.push(admin.id);
+    //   }
+    // }
+    // if (writeables) {
+    //   for (const writable of writeables) {
+    //     writeableIds.push(writable.id);
+    //   }
+    // }
+    // if (readables) {
+    //   for (const readable of readables) {
+    //     readableIds.push(readable.id);
+    //   }
+    // } */
+    // // Add the inventories createdOn date
+    // inventory.createdOn = new Date();
+    // // Request & Response
+    // return await this.http
+    //   .post<Inventory>(this.baseUrl + "/inventories", inventory)
+    //   .toPromise();
+  }
 
-    // Request & Response
-    return await this.http
-      .post<Inventory>(this.baseUrl + "/inventories", inventory)
-      .toPromise();
+  updateInventoriesProjection() {
+    // throw new Error("Method not implemented."); // TODO implement inventories projection
   }
 
   async getInventory(inventoryId: number): Promise<Inventory> {
