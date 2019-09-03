@@ -1,15 +1,15 @@
 <span class="mat-typography" *ngIf="unauthorized">
   <h2>Unauthorized</h2>
-  We couldn't fetch your inventories, because you aren't authorized. <br>
-  Try logging in again to resolve this. <br>
-  <br>
+  We couldn't fetch your inventories, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
   Redirecting you to the login page in 3 seconds...
 </span>
 
 <span *ngIf="!unauthorized">
   <span class="mat-typography" *ngIf="loading">
     <h2>Loading inventories...</h2>
-    We're getting your inventories... <br>
+    We're getting your inventories... <br />
     Please hang on
   </span>
 

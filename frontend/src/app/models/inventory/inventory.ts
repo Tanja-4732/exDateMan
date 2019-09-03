@@ -1,11 +1,38 @@
-import { Thing } from "../thing/thing";
-import { Category } from "../category/category";
-import { InventoryUser } from "../inventory-user/inventory-user";
+export interface Inventory {
+  /**
+   * The uuid of this inventory
+   *
+   * This is also the uuid of its event log.
+   */
+  uuid: string;
 
-export class Inventory {
-  id: number;
+  /**
+   * The name of this inventory
+   */
   name: string;
+
+  /**
+   * The date of the creation of this inventory
+   */
   createdOn: Date;
-  inventoryUsers?: InventoryUser[]; // TODO maybe remove
-  categories?: Category[]; // TODO maybe remove
+
+  /**
+   * The uuid of this inventories owner
+   */
+  ownerUuid: string;
+
+  /**
+   * The uuids of the admins of this inventory
+   */
+  adminUuids: string[];
+
+  /**
+   * The uuids of the writeables of this inventory
+   */
+  writeableUuids: string[];
+
+  /**
+   * The uuids of the readables of this inventory
+   */
+  readableUuids: string[];
 }

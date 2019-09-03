@@ -42,7 +42,7 @@ export class EditInventoryComponent implements OnInit {
   writeables: User[] = [];
   readables: User[] = [];
 
-  inventory: Inventory = new Inventory();
+  inventory: Inventory = {} as Inventory;
 
   ownerEmail: FormControl = new FormControl("", [
     Validators.required,
@@ -66,7 +66,7 @@ export class EditInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inventory.id = this.route.snapshot.params.inventoryId;
+    this.inventory.uuid = this.route.snapshot.params.inventoryId;
     this.getInventory().then(() => {
       setTimeout(() => {
         if (this.unauthorized) {
@@ -142,7 +142,7 @@ export class EditInventoryComponent implements OnInit {
 
   async getInventory(): Promise<void> {
     try {
-      this.inventory = await this.is.getInventory(this.inventory.id);
+      this.inventory = await this.is.getInventory(this.inventory.uuid);
 
       this.loading = false;
     } catch (error) {

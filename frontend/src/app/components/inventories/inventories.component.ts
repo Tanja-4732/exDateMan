@@ -11,8 +11,8 @@ import { Router } from "@angular/router";
 })
 export class InventoriesComponent implements OnInit {
   inventories: Inventory[] = [];
-  loading: boolean = true;
-  unauthorized: boolean = false;
+  loading = true;
+  unauthorized = false;
 
   constructor(private inv: InventoryService, private router: Router) {}
 
@@ -29,7 +29,9 @@ export class InventoriesComponent implements OnInit {
 
   async loadInventories(): Promise<void> {
     try {
-      this.inventories = await this.inv.getInventories();
+      this.inventories = Object.keys(this.inv.inventories).map(
+        (key: string) => this.inv.inventories[key]
+      );
       this.loading = false;
     } catch (error) {
       if (error instanceof HttpErrorResponse) {

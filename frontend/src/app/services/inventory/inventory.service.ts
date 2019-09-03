@@ -1,5 +1,4 @@
 import { Injectable, DefaultIterableDiffer } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 import { Inventory } from "../../models/inventory/inventory";
 import { environment } from "../../../environments/environment";
 import { User } from "../../models/user/user";
@@ -7,7 +6,8 @@ import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 import {
   EventSourcingService,
   crudType,
-  itemType
+  itemType,
+  Event
 } from "../EventSourcing/event-sourcing.service";
 import { v4 } from "uuid";
 import { AuthService } from "../auth/auth.service";
@@ -16,26 +16,104 @@ import { AuthService } from "../auth/auth.service";
   providedIn: "root"
 })
 export class InventoryService {
-  private baseUrl: string = environment.baseUrl;
+  constructor(private ess: EventSourcingService, private as: AuthService) {
+    if (InventoryService.inventoriesProjection == null) {
+      this.fetchInventoryEvents();
+    }
+  }
 
-  constructor(
-    private http: HttpClient,
-    private ess: EventSourcingService,
-    private as: AuthService
-  ) {}
+  /**
+   * Public accessor for the inventories projection
+   */
+  get inventories(): { [uuid: string]: Inventory } {
+    return InventoryService.inventoriesProjection;
+  }
 
-  async getInventories(): Promise<Inventory[]> {
-    const response = await this.http
-      .get<Inventory[]>(this.baseUrl + "/inventories")
-      .toPromise();
+  /**
+   * The current state of inventories (a projection from the event logs)
+   */
+  private static inventoriesProjection: { [uuid: string]: Inventory };
 
-    // // Convert the date strings to dates
-    // for (const inventory of response.inventories) {
-    //   inventory.createdOn = new Date(
-    //     (inventory.createdOn as unknown) as string
-    //   );
-    // }
-    return response;
+  /**
+   * Obtains the inventories event log from the db and parses them
+   */
+  private fetchInventoryEvents() {
+    // Initialize the inventory projection dictionary
+    InventoryService.inventoriesProjection = {};
+
+    console.log(this.ess.events);
+
+    // Iterate over all event logs
+    for (const [uuid, eventLog] of Object.entries(this.ess.events)) {
+      // Iterate over the events in the log
+      for (const event of eventLog) {
+        // Check if the event is about an inventory
+        if (event.data.itemType === itemType.INVENTORY) {
+          // Update the inventories projection according to the event
+          this.updateInventoriesProjection(event);
+        }
+      }
+    }
+  }
+
+  /**
+   * Updates the inventories projection, one event at a time
+   *
+   * @param event The event to be used to update the projection with
+   */
+  private updateInventoriesProjection(event: Event): Inventory {
+    /**
+     * The inventory to be created or updated (ignored for delete events)
+     */
+    const newInventory = {
+      uuid: event.data.uuid,
+      name: event.data.inventoryData.name,
+      createdOn: event.data.inventoryData.createdOn,
+      ownerUuid: event.data.inventoryData.ownerUuid,
+      adminUuids: event.data.inventoryData.adminsUuids,
+      writeableUuids: event.data.inventoryData.writeablesUuids,
+      readableUuids: event.data.inventoryData.readablesUuids
+    };
+
+    // Find the right CRUD operation
+    switch (event.data.crudType) {
+      case crudType.CREATE:
+        // Assign a new inventory to the dictionary
+        InventoryService.inventoriesProjection[
+          event.inventoryUuid
+        ] = newInventory;
+
+        // Return the new inventory
+        return newInventory;
+
+      case crudType.UPDATE:
+        // Remove immutable values
+        delete newInventory.uuid;
+        delete newInventory.createdOn;
+
+        // Delete all null values
+        Object.keys(newInventory).forEach(
+          key => newInventory[key] == null && delete newInventory[key]
+        );
+
+        // Assign the changed values
+        Object.assign(
+          InventoryService.inventoriesProjection[event.inventoryUuid],
+          newInventory
+        );
+
+        // Return the updated inventory
+        return InventoryService.inventoriesProjection[event.inventoryUuid];
+
+      case crudType.DELETE:
+        // Delete the inventory
+        delete InventoryService.inventoriesProjection[event.inventoryUuid];
+
+        // Return nothing (the inventory is gone)
+        return null;
+    }
+
+    // throw new Error("Method not implemented."); // TODO implement inventories projection
   }
 
   /**
@@ -44,7 +122,7 @@ export class InventoryService {
    * @param name The name of the new inventory
    * @returns The uuid of the new inventory
    */
-  async createInventory(name: string): Promise<string> {
+  async createInventory(name: string): Promise<Inventory> {
     /**
      * The uuid for the new inventory
      */
@@ -60,8 +138,7 @@ export class InventoryService {
      */
     const currentDate = new Date();
 
-    // Append to the event log
-    await this.ess.appendEventToInventoryStream({
+    const createInventoryEvent = {
       inventoryUuid: newUuid,
       date: currentDate,
       data: {
@@ -69,7 +146,6 @@ export class InventoryService {
         itemType: itemType.INVENTORY,
         uuid: newUuid,
         userUuid: myUuid,
-
         // Core data
         inventoryData: {
           name,
@@ -80,86 +156,85 @@ export class InventoryService {
           readablesUuids: []
         }
       }
-    });
+    };
+    // Append to the event log
+    await this.ess.appendEventToInventoryStream(createInventoryEvent);
 
     // Update the inventories projection
-    this.updateInventoriesProjection();
-
-    return newUuid;
-
-    // /* const adminIds: number[] = [];
-    // const writeableIds: number[] = [];
-    // const readableIds: number[] = [];
-    // // Copy ids
-    // if (admins) {
-    //   for (const admin of admins) {
-    //     adminIds.push(admin.id);
-    //   }
-    // }
-    // if (writeables) {
-    //   for (const writable of writeables) {
-    //     writeableIds.push(writable.id);
-    //   }
-    // }
-    // if (readables) {
-    //   for (const readable of readables) {
-    //     readableIds.push(readable.id);
-    //   }
-    // } */
-    // // Add the inventories createdOn date
-    // inventory.createdOn = new Date();
-    // // Request & Response
-    // return await this.http
-    //   .post<Inventory>(this.baseUrl + "/inventories", inventory)
-    //   .toPromise();
+    return this.updateInventoriesProjection(createInventoryEvent);
   }
 
-  updateInventoriesProjection() {
-    // throw new Error("Method not implemented."); // TODO implement inventories projection
-  }
-
-  async getInventory(inventoryId: number): Promise<Inventory> {
-    return await this.http
-      .get<Inventory>(this.baseUrl + "/inventories/" + inventoryId)
-      .toPromise();
-  }
-
+  /**
+   * Updates the data of an inventory by generating and issuing an appropriate event
+   *
+   * @param inventory The inventory to be updated
+   */
   async updateInventory(inventory: Inventory): Promise<Inventory> {
     // TODO implement access rights #91
-    /*
-    let owner: number;
-    const admins: number[] = [];
-    const writeables: number[] = [];
-    const readables: number[] = [];
 
-       for (const inventoryUser of inventory.inventoryUsers) {
-      switch (inventoryUser.InventoryUserAccessRights) {
-        case InventoryUserAccess.OWNER:
-          owner = inventoryUser.user.id;
-          break;
-        case InventoryUserAccess.ADMIN:
-          admins.push(inventoryUser.user.id);
-          break;
-        case InventoryUserAccess.WRITE:
-          writeables.push(inventoryUser.user.id);
-          break;
-        case InventoryUserAccess.READ:
-          readables.push(inventoryUser.user.id);
-          break;
-        default:
-          throw new Error("mapUsers fallThrough error");
+    /**
+     * The uuid of the user
+     */
+    const myUuid = (await this.as.getUser()).user.uuid;
+
+    // Create an inventory updated event
+    const updateInventoryEvent = {
+      // Event metadata
+      inventoryUuid: inventory.uuid,
+      date: new Date(),
+      data: {
+        // Generic data
+        crudType: crudType.UPDATE,
+        itemType: itemType.INVENTORY,
+        uuid: inventory.uuid,
+        userUuid: myUuid,
+        // Core data
+        inventoryData: {
+          name: inventory.name,
+          ownerUuid: inventory.ownerUuid,
+          adminsUuids: inventory.adminUuids,
+          writeablesUuids: inventory.writeableUuids,
+          readablesUuids: inventory.readableUuids
+        }
       }
-    } */
+    } as Event;
 
-    return await this.http
-      .put<Inventory>(this.baseUrl + "/inventories/" + inventory.id, inventory)
-      .toPromise();
+    // Append to the event log
+    await this.ess.appendEventToInventoryStream(updateInventoryEvent);
+
+    // Update the inventories projection
+    return this.updateInventoriesProjection(updateInventoryEvent);
   }
 
-  async deleteInventory(inventory: Inventory): Promise<unknown> {
-    const qRes: unknown = this.http
-      .delete<Inventory>(this.baseUrl + "/inventories/" + inventory.id)
-      .toPromise();
-    return qRes;
+  /**
+   * Updates the data of an inventory by generating and issuing an appropriate event
+   *
+   * @param inventory The inventory to be deleted
+   */
+  async deleteInventory(inventory: Inventory): Promise<Inventory> {
+    /**
+     * The uuid of the user
+     */
+    const myUuid = (await this.as.getUser()).user.uuid;
+
+    // Create an inventory deleted event
+    const deleteInventoryEvent = {
+      // Event metadata
+      inventoryUuid: inventory.uuid,
+      date: new Date(),
+      data: {
+        // Generic data
+        crudType: crudType.DELETE,
+        itemType: itemType.INVENTORY,
+        uuid: inventory.uuid,
+        userUuid: myUuid
+      }
+    } as Event;
+
+    // Append to the event log
+    await this.ess.appendEventToInventoryStream(deleteInventoryEvent);
+
+    // Update the inventories projection
+    return this.updateInventoriesProjection(deleteInventoryEvent);
   }
 }

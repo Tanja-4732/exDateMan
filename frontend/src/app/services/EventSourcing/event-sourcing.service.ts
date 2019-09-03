@@ -8,8 +8,8 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
-    // this.fetchInventoryEvents()
-    // this.getAllLocalEventStreams(); // TODO implement
+    this.fetchInventoryEvents();
+    this.getAllLocalEventStreams(); // TODO implement
   }
 
   /**
@@ -18,9 +18,16 @@ export class EventSourcingService {
   private static eventLogs: { [uuid: string]: Event[] } = {};
 
   /**
+   * Public accessor for the event log
+   */
+  get events(): { [uuid: string]: Event[] } {
+    return EventSourcingService.eventLogs;
+  }
+
+  /**
    * The API base url
    */
-  baseUrl: string = environment.baseUrl;
+  private baseUrl: string = environment.baseUrl;
 
   /**
    * Fetches an inventories event-log and parses it.
@@ -42,21 +49,14 @@ export class EventSourcingService {
    */
   public async appendEventToInventoryStream(event: Event): Promise<void> {
     try {
+      // Transmit the event to the server to be stored in the db
       const res: Event[] = await this.api
         .put<Event[]>(this.baseUrl + "/events/", event)
         .toPromise();
 
+      // After a successful transmission, the event gets appended to the local event log
       EventSourcingService.eventLogs[event.inventoryUuid].push(event);
     } catch (err) {}
-  }
-
-  getAllLocalEventStreams(): LocalEventStorage {
-    let les: LocalEventStorage;
-
-    les.inventories;
-    // TODO
-
-    return les;
   }
 }
 
@@ -88,7 +88,7 @@ interface LocalEventStorage {
 /**
  * The data structure of an event
  */
-interface Event {
+export interface Event {
   /**,
    * The date of the event
    */
