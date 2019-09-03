@@ -101,8 +101,8 @@ import { environment } from "../environments/environment";
     MatSlideToggleModule,
     ZXingScannerModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
-      // enabled: environment.production
-      enabled: true
+      enabled: environment.production
+      // enabled: true
     })
   ],
   providers: [],

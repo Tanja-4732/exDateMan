@@ -80,6 +80,10 @@ export class Authentication {
       Authentication.logout(req, res),
     );
 
+    this.routes.get("/status", (req: Request, res: Response) =>
+      this.getStatus(req, res),
+    );
+
     // Setup JWT keys
     this.getJwtKeys();
   }
@@ -249,6 +253,58 @@ export class Authentication {
       .status(200)
       .json({ message: "Logout successful" });
     return;
+  }
+
+  /**
+   * Handles login-status-check requests
+   */
+  private async getStatus(req: Request, res: Response) {
+    // Check for missing cookie
+    if (req.cookies.JWT == undefined) {
+      res.status(401).json({ authorized: false, reason: "Missing JWT cookie" });
+      return;
+    }
+
+    /**
+     * The format of the data coming back from jwt.verify(jwt, pub_key)
+     */
+    type parsedJWT = {
+      iat: number;
+      exp: number;
+      sub: string;
+    };
+
+    /**
+     * The parsed (and verified) JWT
+     */
+    let verified: parsedJWT;
+    try {
+      verified = jwt.verify(req.cookies.JWT, this.JWT_PUBLIC_KEY) as parsedJWT;
+    } catch (err) {
+      res.status(400).json({ authorized: false, reason: "JWT invalid" });
+      return;
+    }
+
+    /**
+     * The user from the projection
+     */
+    const user = this.es.users.find((user: User) => {
+      // Find the user in the projection with a matching email
+      return user.uuid === verified.sub;
+    });
+
+    // Check for not logged in requests
+    if (user == undefined) {
+      res.status(401).json({ authorized: false, reason: "No such user" });
+      return;
+    }
+
+    // Remove sensitive data
+    delete user.saltedPwdHash;
+    delete user.totpSecret;
+
+    // Send logged in user data
+    res.json({ authorized: true, user });
   }
 
   //

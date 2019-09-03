@@ -38,7 +38,7 @@ export class EventSourcingService {
   public async appendEventToInventoryStream(event: Event): Promise<void> {
     try {
       const res: Event[] = await this.api
-        .put<Event[]>(this.baseUrl + "/events/" + event.inventoryUuid, event)
+        .put<Event[]>(this.baseUrl + "/events/", event)
         .toPromise();
 
       EventSourcingService.eventLogs[event.inventoryUuid].push(event);

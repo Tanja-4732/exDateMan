@@ -16,13 +16,15 @@ export class Events {
     // Get the events of one inventory
     this.routes.get(
       "/:inventoryUuid",
-      this.checkFor0,
+      this.checkForManagementEventLogs,
       (req: Request, res: Response) => this.getInventoryEvents(req, res),
     );
 
     // Add an event to an inventory
-    this.routes.post("/", this.checkFor0, (req: Request, res: Response) =>
-      this.appendInventoryEvent(req, res),
+    this.routes.post(
+      "/",
+      this.checkForManagementEventLogs,
+      (req: Request, res: Response) => this.appendInventoryEvent(req, res),
     );
 
     // Return an error for an empty get
@@ -30,9 +32,13 @@ export class Events {
   }
 
   /**
-   * Check for the management inventory uuids
+   * Check for the management inventory uuids, and deny access to them
    */
-  private checkFor0(req: Request, res: Response, next: NextFunction) {
+  private checkForManagementEventLogs(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     if (
       req.body.inventoryUuid == ServerEvents.authorizationEventStreamUuid ||
       req.body.inventoryUuid == ServerEvents.authenticationEventStreamUuid
@@ -96,9 +102,9 @@ export class Events {
         VALUES ($1, $2, $3)
         `,
         [
-          req.params.inventoryUuid,
-          (req.body as ev).date,
-          (req.body as ev).data,
+          (req.body as Event).inventoryUuid,
+          (req.body as Event).date,
+          (req.body as Event).data,
         ],
       );
 
@@ -116,18 +122,172 @@ export class Events {
 }
 
 /**
- * How a transmitted event should look like
+ * The data structure of an event
  */
-interface ev {
-  /**
-   * The date (as an ISO string) at which the event occurred
+interface Event {
+  /**,
+   * The date of the event
    */
-  date: string;
+  date: Date;
 
   /**
-   * Data about the inventory
+   * The uuid of the inventory-event-stream this event belongs to
    */
-  data: {};
+  inventoryUuid: string;
 
-  // TODO add the userId to the event
+  /**
+   * The data of the event
+   */
+  data: {
+    /**
+     * The uuid of the item this event is about
+     * This information is redundant (but still required) on inventory events
+     */
+    uuid: string;
+
+    /**
+     * The uuid of the user who issued this event
+     */
+    userUuid: string;
+
+    /**
+     * Defines what type of item is this event about
+     */
+    itemType: itemType;
+
+    /**
+     * Defines what type of operation was performed
+     */
+    crudType: crudType;
+
+    /**
+     * The inventory-specific data (if this event is about an inventory)
+     */
+    inventoryData?: {
+      /**
+       * The name of this inventory
+       */
+      name?: string;
+
+      /**
+       * The uuid of the owner of this inventory
+       */
+      ownerUuid?: string;
+
+      /**
+       * An array of users who have the admin privilege for this inventory
+       */
+      adminsUuids?: string[];
+
+      /**
+       * An array of user uuids who have the write privilege for this inventory
+       */
+      writeablesUuids?: string[];
+
+      /**
+       * An array of user uuids who have the read privilege for this inventory
+       */
+      readablesUuids?: string[];
+
+      /**
+       * The date of the creation of this inventory
+       *
+       * This field may only be set in an inventory-created event
+       */
+      createdOn?: Date;
+    };
+    /**
+     * The category-specific data (if this event is about a category)
+     */
+    categoryData?: {
+      /**
+       * The name of the category
+       */
+      name?: string;
+
+      /**
+       * The parent-category of this category
+       *
+       * Top-level categories are their own parent
+       */
+      parentUuid?: string;
+
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
+
+    /**
+     * The thing-specific data (if this event is about a thing)
+     */
+    thingData?: {
+      /**
+       * The name of the thing
+       */
+      name: string;
+
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
+
+    /**
+     * The stock-specific data (if this event is about a stock)
+     */
+    stockData?: {
+      /**
+       * The expiration date of the stock
+       */
+      exDate?: Date;
+
+      /**
+       * How many days after the opening of this stock is it still usable?
+       */
+      useUpIn?: number;
+
+      /**
+       * Text description of the quantity of the stock
+       */
+      quantity?: string;
+
+      /**
+       * When was this stock opened?
+       */
+      openedOn: Date;
+
+      /**
+       * The date of the creation of this category
+       *
+       * This field may only be set in an category-created event
+       */
+      createdOn?: Date;
+    };
+  };
+}
+
+/**
+ * Used to describe on which type of item an operation was performed on
+ */
+enum itemType {
+  INVENTORY = "inventory",
+  CATEGORY = "category",
+  THING = "thing",
+  STOCK = "stock",
+}
+
+/**
+ * Used to describe which type of operation was performed
+ *
+ * (read is excluded from this list since it doesn't affect the data)
+ */
+enum crudType {
+  CREATE = "create",
+  UPDATE = "update",
+  DELETE = "delete",
 }

@@ -73,9 +73,7 @@
                 }
               ],
               "baseHref": "/",
-              "sourceMap": true,
-              "serviceWorker": true,
-              "ngswConfigPath": "ngsw-config.json"
+              "sourceMap": true
             }
           }
         },
