@@ -17,6 +17,9 @@ import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { AccountComponent } from "./components/account/account.component";
 import { ScanCodeComponent } from "./components/scan-code/scan-code.component";
 import { EventsComponent } from "./components/events/events.component";
+import { CategoriesComponent } from "./components/categories/categories.component";
+import { AddCategoryComponent } from "./components/add-category/add-category.component";
+import { EditCategoryComponent } from "./components/edit-category/edit-category.component";
 
 const routes: Routes = [
   // Default route
@@ -57,24 +60,38 @@ const routes: Routes = [
       { path: "", component: InventoriesComponent },
       { path: "new", component: AddInventoryComponent },
       {
-        path: ":inventoryId",
+        path: ":inventoryUuid",
         children: [
           { path: "", component: EditInventoryComponent },
+
+          // Categories
+          {
+            path: "categories",
+            children: [
+              { path: "", component: CategoriesComponent },
+              { path: "new", component: AddCategoryComponent },
+              { path: ":categoryUuid", component: EditCategoryComponent }
+            ]
+          },
+
+          // Things
           {
             path: "things",
             children: [
               { path: "", component: ThingsComponent },
               { path: "new", component: AddThingComponent },
               {
-                path: ":thingNumber",
+                path: ":thingUuid",
                 children: [
                   { path: "", component: EditThingComponent },
+
+                  // Stocks
                   {
                     path: "stocks",
                     children: [
                       { path: "", component: StocksComponent },
                       { path: "new", component: AddStockComponent },
-                      { path: ":stockNumber", component: EditStockComponent }
+                      { path: ":stockUuid", component: EditStockComponent }
                     ]
                   }
                 ]

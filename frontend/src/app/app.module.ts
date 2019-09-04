@@ -49,6 +49,10 @@ import { SideNavComponent } from "./components/side-nav/side-nav.component";
 import { EventsComponent } from "./components/events/events.component";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
+import { CategoriesComponent } from "./components/categories/categories.component";
+import { EditCategoryComponent } from "./components/edit-category/edit-category.component";
+import { AddCategoryComponent } from "./components/add-category/add-category.component";
+import { CategoryCardComponent } from "./components/category-card/category-card.component";
 
 @NgModule({
   declarations: [
@@ -73,7 +77,11 @@ import { environment } from "../environments/environment";
     AccountComponent,
     ScanCodeComponent,
     SideNavComponent,
-    EventsComponent
+    EventsComponent,
+    CategoriesComponent,
+    EditCategoryComponent,
+    AddCategoryComponent,
+    CategoryCardComponent
   ],
   imports: [
     BrowserModule,

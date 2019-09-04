@@ -48,7 +48,8 @@ export class ExdatemanApplication {
     ExdatemanApplication._ao = new Authorization();
 
     // Mount the API routes
-    this.routes.use("/events", ExdatemanApplication._ce.routes);
-    this.routes.use("/authentication", ExdatemanApplication._ae.routes);
+    this.routes.use("/events", ExdatemanApplication.ce.routes);
+    this.routes.use("/authentication", ExdatemanApplication.ae.routes);
+    this.routes.use("/authorization", ExdatemanApplication.ao.routes);
   }
 }

@@ -37,11 +37,6 @@ export class EditInventoryComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  owner: User;
-  admins: User[] = [];
-  writeables: User[] = [];
-  readables: User[] = [];
-
   inventory: Inventory = {} as Inventory;
 
   ownerEmail: FormControl = new FormControl("", [
@@ -66,99 +61,9 @@ export class EditInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.inventory.uuid = this.route.snapshot.params.inventoryId;
-    this.getInventory().then(() => {
-      setTimeout(() => {
-        if (this.unauthorized) {
-          this.router.navigate(["/login"]);
-        }
-      }, 3000);
-      this.mapUsers();
-    });
-  }
-
-  /**
-   * Map the inventories users to the local arrays
-   *
-   * @memberof EditInventoryComponent
-   */
-  mapUsers(): void {
-    for (const inventoryUser of this.inventory.inventoryUsers) {
-      switch (inventoryUser.InventoryUserAccessRights) {
-        case InventoryUserAccess.OWNER:
-          this.owner = inventoryUser.user;
-          break;
-        case InventoryUserAccess.ADMIN:
-          this.admins.push(inventoryUser.user);
-          break;
-        case InventoryUserAccess.WRITE:
-          this.writeables.push(inventoryUser.user);
-          break;
-        case InventoryUserAccess.READ:
-          this.readables.push(inventoryUser.user);
-          break;
-        default:
-          throw new Error("mapUsers fallThrough error");
-      }
-    }
-  }
-
-  /**
-   * Write the users from the local arrays to the inventory
-   *
-   * @memberof EditInventoryComponent
-   */
-  reverseMapUsers(): void {
-    const inventoryUsers: InventoryUser[] = [];
-
-    inventoryUsers.push({
-      user: this.owner,
-      InventoryUserAccessRights: InventoryUserAccess.OWNER
-    });
-
-    for (const admin of this.admins) {
-      inventoryUsers.push({
-        user: admin,
-        InventoryUserAccessRights: InventoryUserAccess.ADMIN
-      });
-    }
-
-    for (const writeable of this.writeables) {
-      inventoryUsers.push({
-        user: writeable,
-        InventoryUserAccessRights: InventoryUserAccess.WRITE
-      });
-    }
-
-    for (const readable of this.readables) {
-      inventoryUsers.push({
-        user: readable,
-        InventoryUserAccessRights: InventoryUserAccess.READ
-      });
-    }
-
-    this.inventory.inventoryUsers = inventoryUsers;
-  }
-
-  async getInventory(): Promise<void> {
-    try {
-      this.inventory = await this.is.getInventory(this.inventory.uuid);
-
-      this.loading = false;
-    } catch (error) {
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in inventories while fetching");
-      }
-    }
+    this.inventory = this.is.inventories[
+      this.route.snapshot.params.inventoryUuid
+    ];
   }
 
   onEditInventory(): void {
@@ -170,25 +75,7 @@ export class EditInventoryComponent implements OnInit {
   }
 
   async updateInventory(): Promise<void> {
-    try {
-      this.reverseMapUsers();
-      await this.is.updateInventory(this.inventory);
-      this.oof = false;
-    } catch (error) {
-      this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in inventories while updating");
-      }
-    }
+    // TODO implement
   }
 
   onDeleteInventory(): void {

@@ -8,14 +8,15 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
-    this.fetchInventoryEvents();
-    this.getAllLocalEventStreams(); // TODO implement
+    if (EventSourcingService.eventLogs == null) {
+      this.fetchAllInventoryEvents();
+    }
   }
 
   /**
    * The event-logs (every inventory has its own)
    */
-  private static eventLogs: { [uuid: string]: Event[] } = {};
+  private static eventLogs: { [uuid: string]: Event[] };
 
   /**
    * Public accessor for the event log
@@ -29,12 +30,24 @@ export class EventSourcingService {
    */
   private baseUrl: string = environment.baseUrl;
 
+  private async fetchAllInventoryEvents() {
+    const accessibleUuids = await this.api
+      .get<string[]>(this.baseUrl + "/authorization/accessibleInventoryUuids")
+      .toPromise();
+
+    for (const inventoryUuid of accessibleUuids) {
+      this.fetchSingleInventoryEvents(inventoryUuid);
+    }
+  }
+
   /**
-   * Fetches an inventories event-log and parses it.
+   * Fetches an inventories event-log and parses it
    *
    * @param inventoryUuid The uuid of the inventory to be fetched
    */
-  private async fetchInventoryEvents(inventoryUuid: string): Promise<void> {
+  private async fetchSingleInventoryEvents(
+    inventoryUuid: string
+  ): Promise<void> {
     const res: Event[] = await this.api
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();

@@ -9,7 +9,7 @@ export class ClientEvents {
   private static singletonFlag = false;
 
   /**
-   * The template routes
+   * The ClientEvents routes
    */
   public routes: Router;
 
@@ -143,7 +143,7 @@ export class ClientEvents {
   /**
    * Gets all inventory uuids (with event logs) from the db
    */
-  private async getAllInventoryUuids(): Promise<string[]> {
+  public async getAllInventoryUuids(): Promise<string[]> {
     return (await (await db()).query(
       `
       SELECT stream_id

@@ -1,7 +1,8 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { ClientEvents, InventoryEvent, itemType } from "./client-events";
+import { InventoryEvent, itemType } from "./client-events";
 import { error } from "console";
 import { crudType } from "./authentication";
+import { ExdatemanApplication } from "./application";
 
 /**
  * Handles JWT checks and tests if a user is authorized to access a resource
@@ -10,6 +11,11 @@ import { crudType } from "./authentication";
  */
 export class Authorization {
   private static singletonFlag = false;
+
+  /**
+   * The Authorization routes
+   */
+  public routes: Router;
 
   /**
    * The current state of inventories (a projection from the event logs)
@@ -21,6 +27,47 @@ export class Authorization {
     if (Authorization.singletonFlag) {
       throw new Error("An Authorization instance already exists.");
     } else Authorization.singletonFlag = true;
+
+    // Instantiate the router
+    this.routes = Router();
+
+    // Get the events of one inventory
+    this.routes.get(
+      "/accessibleInventoryUuids",
+      (req: Request, res: Response) =>
+        this.handleGetAllAccessibleInventoryUuids(req, res),
+    );
+  }
+
+  /**
+   * Handles API requests to get all inventoryUuids a user has access to
+   */
+  private async handleGetAllAccessibleInventoryUuids(
+    req: Request,
+    res: Response,
+  ): Promise<any> {
+    try {
+      // Get the userUuid
+      const userUuid = ExdatemanApplication.ae.verifyJWT(req.cookies.JWT).sub;
+
+      // Initiate an empty array
+      const accessibleInventoryUuids: string[] = [];
+
+      // Iterate over all inventoryUuids
+      for (const uuid of await ExdatemanApplication.ce.getAllInventoryUuids()) {
+        // Check if the user has read access
+        if (this.checkReadAccess(uuid, userUuid))
+          // Append the uuid to the array
+          accessibleInventoryUuids.push(uuid);
+      }
+
+      // Send the array back
+      res.json(accessibleInventoryUuids);
+      return;
+    } catch (err) {
+      res.sendStatus(400);
+      return;
+    }
   }
 
   /**
