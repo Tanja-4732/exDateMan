@@ -1,44 +1,27 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { readFileSync } from "fs";
 import * as jwt from "jsonwebtoken";
-import { ServerEvents, crudType } from "./server-events";
+import { ServerEvents, UserEvent } from "./server-events";
 import { hash, compareSync, hashSync, genSaltSync } from "bcrypt";
 import { v4 } from "uuid";
 import { log, error } from "console";
 import { totp } from "speakeasy";
 import { inspect } from "util";
-
-/**
- * The structure of the state of a user
- */
-export interface User {
-  /**
-   * Identifies the user
-   */
-  uuid: string;
-
-  /**
-   * Used for login
-   */
-  email: string;
-
-  /**
-   * A salted hash of a users password
-   */
-  saltedPwdHash: string;
-
-  /**
-   * The TOTP secret used to generate TOTP codes (used for 2FA)
-   */
-  totpSecret: string | null;
-
-  /**
-   * A friendly name for the user
-   */
-  name: string;
-}
+import { ExdatemanApplication } from "./application";
 
 export class Authentication {
+  /**
+   * The current state of users (projection from authenticationEventLog)
+   */
+  private static usersProjection: User[] = [];
+
+  /**
+   * The current state of users (projection from authenticationEventLog)
+   */
+  public get users(): User[] {
+    return Authentication.usersProjection;
+  }
+
   /**
    * The authentication routes
    */
@@ -54,20 +37,11 @@ export class Authentication {
    */
   private JWT_PUBLIC_KEY: string | Buffer;
 
-  /**
-   * A serverEvents instance
-   */
-  private es: ServerEvents;
-
   constructor() {
-    // Prepare a ServerEvents instance
-    this.es = new ServerEvents();
-
     // Instantiate the router
     this.routes = Router();
 
     // Mount the routes
-    // Authentication
     this.routes.post("/login", (req: Request, res: Response) =>
       this.login(req, res),
     );
@@ -117,7 +91,7 @@ export class Authentication {
       /**
        * The saltedPwdHash from the users projection
        */
-      let user = this.es.users.find((user: User) => {
+      let user = this.users.find((user: User) => {
         // Find the user in the projection with a matching email
         return user.email === req.body.email;
       });
@@ -166,7 +140,7 @@ export class Authentication {
   private async register(req: Request, res: Response) {
     // Check for duplicate email
     if (
-      this.es.users.find((user: User) => {
+      Authentication.usersProjection.find((user: User) => {
         return user.email === req.body.email;
       })
     ) {
@@ -266,20 +240,11 @@ export class Authentication {
     }
 
     /**
-     * The format of the data coming back from jwt.verify(jwt, pub_key)
-     */
-    type parsedJWT = {
-      iat: number;
-      exp: number;
-      sub: string;
-    };
-
-    /**
      * The parsed (and verified) JWT
      */
     let verified: parsedJWT;
     try {
-      verified = jwt.verify(req.cookies.JWT, this.JWT_PUBLIC_KEY) as parsedJWT;
+      verified = this.verifyJWT(req.cookies.JWT);
     } catch (err) {
       res.status(400).json({ authorized: false, reason: "JWT invalid" });
       return;
@@ -290,7 +255,7 @@ export class Authentication {
      */
     const user = Object.assign(
       {},
-      this.es.users.find((user: User) => {
+      Authentication.usersProjection.find((user: User) => {
         // Find the user in the projection with a matching email
         return user.uuid === verified.sub;
       }),
@@ -308,6 +273,58 @@ export class Authentication {
 
     // Send logged in user data
     res.json({ authorized: true, user });
+  }
+
+  /**
+   * Verifies a JWT against the public key and returns its contents
+   *
+   * @param jwtString The JWT to be verified
+   */
+  verifyJWT(jwtString: string): parsedJWT {
+    return jwt.verify(jwtString, this.JWT_PUBLIC_KEY) as parsedJWT;
+  }
+
+  /**
+   * Updates the projection, one event at a time
+   *
+   * @param event The event to be used to update the projection with
+   */
+  public static updateUsersProjection(event: UserEvent) {
+    const index = Authentication.usersProjection.findIndex(
+      (user: User) => user.uuid === event.data.userUuid,
+    );
+
+    switch (event.data.crudType) {
+      case crudType.CREATE:
+        Authentication.usersProjection.push({
+          uuid: event.data.userUuid,
+          email: event.data.email,
+          saltedPwdHash: event.data.saltedPwdHash,
+          totpSecret: event.data.totpSecret,
+          name: event.data.name,
+        });
+        break;
+
+      case crudType.UPDATE:
+        // Make temporary object
+        var temp = {
+          email: event.data.email,
+          name: event.data.name,
+          saltedPwdHash: event.data.saltedPwdHash,
+          totpSecret: event.data.totpSecret,
+        } as User;
+
+        // Delete all null values
+        Object.keys(temp).forEach(key => temp[key] == null && delete temp[key]);
+
+        // Assign the changed values
+        Object.assign(Authentication.usersProjection[index], temp);
+        break;
+
+      case crudType.DELETE:
+        Authentication.usersProjection.splice(index, 1);
+        break;
+    }
   }
 
   //
@@ -600,4 +617,64 @@ export class Authentication {
   // // Return auth details on success
   // AccountController.getAuthDetails(req, res);
   // }
+}
+
+/**
+ * The structure of the state of a user
+ */
+export interface User {
+  /**
+   * Identifies the user
+   */
+  uuid: string;
+
+  /**
+   * Used for login
+   */
+  email: string;
+
+  /**
+   * A salted hash of a users password
+   */
+  saltedPwdHash: string;
+
+  /**
+   * The TOTP secret used to generate TOTP codes (used for 2FA)
+   */
+  totpSecret: string | null;
+
+  /**
+   * A friendly name for the user
+   */
+  name: string;
+}
+
+/**
+ * Used to describe on which type of item an operation was performed on
+ */
+enum itemType {
+  INVENTORY = "inventory",
+  CATEGORY = "category",
+  THING = "thing",
+  STOCK = "stock",
+}
+
+/**
+ * Used to describe which type of operation was performed
+ *
+ * (read is excluded from this list since it doesn't affect the data)
+ */
+export enum crudType {
+  CREATE = "create",
+  UPDATE = "update",
+  DELETE = "delete",
+}
+
+/**
+ * The format of the data coming back from jwt.verify(jwt, pub_key)
+ */
+export interface parsedJWT {
+  iat: number;
+  exp: number;
+  sub: string;
 }

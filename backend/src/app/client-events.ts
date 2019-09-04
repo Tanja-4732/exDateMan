@@ -2,14 +2,37 @@ import { Router, Request, Response, NextFunction } from "express";
 import { log, error } from "console";
 import db from "./db";
 import { ServerEvents } from "./server-events";
+import { ExdatemanApplication } from "./application";
+import { crudType } from "./authentication";
 
-export class Events {
+export class ClientEvents {
+  private static singletonFlag = false;
+
   /**
    * The template routes
    */
   public routes: Router;
 
+  /**
+   * The event-logs (every inventory has its own)
+   */
+  private static eventLogs: { [uuid: string]: InventoryEvent[] } = {};
+
+  /**
+   * Public accessor for the event log
+   */
+  get events(): { [uuid: string]: InventoryEvent[] } {
+    return ClientEvents.eventLogs;
+  }
+
   constructor() {
+    // Enforce singleton
+    if (ClientEvents.singletonFlag) {
+      throw new Error("A ClientEvents instance already exists.");
+    } else ClientEvents.singletonFlag = true;
+
+    this.fetchAllInventoryEvents();
+
     // Instantiate the router
     this.routes = Router();
 
@@ -17,32 +40,53 @@ export class Events {
     this.routes.get(
       "/:inventoryUuid",
       this.checkForManagementEventLogs,
-      (req: Request, res: Response) => this.getInventoryEvents(req, res),
+      (req: Request, res: Response) =>
+        this.handleGetInventoryEventsRequest(req, res),
     );
 
     // Add an event to an inventory
     this.routes.post(
       "/",
       this.checkForManagementEventLogs,
-      (req: Request, res: Response) => this.appendInventoryEvent(req, res),
+      (req: Request, res: Response) =>
+        this.handleAppendInventoryEventRequest(req, res),
     );
-
-    // Return an error for an empty get
-    this.routes.get("/", this.emptyGet);
   }
 
   /**
-   * Check for the management inventory uuids, and deny access to them
+   * Fetches all events of every inventory from the db and parses them
+   *
+   * This method is called in the ClientEvents constructor.
+   */
+  private async fetchAllInventoryEvents() {
+    /**
+     * A list of all uuids of inventories
+     */
+    const inventoryUuids = await this.getAllInventoryUuids();
+
+    // Iterate over all inventory uuids
+    for (const inventoryUuid of inventoryUuids) {
+      // Get the events of that inventory
+      ClientEvents.eventLogs[inventoryUuid] = await this.getInventoryEvents(
+        inventoryUuid,
+      );
+
+      // Apply the events inside of the Authorization instance
+      ExdatemanApplication.ao.applyInventory(
+        ClientEvents.eventLogs[inventoryUuid],
+      );
+    }
+  }
+
+  /**
+   * Check for the management event stream uuid, and deny access to it
    */
   private checkForManagementEventLogs(
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
-    if (
-      req.body.inventoryUuid == ServerEvents.authorizationEventStreamUuid ||
-      req.body.inventoryUuid == ServerEvents.authenticationEventStreamUuid
-    ) {
+    if (req.body.inventoryUuid == ServerEvents.userEventLogUuid) {
       res.status(403).json({
         message: "You may not access that",
         oof: true,
@@ -52,61 +96,23 @@ export class Events {
       next();
     }
   }
-  /**
-   * Returns an error when the events of all inventories are requested
-   */
-  private emptyGet(req: Request, res: Response) {
-    res
-      .status(400)
-      .json({ error: "Cannot get events of all inventories at once" });
-  }
 
-  private async getInventoryEvents(req: Request, res: Response) {
-    // Deny access to management event-logs
-
-    // TODO check for read access #99
-
+  private async handleGetInventoryEventsRequest(req: Request, res: Response) {
     try {
+      // Check for read access
+      if (
+        !ExdatemanApplication.ao.checkReadAccess(
+          req.params.inventoryUuid,
+          ExdatemanApplication.ae.verifyJWT(req.cookies.JWT).sub,
+        )
+      ) {
+        // Unauthorized
+        res.sendStatus(401);
+        return;
+      }
+
       // Get the events from the db
-      const result = await (await db()).query(
-        `
-        SELECT date, data
-          FROM ${process.env.EDM_DB_SCHEMA}.events
-        WHERE stream_id = $1
-        ORDER BY date ASC;
-        `,
-        [req.params.inventoryUuid],
-      );
-
-      // Send the events back
-      res.json(result.rows);
-    } catch (err) {
-      error(err);
-      res.status(400).json({
-        message: "That didn't work",
-        oof: true,
-      });
-      return;
-    }
-  }
-
-  private async appendInventoryEvent(req: Request, res: Response) {
-    // TODO check for write access #99
-
-    try {
-      // Get the events from the db
-      const result = await (await db()).query(
-        `
-        INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
-         (stream_id, date, data)
-        VALUES ($1, $2, $3)
-        `,
-        [
-          (req.body as Event).inventoryUuid,
-          (req.body as Event).date,
-          (req.body as Event).data,
-        ],
-      );
+      const result = this.getInventoryEvents(req.params.inventoryUuid);
 
       // Send the events back
       res.json(result);
@@ -119,12 +125,92 @@ export class Events {
       return;
     }
   }
+
+  private async getInventoryEvents(
+    inventoryUuid: string,
+  ): Promise<InventoryEvent[]> {
+    return (await (await db()).query(
+      `
+      SELECT date, data
+        FROM ${process.env.EDM_DB_SCHEMA}.events
+      WHERE stream_id = $1
+      ORDER BY date ASC;
+      `,
+      [inventoryUuid],
+    )).rows;
+  }
+
+  /**
+   * Gets all inventory uuids (with event logs) from the db
+   */
+  private async getAllInventoryUuids(): Promise<string[]> {
+    return (await (await db()).query(
+      `
+      SELECT stream_id
+        FROM ${process.env.EDM_DB_SCHEMA}.events
+      WHERE stream_id != $1
+      GROUP BY stream_id;
+      `,
+      [ServerEvents.userEventLogUuid],
+    )).rows;
+  }
+
+  private async handleAppendInventoryEventRequest(req: Request, res: Response) {
+    try {
+      // Check for authorization
+      if (
+        !ExdatemanApplication.ao.checkEventLegitimacy(
+          req.body,
+          ExdatemanApplication.ae.verifyJWT(req.cookies.JWT).sub,
+        )
+      ) {
+        // Unauthorized
+        res.sendStatus(401);
+        return;
+      }
+
+      // Append the event
+      const result = await this.appendInventoryEvent(req.body);
+
+      // If the item is about an inventory...
+      if ((req.body as InventoryEvent).data.itemType == itemType.INVENTORY)
+        // ...update the inventory projection
+        ExdatemanApplication.ao.updateInventoriesProjection(req.body);
+
+      // Send the events back
+      res.json(result);
+    } catch (err) {
+      error(err);
+      res.status(400).json({
+        message: "That didn't work",
+        oof: true,
+      });
+      return;
+    }
+  }
+
+  private async appendInventoryEvent(event: InventoryEvent) {
+    // Write the event to the db
+    const result = await (await db()).query(
+      `
+      INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
+       (stream_id, date, data)
+      VALUES ($1, $2, $3)
+      `,
+      [event.inventoryUuid, event.date, event.data],
+    );
+
+    // Write the event to the local cache
+    ClientEvents.eventLogs[event.inventoryUuid].push(event);
+
+    return result.rows;
+  }
 }
 
 /**
  * The data structure of an event
  */
-interface Event {
+export interface InventoryEvent {
   /**,
    * The date of the event
    */
@@ -274,20 +360,9 @@ interface Event {
 /**
  * Used to describe on which type of item an operation was performed on
  */
-enum itemType {
+export enum itemType {
   INVENTORY = "inventory",
   CATEGORY = "category",
   THING = "thing",
   STOCK = "stock",
-}
-
-/**
- * Used to describe which type of operation was performed
- *
- * (read is excluded from this list since it doesn't affect the data)
- */
-enum crudType {
-  CREATE = "create",
-  UPDATE = "update",
-  DELETE = "delete",
 }
