@@ -155,6 +155,9 @@ export class ClientEvents {
     )).rows;
   }
 
+  /**
+   * Handles API requests to append an event to an inventory event log
+   */
   private async handleAppendInventoryEventRequest(req: Request, res: Response) {
     try {
       // Check for authorization

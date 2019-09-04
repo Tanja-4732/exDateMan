@@ -121,6 +121,12 @@ export class Authorization {
    * @param event The event to be used to update the projection with
    */
   public updateInventoriesProjection(event: InventoryEvent): Inventory {
+    // Make sure the event is about an inventory
+    if (event.data.itemType !== itemType.INVENTORY)
+      throw new Error(
+        "Cannot update inventoriesProjection with non-inventory event.",
+      );
+
     /**
      * The inventory to be created or updated (ignored for delete events)
      */
