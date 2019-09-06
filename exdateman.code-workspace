@@ -14,6 +14,24 @@
     }
   ],
   "settings": {
+    "editor.rulers": [80],
+    "editor.tabCompletion": "on",
+    "editor.tabSize": 2,
+    "editor.trimAutoWhitespace": true,
+    "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+
+    "files.exclude": {
+      "frontend": true,
+      "backend": true,
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true
+    },
+
     "cSpell.words": [
       "AGPL",
       "Booter",
@@ -27,16 +45,6 @@
       "readables",
       "sessionstorage",
       "writeables"
-    ],
-    "editor.formatOnSave": true,
-    "files.exclude": {
-      "frontend": true,
-      "backend": true,
-      "**/.git": true,
-      "**/.svn": true,
-      "**/.hg": true,
-      "**/CVS": true,
-      "**/.DS_Store": true
-    }
+    ]
   }
 }
