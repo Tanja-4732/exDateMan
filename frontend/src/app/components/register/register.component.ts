@@ -43,15 +43,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onRegister(): void {
-    this.register().then(() => {
-      if (!this.oof) {
-        this.router.navigate(["/inventories"], { relativeTo: this.route });
-      }
-    });
-  }
-
-  async register(): Promise<void> {
+  async onRegister(): Promise<void> {
     this.emailAddress = this.form.value.email;
     try {
       await this.as.register(
@@ -61,6 +53,7 @@ export class RegisterComponent implements OnInit {
       );
       this.oof = false;
       this.emailInUse = false;
+      this.router.navigate(["/inventories"], { relativeTo: this.route });
     } catch (error) {
       this.oof = true;
       this.emailInUse = error.error.error === "Email already in use";

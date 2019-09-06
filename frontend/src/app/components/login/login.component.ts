@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { AuthService, LoginResponse } from "../../services/auth/auth.service";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-login",
@@ -8,42 +9,47 @@ import { AuthService, LoginResponse } from "../../services/auth/auth.service";
   styleUrls: ["./login.component.scss"]
 })
 export class LoginComponent implements OnInit {
-  email: string;
-  password: string;
-  tfaToken: string;
+  /**
+   * Error flag
+   */
+  oof = false;
 
-  // true, when the login data was incorrect
-  oof: boolean = false;
+  form: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
-    private auth: AuthService,
+    private as: AuthService,
+    private fb: FormBuilder,
     private router: Router
   ) {
-    this.email = this.route.snapshot.params["email"];
+    this.createForm();
+    this.form.patchValue({ email: this.route.snapshot.params.email });
   }
 
-  ngOnInit() {
-    // try {
-    //   this.router.navigate(["/inventories"]);
-    // } catch (err) {
-    //   this.oof = true;
-    // }
+  createForm(): void {
+    this.form = this.fb.group({
+      email: ["", [Validators.required]],
+      pwd: ["", [Validators.required]],
+      totp: ["", [Validators.maxLength(6)]]
+    });
   }
+
+  ngOnInit() {}
 
   async onLogin(): Promise<void> {
-    this.auth
-      .login(this.email, this.password, this.tfaToken)
-      .then((response: LoginResponse) => {
-        if (response.status === 200) {
-          this.oof = false;
-          this.router.navigate(["/inventories"]);
-        } else {
-          this.oof = true;
-        }
-      })
-      .catch(() => {
-        this.oof = true;
-      });
+    try {
+      await this.as.login(
+        this.form.value.email,
+        this.form.value.pwd,
+        this.form.value.totp
+      );
+      this.oof = false;
+
+      this.router.navigate(["/inventories"], { relativeTo: this.route });
+    } catch (error) {
+      this.oof = true;
+
+      console.error(error);
+    }
   }
 }

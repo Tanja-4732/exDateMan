@@ -14,30 +14,30 @@ export class InventoriesComponent implements OnInit {
   loading = true;
   unauthorized = false;
 
-  constructor(private inv: InventoryService, private router: Router) {}
+  constructor(private is: InventoryService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadInventories().then();
-    setTimeout(() => {
-      if (this.unauthorized) {
-        this.router.navigate(["/login"]);
-      }
-    }, 3000);
+    this.loadInventories();
   }
-
-  onAddInventory(): void {}
 
   async loadInventories(): Promise<void> {
     try {
-      this.inventories = Object.keys(this.inv.inventories).map(
-        (key: string) => this.inv.inventories[key]
+      console.log("Get the inventories");
+      console.log(this.is.inventories);
+
+      this.inventories = Object.keys(this.is.inventories).map(
+        (key: string) => this.is.inventories[key]
       );
       this.loading = false;
+      console.log("Got the inventories");
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
         if (error.status === 401) {
           // Set flag for html change and timeout above
           this.unauthorized = true;
+          setTimeout(() => {
+            this.router.navigate(["/login"]);
+          }, 3000);
         } else {
           console.log("Unknown error in inventories while fetching");
         }

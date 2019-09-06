@@ -83,16 +83,16 @@ export class AccountComponent implements OnInit {
 
   async save(): Promise<void> {
     try {
-      this.error = await this.as.saveUser({
-        uuid: this.user.uuid,
-        name: this.form.value.name,
-        email: this.form.value.email,
-        pwd: this.form.value.passwords.password,
-        tfaToken: this.form.value.tfa,
-        tfaEnabled: this.user.tfaEnabled
-          ? this.form.value.use2FA
-          : this.form.value.tfa !== ""
-      });
+      // this.error = await this.as.saveUser({
+      //   uuid: this.user.uuid,
+      //   name: this.form.value.name,
+      //   email: this.form.value.email,
+      //   pwd: this.form.value.passwords.password,
+      //   tfaToken: this.form.value.tfa,
+      //   tfaEnabled: this.user.tfaEnabled
+      //     ? this.form.value.use2FA
+      //     : this.form.value.tfa !== ""
+      // });
       this.oof = false;
     } catch (error) {
       this.error = error.error.error; // This works

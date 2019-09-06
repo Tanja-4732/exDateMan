@@ -73,7 +73,9 @@ export class AuthService {
       .toPromise();
   }
 
-  async saveUser(user: User): Promise<{ status: string; user: User }> {
+  async saveUser(
+    user: RegisterRequest
+  ): Promise<{ status: string; user: User }> {
     return await this.http
       .put<{ status: string; user: User }>(this.baseUrl + "/account", user)
       .toPromise();

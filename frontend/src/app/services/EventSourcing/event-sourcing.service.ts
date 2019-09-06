@@ -8,8 +8,14 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
+    console.log("Construct some EventSourcingService");
+
     if (EventSourcingService.eventLogs == null) {
+      console.log("Do fetchAllInventoryEvents");
       this.fetchAllInventoryEvents();
+      console.log("Did fetchAllInventoryEvents");
+    } else {
+      console.log("Don't fetchAllInventoryEvents");
     }
   }
 
@@ -30,13 +36,26 @@ export class EventSourcingService {
    */
   private baseUrl: string = environment.baseUrl;
 
+  /**
+   * Fetches a list of all accessible inventory uuids via the API
+   *
+   * Then it iterates over said list and fetches the events of each
+   */
   private async fetchAllInventoryEvents() {
+    // Initiate the eventLogs
+    EventSourcingService.eventLogs = {};
+
+    // Get a list of all accessible inventory uuids from the API
     const accessibleUuids = await this.api
       .get<string[]>(this.baseUrl + "/authorization/accessibleInventoryUuids")
       .toPromise();
 
+    console.log("accessibleUuids=" + accessibleUuids);
+
+    // Iterate over the list
     for (const inventoryUuid of accessibleUuids) {
-      this.fetchSingleInventoryEvents(inventoryUuid);
+      // Fetch the events from the inventory
+      await this.fetchSingleInventoryEvents(inventoryUuid);
     }
   }
 

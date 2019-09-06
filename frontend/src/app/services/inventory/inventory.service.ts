@@ -17,8 +17,14 @@ import { AuthService } from "../auth/auth.service";
 })
 export class InventoryService {
   constructor(private ess: EventSourcingService, private as: AuthService) {
+    console.log("Constructing some InventoryService");
+
     if (InventoryService.inventoriesProjection == null) {
+      console.log("Do fetchInventoryEvents");
       this.fetchInventoryEvents();
+      console.log("Did fetchInventoryEvents");
+    } else {
+      console.log("Don't fetchInventoryEvents");
     }
   }
 
@@ -26,6 +32,8 @@ export class InventoryService {
    * Public accessor for the inventories projection
    */
   get inventories(): { [uuid: string]: Inventory } {
+    console.log("Getting the inventories dict");
+
     return InventoryService.inventoriesProjection;
   }
 

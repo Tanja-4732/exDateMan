@@ -28,7 +28,6 @@ export class WelcomeComponent implements OnInit {
 
   async testLogin(): Promise<void> {
     try {
-      console.log("hello?");
       const res = await this.as.getUser();
       console.log(res);
 

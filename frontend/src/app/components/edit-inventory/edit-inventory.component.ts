@@ -179,7 +179,7 @@ export class EditInventoryComponent implements OnInit {
       let user: User;
       try {
         user = await this.us.getUser(value.trim());
-        this.admins.push(user);
+        this.inventory.adminUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
       }
@@ -193,10 +193,10 @@ export class EditInventoryComponent implements OnInit {
   }
 
   removeAdmin(admin: User): void {
-    const index: number = this.admins.indexOf(admin);
+    const index: number = this.inventory.adminUuids.indexOf(admin.uuid);
 
     if (index >= 0) {
-      this.admins.splice(index, 1);
+      this.inventory.adminUuids.splice(index, 1);
     }
   }
 
@@ -210,7 +210,7 @@ export class EditInventoryComponent implements OnInit {
       let user: User;
       try {
         user = await this.us.getUser(value.trim());
-        this.writeables.push(user);
+        this.inventory.writeableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
       }
@@ -224,10 +224,10 @@ export class EditInventoryComponent implements OnInit {
   }
 
   removeWriteable(writeable: User): void {
-    const index: number = this.writeables.indexOf(writeable);
+    const index: number = this.inventory.writeableUuids.indexOf(writeable.uuid);
 
     if (index >= 0) {
-      this.writeables.splice(index, 1);
+      this.inventory.writeableUuids.splice(index, 1);
     }
   }
 
@@ -241,7 +241,7 @@ export class EditInventoryComponent implements OnInit {
       let user: User;
       try {
         user = await this.us.getUser(value.trim());
-        this.readables.push(user);
+        this.inventory.readableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
       }
@@ -255,10 +255,10 @@ export class EditInventoryComponent implements OnInit {
   }
 
   removeReadable(readable: User): void {
-    const index: number = this.readables.indexOf(readable);
+    const index: number = this.inventory.readableUuids.indexOf(readable.uuid);
 
     if (index >= 0) {
-      this.readables.splice(index, 1);
+      this.inventory.readableUuids.splice(index, 1);
     }
   }
 }
