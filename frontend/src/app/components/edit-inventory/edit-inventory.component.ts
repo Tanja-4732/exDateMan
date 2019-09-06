@@ -23,6 +23,7 @@ export interface Fruit {
   styleUrls: ["./edit-inventory.component.scss"]
 })
 export class EditInventoryComponent implements OnInit {
+  // Lading & auth flags
   unauthorized = false;
   notFound = false;
   loading = true;
@@ -30,11 +31,15 @@ export class EditInventoryComponent implements OnInit {
   reallyDelete = false;
   userNotFound = false;
 
+  // Old flags // TODO revisit
   visible = true;
   selectable = false;
   removable = true;
   addOnBlur = true;
 
+  /**
+   * The keys which should separate the input values
+   */
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   inventory: Inventory = {} as Inventory;
@@ -44,6 +49,8 @@ export class EditInventoryComponent implements OnInit {
     Validators.email
   ]);
 
+  private owner: User;
+
   constructor(
     private is: InventoryService,
     private us: UserService,
@@ -52,6 +59,9 @@ export class EditInventoryComponent implements OnInit {
     private router: Router
   ) {}
 
+  /**
+   * Generate an error message for when the email field is invalid
+   */
   getErrorMessage(): string {
     return this.ownerEmail.hasError("required")
       ? "You must enter a value"
@@ -61,6 +71,11 @@ export class EditInventoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(
+      "Get inventory from InventoryService: " +
+        this.route.snapshot.params.inventoryUuid
+    );
+
     this.inventory = this.is.inventories[
       this.route.snapshot.params.inventoryUuid
     ];
