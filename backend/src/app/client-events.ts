@@ -15,6 +15,8 @@ export class ClientEvents {
 
   /**
    * The event-logs (every inventory has its own)
+   *
+   * Works like a dict
    */
   private static eventLogs: { [uuid: string]: InventoryEvent[] } = {};
 
@@ -31,6 +33,7 @@ export class ClientEvents {
       throw new Error("A ClientEvents instance already exists.");
     } else ClientEvents.singletonFlag = true;
 
+    // Fetch all event logs available on the db and load them into the dict
     this.fetchAllInventoryEvents();
 
     // Instantiate the router
@@ -45,7 +48,7 @@ export class ClientEvents {
     );
 
     // Add an event to an inventory
-    this.routes.post(
+    this.routes.put(
       "/",
       this.checkForManagementEventLogs,
       (req: Request, res: Response) =>
@@ -67,13 +70,13 @@ export class ClientEvents {
     // Iterate over all inventory uuids
     for (const inventoryUuid of inventoryUuids) {
       // Get the events of that inventory
-      ClientEvents.eventLogs[inventoryUuid] = await this.getInventoryEvents(
-        inventoryUuid,
-      );
+      ClientEvents.eventLogs[
+        inventoryUuid.inventoryUuid
+      ] = await this.getInventoryEvents(inventoryUuid.inventoryUuid);
 
       // Apply the events inside of the Authorization instance
       ExdatemanApplication.ao.applyInventory(
-        ClientEvents.eventLogs[inventoryUuid],
+        ClientEvents.eventLogs[inventoryUuid.inventoryUuid],
       );
     }
   }
@@ -112,7 +115,7 @@ export class ClientEvents {
       }
 
       // Get the events from the db
-      const result = this.getInventoryEvents(req.params.inventoryUuid);
+      const result = ClientEvents.eventLogs[req.params.inventoryUuid];
 
       // Send the events back
       res.json(result);
@@ -131,9 +134,9 @@ export class ClientEvents {
   ): Promise<InventoryEvent[]> {
     return (await (await db()).query(
       `
-      SELECT date, data
+      SELECT "inventoryUuid", date, data
         FROM ${process.env.EDM_DB_SCHEMA}.events
-      WHERE stream_id = $1
+      WHERE "inventoryUuid" = $1
       ORDER BY date ASC;
       `,
       [inventoryUuid],
@@ -143,13 +146,13 @@ export class ClientEvents {
   /**
    * Gets all inventory uuids (with event logs) from the db
    */
-  public async getAllInventoryUuids(): Promise<string[]> {
+  public async getAllInventoryUuids(): Promise<{ inventoryUuid: string }[]> {
     return (await (await db()).query(
       `
-      SELECT stream_id
+      SELECT "inventoryUuid"
         FROM ${process.env.EDM_DB_SCHEMA}.events
-      WHERE stream_id != $1
-      GROUP BY stream_id;
+      WHERE "inventoryUuid" != $1
+      GROUP BY "inventoryUuid";
       `,
       [ServerEvents.userEventLogUuid],
     )).rows;
@@ -192,16 +195,28 @@ export class ClientEvents {
     }
   }
 
+  /**
+   * Appends an event both to the db and the local event log.
+   * The projection is not affected.
+   * If the local dict is missing the event log required, it will get
+   * initialized.
+   *
+   * @param event The event to be appended
+   */
   private async appendInventoryEvent(event: InventoryEvent) {
     // Write the event to the db
     const result = await (await db()).query(
       `
       INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
-       (stream_id, date, data)
+       ("inventoryUuid", date, data)
       VALUES ($1, $2, $3)
       `,
       [event.inventoryUuid, event.date, event.data],
     );
+
+    // Check, if the dict entry needs to be initialized
+    if (ClientEvents.eventLogs[event.inventoryUuid] == null)
+      ClientEvents.eventLogs[event.inventoryUuid] = [];
 
     // Write the event to the local cache
     ClientEvents.eventLogs[event.inventoryUuid].push(event);

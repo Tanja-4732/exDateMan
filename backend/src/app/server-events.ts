@@ -40,7 +40,7 @@ export class ServerEvents {
         `
         SELECT date, data
           FROM ${process.env.EDM_DB_SCHEMA}.events
-        WHERE stream_id = $1
+        WHERE "inventoryUuid" = $1
         ORDER BY date ASC;
         `,
         [ServerEvents.userEventLogUuid],
@@ -70,7 +70,7 @@ export class ServerEvents {
       const result = await (await db()).query(
         `
         INSERT INTO ${process.env.EDM_DB_SCHEMA}.events
-         (stream_id, date, data)
+         ("inventoryUuid", date, data)
         VALUES ($1, $2, $3)
         `,
         [ServerEvents.userEventLogUuid, event.date, event.data],

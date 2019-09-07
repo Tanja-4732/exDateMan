@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { InventoryEvent, itemType } from "./client-events";
-import { error } from "console";
+import { error, log } from "console";
 import { crudType } from "./authentication";
 import { ExdatemanApplication } from "./application";
+import { inspect } from "util";
 
 /**
  * Handles JWT checks and tests if a user is authorized to access a resource
@@ -55,10 +56,14 @@ export class Authorization {
 
       // Iterate over all inventoryUuids
       for (const uuid of await ExdatemanApplication.ce.getAllInventoryUuids()) {
+        log("[Authorization (loop)] uuid:");
+        log(Authorization.inventoriesProjection);
+        // log(uuid);
+
         // Check if the user has read access
-        if (this.checkReadAccess(uuid, userUuid))
+        if (this.checkReadAccess(uuid.inventoryUuid, userUuid))
           // Append the uuid to the array
-          accessibleInventoryUuids.push(uuid);
+          accessibleInventoryUuids.push(uuid.inventoryUuid);
       }
 
       // Send the array back
@@ -66,6 +71,7 @@ export class Authorization {
       return;
     } catch (err) {
       res.sendStatus(400);
+      error(err);
       return;
     }
   }
@@ -77,7 +83,9 @@ export class Authorization {
    * @param inventoryUuid The uuid of the inventory of the events to be applied
    */
   public applyInventory(inventoryEvents: InventoryEvent[]) {
-    console.log(inventoryEvents); // todo remove log
+    log("[Authorization] inventoryEvents:");
+    log(inventoryEvents);
+    // todo remove log
 
     // Iterate over the events in the log
     for (const event of inventoryEvents) {
@@ -192,6 +200,8 @@ export class Authorization {
       case crudType.CREATE:
         // Assign a new inventory to the dictionary
         Authorization.inventoriesProjection[event.inventoryUuid] = newInventory;
+        log("Been here m8");
+        log(event.inventoryUuid);
 
         // Return the new inventory
         return newInventory;
