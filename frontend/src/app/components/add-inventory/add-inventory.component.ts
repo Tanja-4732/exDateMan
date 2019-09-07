@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { Inventory } from "../../models/inventory/inventory";
 import { Router } from "@angular/router";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-add-inventory",
@@ -23,12 +23,12 @@ export class AddInventoryComponent {
   // TODO add support for shared inventories
 
   constructor(
-    private inv: InventoryService,
+    private is: InventoryService,
     private router: Router,
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      name: ""
+      name: ["", [Validators.required]]
     });
   }
 
@@ -39,9 +39,7 @@ export class AddInventoryComponent {
    */
   async onSubmit(formData: Inventory) {
     try {
-      const inventory: Inventory = await this.inv.createInventory(
-        formData.name
-      );
+      const inventory: Inventory = await this.is.createInventory(formData.name);
       this.oof = false;
       this.router.navigate(["/inventories/" + inventory.uuid + "/things"]);
     } catch (err) {

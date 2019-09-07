@@ -165,6 +165,7 @@ export class InventoryService {
         }
       }
     };
+
     // Append to the event log
     await this.ess.appendEventToInventoryStream(createInventoryEvent);
 
