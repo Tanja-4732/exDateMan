@@ -8,21 +8,21 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
-    console.log("Construct some EventSourcingService");
+    this.ready = new Promise((resolve, reject) => {
+      console.log("Construct some EventSourcingService");
 
-    if (EventSourcingService.eventLogs == null) {
-      console.log("Do fetchAllInventoryEvents");
-      this.fetchAllInventoryEvents();
-      console.log("Did fetchAllInventoryEvents");
-    } else {
-      console.log("Don't fetchAllInventoryEvents");
-    }
+      if (EventSourcingService.eventLogs == null) {
+        console.log("Do fetchAllInventoryEvents");
+        this.fetchAllInventoryEvents().then(result => {
+          console.log("Did fetchAllInventoryEvents");
+          resolve(null);
+        });
+      } else {
+        console.log("Don't fetchAllInventoryEvents");
+        resolve(null);
+      }
+    });
   }
-
-  /**
-   * The event-logs (every inventory has its own)
-   */
-  private static eventLogs: { [uuid: string]: Event[] };
 
   /**
    * Public accessor for the event log
@@ -30,6 +30,17 @@ export class EventSourcingService {
   get events(): { [uuid: string]: Event[] } {
     return EventSourcingService.eventLogs;
   }
+
+  /**
+   * The event-logs (every inventory has its own)
+   */
+  private static eventLogs: { [uuid: string]: Event[] };
+  /**
+   * Sneaky stuff
+   *
+   * Used to get around the "no async constructors" limitation
+   */
+  public ready: Promise<any>;
 
   /**
    * The API base url
@@ -40,6 +51,8 @@ export class EventSourcingService {
    * Fetches a list of all accessible inventory uuids via the API
    *
    * Then it iterates over said list and fetches the events of each
+   *
+   * This method gets called in the EventSourcingService constructor
    */
   private async fetchAllInventoryEvents() {
     // Initiate the eventLogs
@@ -67,6 +80,8 @@ export class EventSourcingService {
   private async fetchSingleInventoryEvents(
     inventoryUuid: string
   ): Promise<void> {
+    console.log("Fetching 'em events");
+
     const res: Event[] = await this.api
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();

@@ -45,17 +45,24 @@ export class InventoryService {
   /**
    * Obtains the inventories event log from the db and parses them
    */
-  private fetchInventoryEvents() {
+  private async fetchInventoryEvents() {
     // Initialize the inventory projection dictionary
     InventoryService.inventoriesProjection = {};
 
-    console.log(this.ess.events);
+    console.log("The events right here:");
+
+    await this.ess.ready;
+
+    console.log(JSON.stringify(this.ess.events));
 
     // Iterate over all event logs
     for (const [uuid, eventLog] of Object.entries(this.ess.events)) {
       // Iterate over the events in the log
       for (const event of eventLog) {
         // Check if the event is about an inventory
+        console.log("Maybe do this one:");
+        console.log(event);
+
         if (event.data.itemType === itemType.INVENTORY) {
           // Update the inventories projection according to the event
           this.updateInventoriesProjection(event);
@@ -70,6 +77,9 @@ export class InventoryService {
    * @param event The event to be used to update the projection with
    */
   private updateInventoriesProjection(event: Event): Inventory {
+    console.log("Updating inventory projection for:");
+    console.log(event);
+
     /**
      * The inventory to be created or updated (ignored for delete events)
      */

@@ -21,15 +21,15 @@ export class InventoriesComponent implements OnInit {
   }
 
   async loadInventories(): Promise<void> {
+    console.log("Loading...");
+
     try {
-      console.log("Get the inventories");
       console.log(this.is.inventories);
 
       this.inventories = Object.keys(this.is.inventories).map(
         (key: string) => this.is.inventories[key]
       );
       this.loading = false;
-      console.log("Got the inventories");
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
         if (error.status === 401) {
