@@ -17,6 +17,8 @@ export class WelcomeComponent implements OnInit {
    */
   loggedIn = true;
   loading = true;
+  invalidJWT = false;
+
   user: { uuid: string; email: string; name?: string };
 
   constructor(private as: AuthService) {}
@@ -34,6 +36,9 @@ export class WelcomeComponent implements OnInit {
       this.loggedIn = res.authorized;
       this.user = res.user;
     } catch (error) {
+      if (error.error.reason === "JWT invalid") {
+        this.invalidJWT = true;
+      }
       this.loggedIn = false;
     }
     this.loading = false;

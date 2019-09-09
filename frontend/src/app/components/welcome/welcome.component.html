@@ -34,7 +34,12 @@
     </ng-container>
 
     <ng-container *ngIf="!loggedIn">
-      <p>Not logged in.</p>
+      <p *ngIf="!invalidJWT">
+        You're not logged in. Use the buttons below to log in or register.
+      </p>
+      <p *ngIf="invalidJWT">
+        Your login has expired. Use the buttons below to log in or register.
+      </p>
       <button mat-raised-button routerLink="/login" color="accent">
         Login
       </button>
