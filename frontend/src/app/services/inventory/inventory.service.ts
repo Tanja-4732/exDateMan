@@ -85,7 +85,7 @@ export class InventoryService {
       createdOn: event.data.inventoryData.createdOn,
       ownerUuid: event.data.inventoryData.ownerUuid,
       adminUuids: event.data.inventoryData.adminsUuids,
-      writeableUuids: event.data.inventoryData.writeablesUuids,
+      WritableUuids: event.data.inventoryData.WritablesUuids,
       readableUuids: event.data.inventoryData.readablesUuids
     };
 
@@ -166,7 +166,7 @@ export class InventoryService {
           createdOn: currentDate,
           ownerUuid: myUuid,
           adminsUuids: [],
-          writeablesUuids: [],
+          WritablesUuids: [],
           readablesUuids: []
         }
       }
@@ -208,7 +208,7 @@ export class InventoryService {
           name: inventory.name,
           ownerUuid: inventory.ownerUuid,
           adminsUuids: inventory.adminUuids,
-          writeablesUuids: inventory.writeableUuids,
+          WritablesUuids: inventory.WritableUuids,
           readablesUuids: inventory.readableUuids
         }
       }

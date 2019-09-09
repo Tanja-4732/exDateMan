@@ -157,7 +157,7 @@ export class Authorization {
         ].adminUuids.includes(userUuid) ||
         Authorization.inventoriesProjection[
           event.inventoryUuid
-        ].writeableUuids.includes(userUuid)
+        ].WritableUuids.includes(userUuid)
       );
     } catch (err) {
       error("Couldn't check for legitimacy:");
@@ -187,7 +187,7 @@ export class Authorization {
       createdOn: event.data.inventoryData.createdOn,
       ownerUuid: event.data.inventoryData.ownerUuid,
       adminUuids: event.data.inventoryData.adminsUuids,
-      writeableUuids: event.data.inventoryData.writeablesUuids,
+      WritableUuids: event.data.inventoryData.WritablesUuids,
       readableUuids: event.data.inventoryData.readablesUuids,
     };
 
@@ -249,7 +249,7 @@ export class Authorization {
       ) ||
       Authorization.inventoriesProjection[
         inventoryUuid
-      ].writeableUuids.includes(userUuid) ||
+      ].WritableUuids.includes(userUuid) ||
       Authorization.inventoriesProjection[inventoryUuid].readableUuids.includes(
         userUuid,
       )
@@ -286,9 +286,9 @@ interface Inventory {
   adminUuids: string[];
 
   /**
-   * The uuids of the writeables of this inventory
+   * The uuids of the Writables of this inventory
    */
-  writeableUuids: string[];
+  WritableUuids: string[];
 
   /**
    * The uuids of the readables of this inventory

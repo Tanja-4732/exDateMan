@@ -27,9 +27,9 @@ export interface Inventory {
   adminUuids: string[];
 
   /**
-   * The uuids of the writeables of this inventory
+   * The uuids of the Writables of this inventory
    */
-  writeableUuids: string[];
+  WritableUuids: string[];
 
   /**
    * The uuids of the readables of this inventory

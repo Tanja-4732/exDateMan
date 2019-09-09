@@ -286,7 +286,7 @@ export interface InventoryEvent {
       /**
        * An array of user uuids who have the write privilege for this inventory
        */
-      writeablesUuids?: string[];
+      WritablesUuids?: string[];
 
       /**
        * An array of user uuids who have the read privilege for this inventory

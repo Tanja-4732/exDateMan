@@ -45,7 +45,7 @@
       "prestart",
       "readables",
       "sessionstorage",
-      "writeables"
+      "writables"
     ]
   }
 }

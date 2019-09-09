@@ -9,13 +9,7 @@ import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
 import { UserService } from "../../services/user/user.service";
-import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
-import { InventoryUser } from "../../models/inventory-user/inventory-user";
 import { Validators, FormControl } from "@angular/forms";
-
-export interface Fruit {
-  name: string;
-}
 
 @Component({
   selector: "app-edit-inventory",
@@ -28,14 +22,16 @@ export class EditInventoryComponent implements OnInit {
   notFound = false;
   loading = false;
   oof = false;
+
+  // Operation flags
   reallyDelete = false;
   userNotFound = false;
 
-  // Old flags // TODO revisit
+  // Chip flags
   visible = true;
   selectable = false;
   removable = true;
-  addOnBlur = true;
+  addOnBlur = false;
 
   /**
    * The keys which should separate the input values
@@ -49,7 +45,25 @@ export class EditInventoryComponent implements OnInit {
     Validators.email
   ]);
 
-  private owner: User;
+  /**
+   * The owner of the inventory
+   */
+  owner: User;
+
+  /**
+   * The users allowed to make changes to the inventory itself
+   */
+  admins: User[];
+
+  /**
+   * The users allowed to make changes to the inventories contents
+   */
+  writables: User[];
+
+  /**
+   * The users allowed to read data from the inventory
+   */
+  readables: User[];
 
   constructor(
     private is: InventoryService,
@@ -58,17 +72,6 @@ export class EditInventoryComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router
   ) {}
-
-  /**
-   * Generate an error message for when the email field is invalid
-   */
-  getErrorMessage(): string {
-    return this.ownerEmail.hasError("required")
-      ? "You must enter a value"
-      : this.ownerEmail.hasError("email")
-      ? "Not a valid email"
-      : "";
-  }
 
   ngOnInit(): void {
     console.log(
@@ -79,6 +82,17 @@ export class EditInventoryComponent implements OnInit {
     this.inventory = this.is.inventories[
       this.route.snapshot.params.inventoryUuid
     ];
+  }
+
+  /**
+   * Generate an error message for when the email field is invalid
+   */
+  getErrorMessage(): string {
+    return this.ownerEmail.hasError("required")
+      ? "You must enter a value"
+      : this.ownerEmail.hasError("email")
+      ? "Not a valid email"
+      : "";
   }
 
   onEditInventory(): void {
@@ -200,8 +214,8 @@ export class EditInventoryComponent implements OnInit {
     }
   }
 
-  // writeable
-  async addWriteable(event: MatChipInputEvent): Promise<void> {
+  // writable
+  async addWritable(event: MatChipInputEvent): Promise<void> {
     const input: HTMLInputElement = event.input;
     const value: string = event.value;
 
@@ -210,7 +224,7 @@ export class EditInventoryComponent implements OnInit {
       let user: User;
       try {
         user = await this.us.getUser(value.trim());
-        this.inventory.writeableUuids.push(user.uuid);
+        this.inventory.WritableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
       }
@@ -223,11 +237,11 @@ export class EditInventoryComponent implements OnInit {
     }
   }
 
-  removeWriteable(writeable: User): void {
-    const index: number = this.inventory.writeableUuids.indexOf(writeable.uuid);
+  removeWritable(writable: User): void {
+    const index: number = this.inventory.WritableUuids.indexOf(writable.uuid);
 
     if (index >= 0) {
-      this.inventory.writeableUuids.splice(index, 1);
+      this.inventory.WritableUuids.splice(index, 1);
     }
   }
 

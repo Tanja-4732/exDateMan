@@ -1,3 +1,4 @@
+<!-- Unauthorized message -->
 <span class="mat-typography" *ngIf="unauthorized">
   <h2>Unauthorized</h2>
   We couldn't fetch this inventory, because you aren't authorized. <br />
@@ -6,6 +7,7 @@
   Redirecting you to the login page in 3 seconds...
 </span>
 
+<!-- Main content -->
 <span *ngIf="!unauthorized">
   <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading inventory...</h2>
@@ -13,8 +15,10 @@
     Please hang on
   </span>
 
+  <!-- Continue if ok -->
   <span *ngIf="!notFound && !loading">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+      <!-- Inventory name -->
       <mat-form-field appearance="outline">
         <mat-label>Inventory name</mat-label>
         <input
@@ -25,13 +29,13 @@
           required
         />
         <i matSuffix class="material-icons">crop_free</i>
-        <!-- <mat-hint>Hint</mat-hint> -->
       </mat-form-field>
       <br />
 
+      <!-- Inventory owner -->
       <mat-form-field appearance="outline">
         <mat-label>Owner</mat-label>
-        <mat-chip-list #OwnerChipList>
+        <mat-chip-list #OwnerChipList aria-label="Owner">
           <mat-chip [selectable]="selectable" [removable]="false">
             {{ owner.name }}
           </mat-chip>
@@ -51,9 +55,10 @@
       </mat-form-field>
       <br />
 
+      <!-- Inventory admins -->
       <mat-form-field appearance="outline">
         <mat-label>Admins</mat-label>
-        <mat-chip-list #AdminsChipList>
+        <mat-chip-list #AdminsChipList aria-label="Admins">
           <mat-chip
             *ngFor="let admin of admins"
             [selectable]="selectable"
@@ -76,23 +81,23 @@
       <br />
 
       <mat-form-field appearance="outline">
-        <mat-label>Writeables</mat-label>
-        <mat-chip-list #writeablesChipList>
+        <mat-label>Writables</mat-label>
+        <mat-chip-list #WritablesChipList>
           <mat-chip
-            *ngFor="let writeable of writeables"
+            *ngFor="let writable of Writables"
             [selectable]="selectable"
             [removable]="removable"
-            (removed)="removeWriteable(writeable)"
+            (removed)="removeWritable(writable)"
           >
-            {{ writeable.name }}
+            {{ writable.name }}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
           <input
             placeholder="Bob"
-            [matChipInputFor]="writeablesChipList"
+            [matChipInputFor]="WritablesChipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
-            (matChipInputTokenEnd)="addWriteable($event)"
+            (matChipInputTokenEnd)="addWritable($event)"
           />
         </mat-chip-list>
         <i matSuffix class="material-icons">create</i>
