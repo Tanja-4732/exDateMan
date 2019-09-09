@@ -38,6 +38,7 @@
       "TOTP",
       "Uuids",
       "ZXing",
+      "keycodes",
       "ngsw",
       "postgresql",
       "prefetch",

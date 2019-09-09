@@ -14,117 +14,122 @@
   </span>
 
   <span *ngIf="!notFound && !loading">
-    <mat-form-field appearance="outline">
-      <mat-label>Inventory name</mat-label>
-      <input
-        matInput
-        type="text"
-        placeholder="Someones inventory"
-        [(ngModel)]="inventory.name"
-        required
-      />
-      <i matSuffix class="material-icons">crop_free</i>
-      <!-- <mat-hint>Hint</mat-hint> -->
-    </mat-form-field>
-    <br />
-
-    <mat-form-field appearance="outline">
-      <mat-label>Owner</mat-label>
-      <mat-chip-list #OwnerChipList>
-        <mat-chip [selectable]="selectable" [removable]="false">
-          {{ owner.name }}
-        </mat-chip>
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+      <mat-form-field appearance="outline">
+        <mat-label>Inventory name</mat-label>
         <input
-          placeholder="Bob"
-          [matChipInputFor]="OwnerChipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="onAddOwner($event)"
-          [formControl]="ownerEmail"
+          matInput
+          type="text"
+          placeholder="Someones inventory"
+          formControlName="name"
+          required
         />
-      </mat-chip-list>
-      <i matSuffix class="material-icons">build</i>
-      <mat-error *ngIf="ownerEmail.invalid">{{ getErrorMessage() }}</mat-error>
-    </mat-form-field>
-    <br />
+        <i matSuffix class="material-icons">crop_free</i>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      <br />
 
-    <mat-form-field appearance="outline">
-      <mat-label>Admins</mat-label>
-      <mat-chip-list #AdminsChipList>
-        <mat-chip
-          *ngFor="let admin of admins"
-          [selectable]="selectable"
-          [removable]="removable"
-          (removed)="removeAdmin(admin)"
-        >
-          {{ admin.name }}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-        </mat-chip>
-        <input
-          placeholder="Bob"
-          [matChipInputFor]="AdminsChipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="addAdmin($event)"
-        />
-      </mat-chip-list>
-      <i matSuffix class="material-icons">build</i>
-    </mat-form-field>
-    <br />
+      <mat-form-field appearance="outline">
+        <mat-label>Owner</mat-label>
+        <mat-chip-list #OwnerChipList>
+          <mat-chip [selectable]="selectable" [removable]="false">
+            {{ owner.name }}
+          </mat-chip>
+          <input
+            placeholder="Bob"
+            [matChipInputFor]="OwnerChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="onAddOwner($event)"
+            [formControl]="ownerEmail"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">build</i>
+        <mat-error *ngIf="ownerEmail.invalid">{{
+          getErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+      <br />
 
-    <mat-form-field appearance="outline">
-      <mat-label>Writeables</mat-label>
-      <mat-chip-list #writeablesChipList>
-        <mat-chip
-          *ngFor="let writeable of writeables"
-          [selectable]="selectable"
-          [removable]="removable"
-          (removed)="removeWriteable(writeable)"
-        >
-          {{ writeable.name }}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-        </mat-chip>
-        <input
-          placeholder="Bob"
-          [matChipInputFor]="writeablesChipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="addWriteable($event)"
-        />
-      </mat-chip-list>
-      <i matSuffix class="material-icons">create</i>
-    </mat-form-field>
-    <br />
+      <mat-form-field appearance="outline">
+        <mat-label>Admins</mat-label>
+        <mat-chip-list #AdminsChipList>
+          <mat-chip
+            *ngFor="let admin of admins"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeAdmin(admin)"
+          >
+            {{ admin.name }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Bob"
+            [matChipInputFor]="AdminsChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addAdmin($event)"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">build</i>
+      </mat-form-field>
+      <br />
 
-    <mat-form-field appearance="outline">
-      <mat-label>Readables</mat-label>
-      <mat-chip-list #readablesChipList>
-        <mat-chip
-          *ngFor="let readable of readables"
-          [selectable]="selectable"
-          [removable]="removable"
-          (removed)="removeReadable(readable)"
-        >
-          {{ readable.name }}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-        </mat-chip>
-        <input
-          placeholder="Bob"
-          [matChipInputFor]="readablesChipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="addOnBlur"
-          (matChipInputTokenEnd)="addReadable($event)"
-        />
-      </mat-chip-list>
-      <i matSuffix class="material-icons">import_contacts</i>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Writeables</mat-label>
+        <mat-chip-list #writeablesChipList>
+          <mat-chip
+            *ngFor="let writeable of writeables"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeWriteable(writeable)"
+          >
+            {{ writeable.name }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Bob"
+            [matChipInputFor]="writeablesChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addWriteable($event)"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">create</i>
+      </mat-form-field>
+      <br />
+
+      <mat-form-field appearance="outline">
+        <mat-label>Readables</mat-label>
+        <mat-chip-list #readablesChipList>
+          <mat-chip
+            *ngFor="let readable of readables"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeReadable(readable)"
+          >
+            {{ readable.name }}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Bob"
+            [matChipInputFor]="readablesChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addReadable($event)"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">import_contacts</i>
+      </mat-form-field>
+    </form>
+
     <br />
 
     <button
       mat-raised-button
-      (click)="onEditInventory()"
       color="accent"
-      [disabled]="inventory.name == ''"
+      type="submit"
+      [disabled]="!form.valid"
     >
       Save changes
     </button>
@@ -135,7 +140,7 @@
     &nbsp;
     <button
       mat-stroked-button
-      routerLink="/inventories/{{ inventory.id }}/things/"
+      routerLink="/inventories/{{ inventory.uuid }}/things/"
     >
       Go back
     </button>
@@ -152,6 +157,7 @@
     <h2>
       Oh, no.
     </h2>
-    We couldn't find the inventory with the ID {{ inventory.id }}
+    We couldn't find the inventory with the UUID
+    <code>{{ inventory.uuid }}</code>
   </div>
 </span>
