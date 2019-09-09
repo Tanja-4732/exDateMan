@@ -26,7 +26,7 @@ export class EditInventoryComponent implements OnInit {
   // Lading & auth flags
   unauthorized = false;
   notFound = false;
-  loading = true;
+  loading = false;
   oof = false;
   reallyDelete = false;
   userNotFound = false;

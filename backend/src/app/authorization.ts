@@ -83,10 +83,6 @@ export class Authorization {
    * @param inventoryUuid The uuid of the inventory of the events to be applied
    */
   public applyInventory(inventoryEvents: InventoryEvent[]) {
-    log("[Authorization] inventoryEvents:");
-    log(inventoryEvents);
-    // todo remove log
-
     // Iterate over the events in the log
     for (const event of inventoryEvents) {
       // Check if the event is about an inventory
@@ -200,8 +196,6 @@ export class Authorization {
       case crudType.CREATE:
         // Assign a new inventory to the dictionary
         Authorization.inventoriesProjection[event.inventoryUuid] = newInventory;
-        log("Been here m8");
-        log(event.inventoryUuid);
 
         // Return the new inventory
         return newInventory;

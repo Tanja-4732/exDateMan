@@ -1,13 +1,12 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router, Request, Response } from "express";
 import { readFileSync } from "fs";
 import * as jwt from "jsonwebtoken";
 import { ServerEvents, UserEvent } from "./server-events";
-import { hash, compareSync, hashSync, genSaltSync } from "bcrypt";
+import { compareSync, hashSync } from "bcrypt";
 import { v4 } from "uuid";
 import { log, error } from "console";
 import { totp } from "speakeasy";
 import { inspect } from "util";
-import { ExdatemanApplication } from "./application";
 
 export class Authentication {
   /**
@@ -43,23 +42,58 @@ export class Authentication {
 
     // Mount the routes
     this.routes.post("/login", (req: Request, res: Response) =>
-      this.login(req, res),
+      this.handleLogin(req, res),
     );
 
     this.routes.post("/register", (req: Request, res: Response) =>
-      this.register(req, res),
+      this.handleRegister(req, res),
     );
 
     this.routes.post("/logout", (req: Request, res: Response) =>
-      Authentication.logout(req, res),
+      Authentication.handleLogout(req, res),
     );
 
     this.routes.get("/status", (req: Request, res: Response) =>
-      this.getStatus(req, res),
+      this.handleGetStatus(req, res),
+    );
+
+    this.routes.get("/resolve/:email", (req: Request, res: Response) =>
+      this.handleResolveEmail(req, res),
     );
 
     // Setup JWT keys
     this.getJwtKeys();
+  }
+
+  /**
+   * Handles API requests to resolve email addresses to user UUIDs
+   */
+  private handleResolveEmail(req: Request, res: Response): void {
+    /**
+     * This constant holds the copy of the found value
+     */
+    const result: User | undefined =
+      // Copy the object as to not mutate the stored state
+      Object.assign(
+        // An empty object is the target
+        {},
+
+        // The user with a matching email adress (if any) is the source
+        this.users.find((user: User) => req.params.email === user.email),
+      );
+
+    // Send an error as response and return
+    if (result == null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Remove confidential information from the copy
+    delete result.saltedPwdHash;
+    delete result.totpSecret;
+
+    // Send back the modified copy
+    res.json(result);
   }
 
   /**
@@ -86,7 +120,7 @@ export class Authentication {
    * This method handles the login process and
    * provides JWTs for the authenticated users
    */
-  private async login(req: Request, res: Response) {
+  private async handleLogin(req: Request, res: Response) {
     try {
       /**
        * The saltedPwdHash from the users projection
@@ -137,7 +171,7 @@ export class Authentication {
   /**
    * Handles the API call to create a new user
    */
-  private async register(req: Request, res: Response) {
+  private async handleRegister(req: Request, res: Response) {
     // Check for duplicate email
     if (
       Authentication.usersProjection.find((user: User) => {
@@ -221,7 +255,7 @@ export class Authentication {
   /**
    * Removes the JWT cookie form the user
    */
-  static logout(req: Request, res: Response): void {
+  static handleLogout(req: Request, res: Response): void {
     res
       .clearCookie("JWT")
       .status(200)
@@ -232,7 +266,7 @@ export class Authentication {
   /**
    * Handles login-status-check requests
    */
-  private async getStatus(req: Request, res: Response) {
+  private async handleGetStatus(req: Request, res: Response) {
     // Check for missing cookie
     if (req.cookies.JWT == undefined) {
       res.status(401).json({ authorized: false, reason: "Missing JWT cookie" });
