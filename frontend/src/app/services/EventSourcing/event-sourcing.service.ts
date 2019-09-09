@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { v4 } from "uuid";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
 
@@ -8,17 +7,15 @@ import { environment } from "../../../environments/environment";
 })
 export class EventSourcingService {
   constructor(private api: HttpClient) {
-    this.ready = new Promise((resolve, reject) => {
-      console.log("Construct some EventSourcingService");
-
+    // Ready declaration
+    this.ready = new Promise(resolve => {
       if (EventSourcingService.eventLogs == null) {
-        console.log("Do fetchAllInventoryEvents");
-        this.fetchAllInventoryEvents().then(result => {
-          console.log("Did fetchAllInventoryEvents");
+        this.fetchAllInventoryEvents().then(() => {
+          // Mark as ready
           resolve(null);
         });
       } else {
-        console.log("Don't fetchAllInventoryEvents");
+        // Mark as ready
         resolve(null);
       }
     });
@@ -64,8 +61,6 @@ export class EventSourcingService {
       .get<string[]>(this.baseUrl + "/authorization/accessibleInventoryUuids")
       .toPromise();
 
-    console.log("accessibleUuids=" + accessibleUuids);
-
     // Iterate over the list
     for (const inventoryUuid of accessibleUuids) {
       // Fetch the events from the inventory
@@ -81,8 +76,6 @@ export class EventSourcingService {
   private async fetchSingleInventoryEvents(
     inventoryUuid: string
   ): Promise<void> {
-    console.log("Fetching 'em events");
-
     const res: Event[] = await this.api
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();

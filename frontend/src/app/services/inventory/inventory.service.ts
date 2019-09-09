@@ -1,8 +1,5 @@
-import { Injectable, DefaultIterableDiffer } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Inventory } from "../../models/inventory/inventory";
-import { environment } from "../../../environments/environment";
-import { User } from "../../models/user/user";
-import { InventoryUserAccess } from "../../models/inventory-user-access.enum";
 import {
   EventSourcingService,
   crudType,
@@ -17,17 +14,15 @@ import { AuthService } from "../auth/auth.service";
 })
 export class InventoryService {
   constructor(private ess: EventSourcingService, private as: AuthService) {
+    // Ready declaration
     this.ready = new Promise((resolve, reject) => {
-      console.log("Constructing some InventoryService");
-
       if (InventoryService.inventoriesProjection == null) {
-        console.log("Do fetchInventoryEvents");
         this.fetchInventoryEvents().then(result => {
-          console.log("Did fetchInventoryEvents");
+          // Mark as ready
           resolve(null);
         });
       } else {
-        console.log("Don't fetchInventoryEvents");
+        // Mark as ready
         resolve(null);
       }
     });
@@ -37,8 +32,6 @@ export class InventoryService {
    * Public accessor for the inventories projection
    */
   get inventories(): { [uuid: string]: Inventory } {
-    console.log("Getting the inventories dict");
-
     return InventoryService.inventoriesProjection;
   }
 
@@ -61,20 +54,14 @@ export class InventoryService {
     // Initialize the inventory projection dictionary
     InventoryService.inventoriesProjection = {};
 
+    // Wait for EventSourcingService to be ready
     await this.ess.ready;
-    await this.ess.ready;
-
-    console.log("The events right here:");
-    console.log(this.ess.events);
 
     // Iterate over all event logs
     for (const [uuid, eventLog] of Object.entries(this.ess.events)) {
       // Iterate over the events in the log
       for (const event of eventLog) {
         // Check if the event is about an inventory
-        console.log("Maybe do this one:");
-        console.log(event);
-
         if (event.data.itemType === itemType.INVENTORY) {
           // Update the inventories projection according to the event
           this.updateInventoriesProjection(event);
@@ -89,9 +76,6 @@ export class InventoryService {
    * @param event The event to be used to update the projection with
    */
   private updateInventoriesProjection(event: Event): Inventory {
-    console.log("Updating inventory projection for:");
-    console.log(event);
-
     /**
      * The inventory to be created or updated (ignored for delete events)
      */

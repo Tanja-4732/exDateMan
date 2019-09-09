@@ -21,11 +21,9 @@ export class InventoriesComponent implements OnInit {
   }
 
   async loadInventories(): Promise<void> {
-    console.log("Loading...");
-
     try {
+      // Wait for InventoryService to be ready
       await this.is.ready;
-      console.log(this.is.inventories);
 
       this.inventories = Object.keys(this.is.inventories).map(
         (key: string) => this.is.inventories[key]
