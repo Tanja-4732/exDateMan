@@ -24,6 +24,7 @@ export class InventoriesComponent implements OnInit {
     console.log("Loading...");
 
     try {
+      await this.is.ready;
       console.log(this.is.inventories);
 
       this.inventories = Object.keys(this.is.inventories).map(

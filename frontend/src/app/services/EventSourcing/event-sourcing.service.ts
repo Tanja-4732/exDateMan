@@ -35,6 +35,7 @@ export class EventSourcingService {
    * The event-logs (every inventory has its own)
    */
   private static eventLogs: { [uuid: string]: Event[] };
+
   /**
    * Sneaky stuff
    *

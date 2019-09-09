@@ -17,15 +17,20 @@ import { AuthService } from "../auth/auth.service";
 })
 export class InventoryService {
   constructor(private ess: EventSourcingService, private as: AuthService) {
-    console.log("Constructing some InventoryService");
+    this.ready = new Promise((resolve, reject) => {
+      console.log("Constructing some InventoryService");
 
-    if (InventoryService.inventoriesProjection == null) {
-      console.log("Do fetchInventoryEvents");
-      this.fetchInventoryEvents();
-      console.log("Did fetchInventoryEvents");
-    } else {
-      console.log("Don't fetchInventoryEvents");
-    }
+      if (InventoryService.inventoriesProjection == null) {
+        console.log("Do fetchInventoryEvents");
+        this.fetchInventoryEvents().then(result => {
+          console.log("Did fetchInventoryEvents");
+          resolve(null);
+        });
+      } else {
+        console.log("Don't fetchInventoryEvents");
+        resolve(null);
+      }
+    });
   }
 
   /**
@@ -43,17 +48,24 @@ export class InventoryService {
   private static inventoriesProjection: { [uuid: string]: Inventory };
 
   /**
+   * Sneaky stuff
+   *
+   * Used to get around the "no async constructors" limitation
+   */
+  public ready: Promise<any>;
+
+  /**
    * Obtains the inventories event log from the db and parses them
    */
   private async fetchInventoryEvents() {
     // Initialize the inventory projection dictionary
     InventoryService.inventoriesProjection = {};
 
-    console.log("The events right here:");
-
+    await this.ess.ready;
     await this.ess.ready;
 
-    console.log(JSON.stringify(this.ess.events));
+    console.log("The events right here:");
+    console.log(this.ess.events);
 
     // Iterate over all event logs
     for (const [uuid, eventLog] of Object.entries(this.ess.events)) {
