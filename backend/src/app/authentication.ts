@@ -61,12 +61,17 @@ export class Authentication {
       this.handleResolveEmail(req, res),
     );
 
+    // This is a post request, because GET /user/:uuid didn't work
+    this.routes.post("/user", (req: Request, res: Response) =>
+      this.handleGetUser(req, res),
+    );
+
     // Setup JWT keys
     this.getJwtKeys();
   }
 
   /**
-   * Handles API requests to resolve email addresses to user UUIDs
+   * Handles API requests to resolve email addresses to users
    */
   private handleResolveEmail(req: Request, res: Response): void {
     /**
@@ -80,6 +85,41 @@ export class Authentication {
 
         // The user with a matching email adress (if any) is the source
         this.users.find((user: User) => req.params.email === user.email),
+      );
+
+    // Send an error as response and return
+    if (result == null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Remove confidential information from the copy
+    delete result.saltedPwdHash;
+    delete result.totpSecret;
+
+    // Send back the modified copy
+    res.json(result);
+  }
+
+  /**
+   * Handles API requests to get users by UUID
+   */
+  private handleGetUser(req: Request, res: Response): void {
+    log("User UUID:");
+    log(req.body.uuid);
+    log("User UUID above");
+
+    /**
+     * This constant holds the copy of the found value
+     */
+    const result: User | undefined =
+      // Copy the object as to not mutate the stored state
+      Object.assign(
+        // An empty object is the target
+        {},
+
+        // The user with a matching email adress (if any) is the source
+        this.users.find((user: User) => req.body.uuid === user.uuid),
       );
 
     // Send an error as response and return

@@ -29,7 +29,7 @@ export interface Inventory {
   /**
    * The uuids of the Writables of this inventory
    */
-  WritableUuids: string[];
+  writableUuids: string[];
 
   /**
    * The uuids of the readables of this inventory

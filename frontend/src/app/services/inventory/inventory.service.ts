@@ -85,7 +85,7 @@ export class InventoryService {
       createdOn: event.data.inventoryData.createdOn,
       ownerUuid: event.data.inventoryData.ownerUuid,
       adminUuids: event.data.inventoryData.adminsUuids,
-      WritableUuids: event.data.inventoryData.WritablesUuids,
+      writableUuids: event.data.inventoryData.WritablesUuids,
       readableUuids: event.data.inventoryData.readablesUuids
     };
 
@@ -145,7 +145,7 @@ export class InventoryService {
     /**
      * The uuid of the user
      */
-    const myUuid = (await this.as.getUser()).user.uuid;
+    const myUuid = (await this.as.getCurrentUser()).user.uuid;
 
     /**
      * The current date (and time)
@@ -190,7 +190,7 @@ export class InventoryService {
     /**
      * The uuid of the user
      */
-    const myUuid = (await this.as.getUser()).user.uuid;
+    const myUuid = (await this.as.getCurrentUser()).user.uuid;
 
     // Create an inventory updated event
     const updateInventoryEvent = {
@@ -208,7 +208,7 @@ export class InventoryService {
           name: inventory.name,
           ownerUuid: inventory.ownerUuid,
           adminsUuids: inventory.adminUuids,
-          WritablesUuids: inventory.WritableUuids,
+          WritablesUuids: inventory.writableUuids,
           readablesUuids: inventory.readableUuids
         }
       }
@@ -230,7 +230,7 @@ export class InventoryService {
     /**
      * The uuid of the user
      */
-    const myUuid = (await this.as.getUser()).user.uuid;
+    const myUuid = (await this.as.getCurrentUser()).user.uuid;
 
     // Create an inventory deleted event
     const deleteInventoryEvent = {

@@ -9,7 +9,13 @@ import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { User } from "../../models/user/user";
 import { UserService } from "../../services/user/user.service";
-import { Validators, FormControl } from "@angular/forms";
+import {
+  Validators,
+  FormControl,
+  FormGroup,
+  FormBuilder
+} from "@angular/forms";
+import { AuthService } from "../../services/auth/auth.service";
 
 @Component({
   selector: "app-edit-inventory",
@@ -17,6 +23,18 @@ import { Validators, FormControl } from "@angular/forms";
   styleUrls: ["./edit-inventory.component.scss"]
 })
 export class EditInventoryComponent implements OnInit {
+  constructor(
+    private is: InventoryService,
+    private as: AuthService,
+    private route: ActivatedRoute,
+    public dialog: MatDialog,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.createForm();
+    this.formGroup.patchValue({ inventoryName: this.inventory.name });
+  }
+
   // Lading & auth flags
   unauthorized = false;
   notFound = false;
@@ -38,12 +56,12 @@ export class EditInventoryComponent implements OnInit {
    */
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
+  /**
+   * The imported inventory
+   *
+   * // TODO revisit
+   */
   inventory: Inventory = {} as Inventory;
-
-  ownerEmail: FormControl = new FormControl("", [
-    Validators.required,
-    Validators.email
-  ]);
 
   /**
    * The owner of the inventory
@@ -65,37 +83,86 @@ export class EditInventoryComponent implements OnInit {
    */
   readables: User[];
 
-  constructor(
-    private is: InventoryService,
-    private us: UserService,
-    private route: ActivatedRoute,
-    public dialog: MatDialog,
-    private router: Router
-  ) {}
+  /**
+   * The intersection flag signals to the isValid method if the lists
+   * have intersections within.
+   *
+   * A user may only either be owner, admin, writable or readable at once.
+   *
+   * This flag is true when there is intersection between those roles.
+   */
+  private intersectionFlag = true;
+
+  /**
+   * The formGroup of EditInventoryComponent
+   */
+  formGroup: FormGroup;
 
   ngOnInit(): void {
+    this.initIt().then(() => {
+      console.log(this.owner);
+      console.log(this.admins);
+      console.log(this.writables);
+      console.log(this.readables);
+    });
+  }
+
+  async initIt(): Promise<void> {
+    await this.is.ready;
     console.log(
       "Get inventory from InventoryService: " +
         this.route.snapshot.params.inventoryUuid
     );
-
     this.inventory = this.is.inventories[
       this.route.snapshot.params.inventoryUuid
     ];
+    console.log(this.inventory);
+
+    // Owner
+    this.owner = await this.as.getUserByUuid(this.inventory.ownerUuid);
+
+    // Admins
+    for (const uuid of this.inventory.adminUuids) {
+      this.admins.push(await this.as.getUserByUuid(uuid));
+    }
+
+    // Writables
+    for (const uuid of this.inventory.writableUuids) {
+      this.writables.push(await this.as.getUserByUuid(uuid));
+    }
+
+    // Readables
+    for (const uuid of this.inventory.readableUuids) {
+      this.readables.push(await this.as.getUserByUuid(uuid));
+    }
+  }
+
+  /**
+   * Initiates the formGroup
+   */
+  createForm(): void {
+    this.formGroup = this.fb.group({
+      inventoryName: ["", [Validators.required]],
+      ownerEmail: ["", [Validators.email]],
+      adminEmail: ["", [Validators.email]],
+      writableEmail: ["", [Validators.email]],
+      readableEmail: ["", [Validators.email]]
+    });
   }
 
   /**
    * Generate an error message for when the email field is invalid
    */
   getErrorMessage(): string {
-    return this.ownerEmail.hasError("required")
+    return this.formGroup.controls.inventoryName.hasError("required")
       ? "You must enter a value"
-      : this.ownerEmail.hasError("email")
-      ? "Not a valid email"
       : "";
   }
 
-  onEditInventory(): void {
+  /**
+   * Handles form submission
+   */
+  onSubmit(): void {
     this.updateInventory().then(() => {
       if (!this.oof) {
         this.router.navigate(["things"], { relativeTo: this.route });
@@ -103,6 +170,9 @@ export class EditInventoryComponent implements OnInit {
     });
   }
 
+  /**
+   * Uses the InventoryService to update the inventory
+   */
   async updateInventory(): Promise<void> {
     // TODO implement
   }
@@ -153,19 +223,40 @@ export class EditInventoryComponent implements OnInit {
 
   // owner
 
+  /**
+   * Handles a matChipInputTokenEnd event
+   *
+   * @param event The event emitted by the template
+   */
   onAddOwner(event: MatChipInputEvent): void {
     this.addOwner(event).then();
   }
 
+  /**
+   * Implements the logic required to separate the input-text into chips
+   *
+   * @param event The event emitted by the template
+   */
   async addOwner(event: MatChipInputEvent): Promise<void> {
+    /**
+     * The HTML input element the event was emitted from
+     */
     const input: HTMLInputElement = event.input;
+
+    /**
+     * The value of the field when the event was emitted
+     */
     const value: string = event.value;
 
-    // Add the admin
+    // TODO revisit; maybe remove `if`
     if ((value || "").trim()) {
+      /**
+       * The user to be appended to a list
+       */
       let user: User;
       try {
-        user = await this.us.getUser(value.trim());
+        // Try to resolve the email address received as input
+        user = await this.as.getUserByUuid(value.trim());
         this.owner = user;
       } catch (error) {
         this.userNotFound = true;
@@ -192,7 +283,7 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.us.getUser(value.trim());
+        user = await this.as.getUserByUuid(value.trim());
         this.inventory.adminUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
@@ -223,8 +314,8 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.us.getUser(value.trim());
-        this.inventory.WritableUuids.push(user.uuid);
+        user = await this.as.getUserByUuid(value.trim());
+        this.inventory.writableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
       }
@@ -238,10 +329,10 @@ export class EditInventoryComponent implements OnInit {
   }
 
   removeWritable(writable: User): void {
-    const index: number = this.inventory.WritableUuids.indexOf(writable.uuid);
+    const index: number = this.inventory.writableUuids.indexOf(writable.uuid);
 
     if (index >= 0) {
-      this.inventory.WritableUuids.splice(index, 1);
+      this.inventory.writableUuids.splice(index, 1);
     }
   }
 
@@ -254,7 +345,7 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.us.getUser(value.trim());
+        user = await this.as.getUserByUuid(value.trim());
         this.inventory.readableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
@@ -274,5 +365,26 @@ export class EditInventoryComponent implements OnInit {
     if (index >= 0) {
       this.inventory.readableUuids.splice(index, 1);
     }
+  }
+
+  /**
+   * A quick-to-compute method returning the state of the forms validity
+   *
+   * Checks for the validity of the inventory name, that an owner exists and
+   * that the input is free of intersection(s).
+   *
+   * Used to check if the submit button is to be enabled.
+   *
+   * @returns true, if the forms state is valid
+   */
+  isValid(): boolean {
+    return (
+      // Check if the inventory name is valid
+      this.formGroup.valid &&
+      // Check, if the owner is null
+      this.owner != null &&
+      // Check for user intersection
+      !this.intersectionFlag
+    );
   }
 }

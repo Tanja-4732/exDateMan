@@ -17,7 +17,7 @@
 
   <!-- Continue if ok -->
   <span *ngIf="!notFound && !loading">
-    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
       <!-- Inventory name -->
       <mat-form-field appearance="outline">
         <mat-label>Inventory name</mat-label>
@@ -25,7 +25,7 @@
           matInput
           type="text"
           placeholder="Someones inventory"
-          formControlName="name"
+          formControlName="inventoryName"
           required
         />
         <i matSuffix class="material-icons">crop_free</i>
@@ -45,13 +45,13 @@
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
             (matChipInputTokenEnd)="onAddOwner($event)"
-            [formControl]="ownerEmail"
+            formControlName="ownerEmail"
           />
         </mat-chip-list>
         <i matSuffix class="material-icons">build</i>
-        <mat-error *ngIf="ownerEmail.invalid">{{
-          getErrorMessage()
-        }}</mat-error>
+        <mat-error *ngIf="owner == null || owner.email == null">
+          The owner must be specified.
+        </mat-error>
       </mat-form-field>
       <br />
 
@@ -74,17 +74,19 @@
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
             (matChipInputTokenEnd)="addAdmin($event)"
+            formControlName="adminEmail"
           />
         </mat-chip-list>
         <i matSuffix class="material-icons">build</i>
       </mat-form-field>
       <br />
 
+      <!-- Writables -->
       <mat-form-field appearance="outline">
         <mat-label>Writables</mat-label>
         <mat-chip-list #WritablesChipList>
           <mat-chip
-            *ngFor="let writable of Writables"
+            *ngFor="let writable of writables"
             [selectable]="selectable"
             [removable]="removable"
             (removed)="removeWritable(writable)"
@@ -98,12 +100,14 @@
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
             (matChipInputTokenEnd)="addWritable($event)"
+            formControlName="writableEmail"
           />
         </mat-chip-list>
         <i matSuffix class="material-icons">create</i>
       </mat-form-field>
       <br />
 
+      <!-- Readables -->
       <mat-form-field appearance="outline">
         <mat-label>Readables</mat-label>
         <mat-chip-list #readablesChipList>
@@ -112,6 +116,7 @@
             [selectable]="selectable"
             [removable]="removable"
             (removed)="removeReadable(readable)"
+            formControlName="readableEmail"
           >
             {{ readable.name }}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
@@ -134,7 +139,7 @@
       mat-raised-button
       color="accent"
       type="submit"
-      [disabled]="!form.valid"
+      [disabled]="!isValid()"
     >
       Save changes
     </button>

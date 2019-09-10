@@ -67,7 +67,7 @@ export class AuthService {
   /**
    * Fetches info from the server about the current login status
    */
-  async getUser(): Promise<GetStatusResponse> {
+  async getCurrentUser(): Promise<GetStatusResponse> {
     return await this.http
       .get<GetStatusResponse>(this.baseUrl + "/authentication/status")
       .toPromise();
@@ -78,6 +78,28 @@ export class AuthService {
   ): Promise<{ status: string; user: User }> {
     return await this.http
       .put<{ status: string; user: User }>(this.baseUrl + "/account", user)
+      .toPromise();
+  }
+
+  /**
+   * Fetches a user by email their address from the API
+   *
+   * @param email The email address to be resolved to a user
+   */
+  async resolveUser(email: string): Promise<User> {
+    return await this.http
+      .get<User>("/authentication/resolve/" + email)
+      .toPromise();
+  }
+
+  /**
+   * Fetches a user by UUID from the API
+   *
+   * @param uuid The uuid of the user to be fetched
+   */
+  async getUserByUuid(uuid: string): Promise<User> {
+    return await this.http
+      .post<User>("/authentication/user", { uuid })
       .toPromise();
   }
 }

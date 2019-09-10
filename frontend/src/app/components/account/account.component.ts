@@ -53,7 +53,7 @@ export class AccountComponent implements OnInit {
 
   async loadUser(): Promise<void> {
     try {
-      this.user = ((await this.as.getUser()).user as unknown) as User; // TODO FixMe
+      this.user = ((await this.as.getCurrentUser()).user as unknown) as User; // TODO FixMe
       console.log(this.user);
 
       this.form.patchValue(this.user);
