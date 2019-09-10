@@ -61,8 +61,7 @@ export class Authentication {
       this.handleResolveEmail(req, res),
     );
 
-    // This is a post request, because GET /user/:uuid didn't work
-    this.routes.post("/user", (req: Request, res: Response) =>
+    this.routes.get("/user/:uuid", (req: Request, res: Response) =>
       this.handleGetUser(req, res),
     );
 
@@ -106,7 +105,7 @@ export class Authentication {
    */
   private handleGetUser(req: Request, res: Response): void {
     log("User UUID:");
-    log(req.body.uuid);
+    log(req.params.uuid);
     log("User UUID above");
 
     /**
@@ -119,7 +118,7 @@ export class Authentication {
         {},
 
         // The user with a matching email adress (if any) is the source
-        this.users.find((user: User) => req.body.uuid === user.uuid),
+        this.users.find((user: User) => req.params.uuid === user.uuid),
       );
 
     // Send an error as response and return

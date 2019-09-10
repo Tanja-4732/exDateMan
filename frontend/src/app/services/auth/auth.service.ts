@@ -88,7 +88,7 @@ export class AuthService {
    */
   async resolveUser(email: string): Promise<User> {
     return await this.http
-      .get<User>("/authentication/resolve/" + email)
+      .get<User>(this.baseUrl + "/authentication/resolve/" + email)
       .toPromise();
   }
 
@@ -99,7 +99,7 @@ export class AuthService {
    */
   async getUserByUuid(uuid: string): Promise<User> {
     return await this.http
-      .post<User>("/authentication/user", { uuid })
+      .get<User>(this.baseUrl + "/authentication/user/" + uuid)
       .toPromise();
   }
 }
