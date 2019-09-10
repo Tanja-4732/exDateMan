@@ -87,7 +87,7 @@ export class Authentication {
       );
 
     // Send an error as response and return
-    if (result == null) {
+    if (JSON.stringify(result) === "{}") {
       res.sendStatus(404);
       return;
     }
@@ -104,10 +104,6 @@ export class Authentication {
    * Handles API requests to get users by UUID
    */
   private handleGetUser(req: Request, res: Response): void {
-    log("User UUID:");
-    log(req.params.uuid);
-    log("User UUID above");
-
     /**
      * This constant holds the copy of the found value
      */
@@ -122,7 +118,7 @@ export class Authentication {
       );
 
     // Send an error as response and return
-    if (result == null) {
+    if (JSON.stringify(result) === "{}") {
       res.sendStatus(404);
       return;
     }

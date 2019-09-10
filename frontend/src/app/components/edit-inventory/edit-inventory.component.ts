@@ -248,6 +248,9 @@ export class EditInventoryComponent implements OnInit {
      */
     const value: string = event.value;
 
+    console.log("The value:");
+    console.log(value);
+
     // TODO revisit; maybe remove `if`
     if ((value || "").trim()) {
       /**
@@ -256,7 +259,7 @@ export class EditInventoryComponent implements OnInit {
       let user: User;
       try {
         // Try to resolve the email address received as input
-        user = await this.as.getUserByUuid(value.trim());
+        user = await this.as.resolveUser(value.trim());
         this.owner = user;
       } catch (error) {
         this.userNotFound = true;
@@ -283,7 +286,7 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.as.getUserByUuid(value.trim());
+        user = await this.as.resolveUser(value.trim());
         this.inventory.adminUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
@@ -314,7 +317,7 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.as.getUserByUuid(value.trim());
+        user = await this.as.resolveUser(value.trim());
         this.inventory.writableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
@@ -345,7 +348,7 @@ export class EditInventoryComponent implements OnInit {
     if ((value || "").trim()) {
       let user: User;
       try {
-        user = await this.as.getUserByUuid(value.trim());
+        user = await this.as.resolveUser(value.trim());
         this.inventory.readableUuids.push(user.uuid);
       } catch (error) {
         this.userNotFound = true;
