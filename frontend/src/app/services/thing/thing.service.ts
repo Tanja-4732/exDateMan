@@ -19,9 +19,9 @@ export class ThingService {
       .toPromise();
   }
 
-  async getThings(inventoryId: number): Promise<Thing[]> {
+  async getThings(inventoryUuid: string): Promise<Thing[]> {
     return await this.http
-      .get<Thing[]>(this.baseUrl + "/inventories/" + inventoryId + "/things")
+      .get<Thing[]>(this.baseUrl + "/inventories/" + inventoryUuid + "/things")
       .toPromise();
   }
 
@@ -45,11 +45,7 @@ export class ThingService {
   async updateThing(thing: Thing, inventoryId: number): Promise<Thing> {
     return await this.http
       .put<Thing>(
-        this.baseUrl +
-          "/inventories/" +
-          inventoryId +
-          "/things/" +
-          thing.id,
+        this.baseUrl + "/inventories/" + inventoryId + "/things/" + thing.id,
         thing
       )
       .toPromise();

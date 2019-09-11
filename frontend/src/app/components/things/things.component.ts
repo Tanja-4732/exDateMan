@@ -10,13 +10,13 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./things.component.scss"]
 })
 export class ThingsComponent implements OnInit {
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
-  oof: boolean = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
+  oof = false;
 
   things: Thing[] = [];
-  inventoryId: number;
+  inventoryUuid: string;
 
   constructor(
     private ts: ThingService,
@@ -36,7 +36,7 @@ export class ThingsComponent implements OnInit {
 
   async getThings(): Promise<void> {
     try {
-      this.things = await this.ts.getThings(this.inventoryId);
+      this.things = await this.ts.getThings(this.inventoryUuid);
       this.loading = false;
     } catch (error) {
       this.oof = true;
@@ -56,7 +56,7 @@ export class ThingsComponent implements OnInit {
   }
 
   getInventoryId(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
   }
 
   onAddThing(): void {}

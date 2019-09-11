@@ -37,8 +37,8 @@
         <mat-label>Owner</mat-label>
         <mat-chip-list #OwnerChipList aria-label="Owner">
           <mat-chip [selectable]="selectable" [removable]="false">
-            <!-- {{ owner.name }} <br /> -->
-            <!-- ({{ owner.email }}) -->
+            {{ owner.name }} <br />
+            ({{ owner.email }})
           </mat-chip>
           <input
             placeholder="someone@example.com"
