@@ -71,17 +71,17 @@ export class EditInventoryComponent implements OnInit {
   /**
    * The users allowed to make changes to the inventory itself
    */
-  admins: User[];
+  admins: User[] = [];
 
   /**
    * The users allowed to make changes to the inventories contents
    */
-  writables: User[];
+  writables: User[] = [];
 
   /**
    * The users allowed to read data from the inventory
    */
-  readables: User[];
+  readables: User[] = [];
 
   /**
    * The intersection flag signals to the isValid method if the lists
@@ -100,13 +100,23 @@ export class EditInventoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.initIt().then(() => {
+      console.log("owner");
       console.log(this.owner);
+
+      console.log("admins");
       console.log(this.admins);
+
+      console.log("writables");
       console.log(this.writables);
+
+      console.log("readables");
       console.log(this.readables);
     });
   }
 
+  /**
+   * Initializes this component
+   */
   async initIt(): Promise<void> {
     await this.is.ready;
     console.log(

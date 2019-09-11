@@ -37,7 +37,8 @@
         <mat-label>Owner</mat-label>
         <mat-chip-list #OwnerChipList aria-label="Owner">
           <mat-chip [selectable]="selectable" [removable]="false">
-            {{ owner.name }}
+            <!-- {{ owner.name }} <br /> -->
+            <!-- ({{ owner.email }}) -->
           </mat-chip>
           <input
             placeholder="someone@example.com"
@@ -65,7 +66,8 @@
             [removable]="removable"
             (removed)="removeAdmin(admin)"
           >
-            {{ admin.name }}
+            <!-- {{ admin.name }}<br /> -->
+            <!-- ({{ admin.email }}) -->
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
           <input
@@ -91,7 +93,8 @@
             [removable]="removable"
             (removed)="removeWritable(writable)"
           >
-            {{ writable.name }}
+            <!-- {{ writable.name }}<br /> -->
+            <!-- ({{ writable.email }}) -->
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
           <input
@@ -116,9 +119,9 @@
             [selectable]="selectable"
             [removable]="removable"
             (removed)="removeReadable(readable)"
-            formControlName="readableEmail"
           >
-            {{ readable.name }}
+            <!-- {{ readable.name }}<br /> -->
+            <!-- ({{ readable.email }}) -->
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
           <input
@@ -127,6 +130,7 @@
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
             [matChipInputAddOnBlur]="addOnBlur"
             (matChipInputTokenEnd)="addReadable($event)"
+            formControlName="readableEmail"
           />
         </mat-chip-list>
         <i matSuffix class="material-icons">import_contacts</i>
@@ -171,3 +175,13 @@
     <code>{{ inventory.uuid }}</code>
   </div>
 </span>
+
+<mat-chip-list>
+  <mat-chip
+    *ngFor="let element of myUl"
+    [selectable]="selectable"
+    [removable]="removable"
+  >
+    {{ element.hi }}</mat-chip
+  >
+</mat-chip-list>
