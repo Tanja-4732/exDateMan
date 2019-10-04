@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { AuthService, LoginResponse } from "../../services/auth/auth.service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { InventoryService } from "../../services/inventory/inventory.service";
 
 @Component({
   selector: "app-login",
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private as: AuthService,
     private fb: FormBuilder,
+    private is: InventoryService,
     private router: Router
   ) {
     this.createForm();
@@ -44,6 +46,9 @@ export class LoginComponent implements OnInit {
         this.form.value.totp
       );
       this.oof = false;
+
+      // Refresh the inventories
+      // await this.is.reFetchAll();
 
       this.router.navigate(["/inventories"], { relativeTo: this.route });
     } catch (error) {

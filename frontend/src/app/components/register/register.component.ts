@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../services/auth/auth.service";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { CustomValidatorsService } from "../../services/CustomValidators/custom-validators.service";
+import { InventoryService } from "../../services/inventory/inventory.service";
 
 @Component({
   selector: "app-register",
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private as: AuthService,
+    private is: InventoryService,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -53,6 +55,10 @@ export class RegisterComponent implements OnInit {
       );
       this.oof = false;
       this.emailInUse = false;
+
+      // Refresh the inventories
+      // await this.is.reFetchAll();
+
       this.router.navigate(["/inventories"], { relativeTo: this.route });
     } catch (error) {
       this.oof = true;
