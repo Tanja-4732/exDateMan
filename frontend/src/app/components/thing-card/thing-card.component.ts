@@ -11,10 +11,10 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./thing-card.component.scss"]
 })
 export class ThingCardComponent implements OnInit {
-  oof: boolean = false;
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
+  oof = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
 
   @Input()
   thing: Thing;
@@ -31,15 +31,12 @@ export class ThingCardComponent implements OnInit {
   }
 
   getInventoryId(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
+    this.inventoryId = this.route.snapshot.params.inventoryId;
   }
 
   async setStocks(): Promise<void> {
     try {
-      this.stocks = await this.ss.getStocks(
-        this.inventoryId,
-        this.thing.id
-      );
+      this.stocks = await this.ss.getStocks(this.inventoryId, this.thing.uuid);
       this.loading = false;
     } catch (error) {
       this.oof = true;

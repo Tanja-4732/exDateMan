@@ -55,7 +55,7 @@ export class AddThingComponent implements OnInit {
   async createThing(): Promise<void> {
     try {
       this.copyData();
-      this.thing.categories = [];
+      this.thing.categoryUuids = [];
       await this.ts.newThing(this.thing, this.inventoryId);
       this.oof = false;
     } catch (err) {

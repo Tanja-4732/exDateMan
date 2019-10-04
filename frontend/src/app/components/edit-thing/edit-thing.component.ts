@@ -13,11 +13,11 @@ import { FormGroup, Validators, FormBuilder } from "@angular/forms";
   styleUrls: ["./edit-thing.component.scss"]
 })
 export class EditThingComponent implements OnInit {
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
-  oof: boolean = false;
-  reallyDelete: boolean = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
+  oof = false;
+  reallyDelete = false;
 
   inventoryId: number;
   thingNumber: number;
@@ -32,7 +32,7 @@ export class EditThingComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder
-    ) {
+  ) {
     this.createForm();
   }
 
@@ -56,12 +56,12 @@ export class EditThingComponent implements OnInit {
 
   private copyData(): void {
     this.thing = this.form.value;
-    this.thing.id = this.thingNumber;
+    this.thing.uuid = this.thingNumber;
   }
 
   getIds(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
-    this.thingNumber = this.route.snapshot.params["thingNumber"];
+    this.inventoryId = this.route.snapshot.params.inventoryId;
+    this.thingNumber = this.route.snapshot.params.thingNumber;
   }
 
   async getThing(): Promise<void> {
