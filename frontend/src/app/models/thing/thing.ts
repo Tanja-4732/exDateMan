@@ -1,8 +1,5 @@
-import { Category } from "../category/category";
-import { Stock } from "../stock/stock";
-
 export class Thing {
-  id: number;
+  uuid: string;
   name: string;
-  categories: Category[];
+  categoryUuids: string[];
 }

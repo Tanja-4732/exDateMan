@@ -48,6 +48,14 @@ export class InventoryService {
   public ready: Promise<any>;
 
   /**
+   * Re-fetches all events from the EventSourcingService
+   */
+  public async reFetchAll(): Promise<void> {
+    await this.ess.reFetchAll();
+    await this.fetchInventoryEvents();
+  }
+
+  /**
    * Obtains the inventories event log from the db and parses them
    */
   private async fetchInventoryEvents() {

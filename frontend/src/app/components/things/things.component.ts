@@ -36,7 +36,11 @@ export class ThingsComponent implements OnInit {
 
   async getThings(): Promise<void> {
     try {
+      console.log("Getting things");
+
       this.things = await this.ts.getThings(this.inventoryUuid);
+      console.log("Got things");
+
       this.loading = false;
     } catch (error) {
       this.oof = true;

@@ -130,6 +130,6 @@ export interface GetStatusResponse {
   user: {
     uuid: string;
     email: string;
-    name?: string;
+    name: string;
   };
 }

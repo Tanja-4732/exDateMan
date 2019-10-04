@@ -1,3 +1,4 @@
+<!-- Main nav list -->
 <mat-nav-list class="mat-typography">
   <a mat-list-item routerLink="/welcome">
     <mat-icon>home</mat-icon>
@@ -14,35 +15,36 @@
     &nbsp; Register
   </a>
 
-  <a mat-list-item routerLink="/events">
-    <mat-icon>blur_on</mat-icon>
-    &nbsp; Events
-  </a>
+  <ng-container *ngIf="loggedIn">
+    <a mat-list-item routerLink="/events">
+      <mat-icon>blur_on</mat-icon>
+      &nbsp; Events
+    </a>
 
-  <a mat-list-item routerLink="/scan">
-    <mat-icon>camera</mat-icon>
-    &nbsp; Scan
-  </a>
+    <a mat-list-item routerLink="/scan">
+      <mat-icon>camera</mat-icon>
+      &nbsp; Scan
+    </a>
 
-  <a mat-list-item routerLink="/inventories">
-    <mat-icon>work</mat-icon>
-    &nbsp; Inventories
-  </a>
+    <a mat-list-item routerLink="/inventories">
+      <mat-icon>work</mat-icon>
+      &nbsp; Inventories
+    </a>
 
-  <a mat-list-item routerLink="/inventories/new">
-    <mat-icon>add</mat-icon>
-    &nbsp; New inventory
-  </a>
+    <a mat-list-item routerLink="/inventories/new">
+      <mat-icon>add</mat-icon>
+      &nbsp; New inventory
+    </a>
 
-  <a
-    mat-list-item
-    routerLink="/inventories/8d21378c-5a1f-40af-b496-1a543d15464e/"
-  >
-    <mat-icon>add</mat-icon>
-    &nbsp; Up
-  </a>
+    <a
+      mat-list-item
+      routerLink="/inventories/8d21378c-5a1f-40af-b496-1a543d15464e/"
+    >
+      <mat-icon>add</mat-icon>
+      &nbsp; Up
+    </a>
 
-  <!-- <a mat-list-item routerLink="/inventories/1">
+    <!-- <a mat-list-item routerLink="/inventories/1">
     <mat-icon>camera</mat-icon>
     &nbsp; Edit inventory
   </a>
@@ -76,4 +78,5 @@
     <mat-icon>camera</mat-icon>
     &nbsp; Edit stock
   </a> -->
+  </ng-container>
 </mat-nav-list>

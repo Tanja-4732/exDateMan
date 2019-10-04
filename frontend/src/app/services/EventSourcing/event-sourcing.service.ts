@@ -46,6 +46,13 @@ export class EventSourcingService {
   private baseUrl: string = environment.baseUrl;
 
   /**
+   * Re-fetches all events from the API
+   */
+  public async reFetchAll(): Promise<void> {
+    await this.fetchAllInventoryEvents();
+  }
+
+  /**
    * Fetches a list of all accessible inventory uuids via the API
    *
    * Then it iterates over said list and fetches the events of each

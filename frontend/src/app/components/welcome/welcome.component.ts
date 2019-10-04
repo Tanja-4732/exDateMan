@@ -21,7 +21,7 @@ export class WelcomeComponent implements OnInit {
 
   user: { uuid: string; email: string; name?: string };
 
-  constructor(private as: AuthService) {}
+  constructor(private as: AuthService, private is: InventoryService) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -51,6 +51,10 @@ export class WelcomeComponent implements OnInit {
   async logout(): Promise<void> {
     try {
       await this.as.logout();
+
+      // Refresh the inventories
+      // await this.is.reFetchAll();
+
       this.loggedIn = false;
     } catch (error) {
       console.log(error);
