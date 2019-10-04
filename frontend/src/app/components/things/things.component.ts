@@ -24,9 +24,14 @@ export class ThingsComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.getInventoryId();
-    this.getThings().then();
+  async ngOnInit(): Promise<void> {
+    // Get Inventory UUID
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+
+    // Fetch the things of this inventory
+    await this.getThings();
+
+    // Navigate to the login component 3 seconds after being unauthorized
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
@@ -39,6 +44,8 @@ export class ThingsComponent implements OnInit {
       console.log("Getting things");
 
       this.things = await this.ts.getThings(this.inventoryUuid);
+      console.log(this.things);
+
       console.log("Got things");
 
       this.loading = false;
@@ -57,10 +64,6 @@ export class ThingsComponent implements OnInit {
         console.log("Unknown error in add-stock while creating");
       }
     }
-  }
-
-  getInventoryId(): void {
-    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
   }
 
   onAddThing(): void {}

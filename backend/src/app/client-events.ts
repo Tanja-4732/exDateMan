@@ -339,6 +339,11 @@ export interface InventoryEvent {
        * This field may only be set in an category-created event
        */
       createdOn?: Date;
+
+      /**
+       * The UUIDs of the categories this thing has
+       */
+      categoryUuids?: string[];
     };
 
     /**

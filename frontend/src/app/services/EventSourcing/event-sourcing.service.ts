@@ -239,7 +239,7 @@ export interface Event {
       /**
        * The name of the thing
        */
-      name: string;
+      name?: string;
 
       /**
        * The date of the creation of this category
@@ -247,6 +247,11 @@ export interface Event {
        * This field may only be set in an category-created event
        */
       createdOn?: Date;
+
+      /**
+       * The UUIDs of the categories this thing has
+       */
+      categoryUuids?: string[];
     };
 
     /**
