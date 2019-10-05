@@ -6,8 +6,10 @@ import { InventoryService } from "../inventory/inventory.service";
 import {
   EventSourcingService,
   crudType,
-  itemType
+  itemType,
+  Event
 } from "../EventSourcing/event-sourcing.service";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable({
   providedIn: "root"
@@ -32,7 +34,11 @@ export class ThingService {
    */
   public ready: Promise<any>;
 
-  constructor(private is: InventoryService, private ess: EventSourcingService) {
+  constructor(
+    private is: InventoryService,
+    private ess: EventSourcingService,
+    private as: AuthService
+  ) {
     // Ready declaration
     this.ready = new Promise((resolve, reject) => {
       if (ThingService.inventoryTingsProjection == null) {
@@ -54,6 +60,10 @@ export class ThingService {
    */
   async fetchAllInventoryThings() {
     console.log("fetch all");
+
+    // Wait for the InventoryService & EventSourcingService to be ready
+    await this.is.ready;
+    await this.ess.ready;
 
     // Initialize the array
     ThingService.inventoryTingsProjection = ([] as unknown) as {
@@ -84,10 +94,6 @@ export class ThingService {
    * @param inventoryUuid The UUID of the inventory to be fetched
    */
   async fetchInventoryThings(inventoryUuid: string) {
-    // Wait for the InventoryService & EventSourcingService to be ready
-    await this.is.ready;
-    await this.ess.ready;
-
     // Iterate over the events
     for (const event of this.ess.events[inventoryUuid]) {
       // Only apply Thing events
@@ -186,7 +192,32 @@ export class ThingService {
    * @param thing The thing to be created
    * @param inventoryUuid THhe UUID of the things inventory
    */
-  async newThing(thing: Thing, inventoryUuid: string): Promise<Thing> {}
+  async newThing(thing: Thing, inventoryUuid: string): Promise<void> {
+    // Wait for ThingService to be ready
+    await this.ready;
+
+    const now = new Date();
+    /**
+     * The new-inventory event
+     */
+    const newInventoryEvent: Event = {
+      inventoryUuid,
+      date: now,
+      data: {
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        crudType: crudType.CREATE,
+        itemType: itemType.THING,
+        uuid: thing.uuid,
+        thingData: {
+          name: thing.name,
+          createdOn: now,
+          categoryUuids: thing.categoryUuids
+        }
+      }
+    };
+
+    await this.ess.appendEventToInventoryLog(newInventoryEvent);
+  }
 
   // TODO
   async updateThing(thing: Thing, inventoryUuid: string): Promise<Thing> {}

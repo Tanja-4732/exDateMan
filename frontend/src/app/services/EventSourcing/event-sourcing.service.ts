@@ -91,11 +91,11 @@ export class EventSourcingService {
   }
 
   /**
-   * Appends an event to its corresponding event log
+   * Appends an event to its corresponding event log and sends it to the API
    *
    * @param event The event to be appended to its log
    */
-  public async appendEventToInventoryStream(event: Event): Promise<void> {
+  public async appendEventToInventoryLog(event: Event): Promise<void> {
     try {
       // Transmit the event to the server to be stored in the db
       const res: Event[] = await this.api
@@ -104,7 +104,11 @@ export class EventSourcingService {
 
       // After a successful transmission, the event gets appended to the local event log
       EventSourcingService.eventLogs[event.inventoryUuid].push(event);
-    } catch (err) {}
+    } catch (err) {
+      console.log("Couldn't push event");
+
+      console.error(err);
+    }
   }
 }
 

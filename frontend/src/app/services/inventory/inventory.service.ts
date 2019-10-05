@@ -181,7 +181,7 @@ export class InventoryService {
     };
 
     // Append to the event log
-    await this.ess.appendEventToInventoryStream(createInventoryEvent);
+    await this.ess.appendEventToInventoryLog(createInventoryEvent);
 
     // Update the inventories projection
     return this.updateInventoriesProjection(createInventoryEvent);
@@ -223,7 +223,7 @@ export class InventoryService {
     } as Event;
 
     // Append to the event log
-    await this.ess.appendEventToInventoryStream(updateInventoryEvent);
+    await this.ess.appendEventToInventoryLog(updateInventoryEvent);
 
     // Update the inventories projection
     return this.updateInventoriesProjection(updateInventoryEvent);
@@ -255,7 +255,7 @@ export class InventoryService {
     } as Event;
 
     // Append to the event log
-    await this.ess.appendEventToInventoryStream(deleteInventoryEvent);
+    await this.ess.appendEventToInventoryLog(deleteInventoryEvent);
 
     // Update the inventories projection
     return this.updateInventoriesProjection(deleteInventoryEvent);

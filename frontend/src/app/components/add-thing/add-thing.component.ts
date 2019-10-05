@@ -10,11 +10,11 @@ import { Validators, FormBuilder, FormGroup } from "@angular/forms";
   styleUrls: ["./add-thing.component.scss"]
 })
 export class AddThingComponent implements OnInit {
-  oof: boolean = false; // Error flag
-  unauthorized: boolean = false;
+  oof = false; // Error flag
+  unauthorized = false;
 
   thing: Thing;
-  inventoryId: number;
+  inventoryId: string;
 
   form: FormGroup;
 
@@ -23,15 +23,15 @@ export class AddThingComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder
-    ) {
+  ) {
     this.createForm();
-    }
+  }
 
-    createForm(): void {
-      this.form = this.fb.group({
-        name: ["", [Validators.required]]
-      });
-    }
+  createForm(): void {
+    this.form = this.fb.group({
+      name: ["", [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.getInventoryId();
@@ -61,11 +61,10 @@ export class AddThingComponent implements OnInit {
     } catch (err) {
       console.log("oof"); // TODO remove log
       console.log(err);
-
     }
   }
 
   getInventoryId(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
+    this.inventoryId = this.route.snapshot.params.inventoryId;
   }
 }
