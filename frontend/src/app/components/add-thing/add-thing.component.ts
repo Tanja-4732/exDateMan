@@ -14,7 +14,7 @@ export class AddThingComponent implements OnInit {
   unauthorized = false;
 
   thing: Thing;
-  inventoryId: string;
+  inventoryUuid: string;
 
   form: FormGroup;
 
@@ -34,7 +34,7 @@ export class AddThingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getInventoryId();
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
@@ -56,15 +56,12 @@ export class AddThingComponent implements OnInit {
     try {
       this.copyData();
       this.thing.categoryUuids = [];
-      await this.ts.newThing(this.thing, this.inventoryId);
+      console.log(this.inventoryUuid);
+      await this.ts.newThing(this.thing, this.inventoryUuid);
       this.oof = false;
     } catch (err) {
       console.log("oof"); // TODO remove log
       console.log(err);
     }
-  }
-
-  getInventoryId(): void {
-    this.inventoryId = this.route.snapshot.params.inventoryId;
   }
 }
