@@ -2,14 +2,85 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
 import { Stock } from "../../models/stock/stock";
+import { ThingService } from "../thing/thing.service";
+import { InventoryService } from "../inventory/inventory.service";
+import { EventSourcingService } from "../EventSourcing/event-sourcing.service";
+import { AuthService } from "../auth/auth.service";
+import { Thing } from "../../models/thing/thing";
 
 @Injectable({
   providedIn: "root"
 })
 export class StockService {
-  private readonly baseUrl: string = environment.baseUrl;
+  /**
+   * The current state of Stocks of all Things of all Inventories
+   *
+   * (a projection from the event logs)
+   */
+  private static inventoryTingsStocksProjection: {
+    [inventoryUuid: string]: { [thingUuid: string]: Stock[] };
+  };
 
-  constructor(private http: HttpClient) {}
+  /**
+   * Sneaky stuff
+   *
+   * Used to get around the "no async constructors" limitation
+   */
+  public ready: Promise<any>;
+
+  constructor(
+    private ts: ThingService,
+    private is: InventoryService,
+    private ess: EventSourcingService,
+    private as: AuthService
+  ) {
+    // Ready declaration
+    this.ready = new Promise((resolve, reject) => {
+      if (StockService.inventoryTingsStocksProjection == null) {
+        this.fetchAllInventoryThingStocks().then(result => {
+          // Mark as ready
+          resolve(null);
+        });
+      } else {
+        // Mark as ready
+        resolve(null);
+      }
+    });
+  }
+
+  /**
+   * Iterates over all inventories and their Things and fetches their Stocks
+   */
+  async fetchAllInventoryThingStocks() {
+    console.log("fetch all Stocks");
+
+    // Wait for the InventoryService & EventSourcingService to be ready
+    await this.ts.ready;
+    await this.is.ready;
+    await this.ess.ready;
+
+    // Initialize the array
+    ThingService.inventoryTingsProjection = ([] as unknown) as {
+      [uuid: string]: Thing[];
+    };
+
+    for (const inventory in this.is.inventories) {
+      if (this.is.inventories.hasOwnProperty(inventory)) {
+        console.log("no oof");
+
+        const uuid = this.is.inventories[inventory].uuid;
+
+        console.log("and the inventory uuid is:");
+        console.log(uuid);
+
+        // Initialize the inner array
+        ThingService.inventoryTingsProjection[uuid] = [];
+
+        // Fetch and apply the Things of the Inventory
+        await this.fetchInventoryThings(uuid);
+      }
+    }
+  }
 
   async getStock(
     inventoryId: number,
@@ -35,28 +106,11 @@ export class StockService {
     return qRes;
   }
 
-  async getStocks(inventoryId: number, thingNumber: number): Promise<Stock[]> {
-    if (inventoryId == null || thingNumber == null) {
+  async getStocks(inventoryUuid: string, thingUuid: string): Promise<Stock[]> {
+    if (inventoryUuid == null || thingUuid == null) {
       throw new Error("Arguments invalid");
     }
-    const qRes: Stock[] = await this.http
-      .get<Stock[]>(
-        this.baseUrl +
-          "/inv/" +
-          inventoryId +
-          "/things/" +
-          thingNumber +
-          "/stocks"
-      )
-      .toPromise();
 
-    for (const stock of qRes) {
-      if (stock.openedOn != null) {
-        stock.openedOn = new Date(stock.openedOn);
-        stock.exDate = new Date(stock.exDate);
-        stock.addedOn = new Date(stock.addedOn);
-      }
-    }
     return qRes;
   }
 

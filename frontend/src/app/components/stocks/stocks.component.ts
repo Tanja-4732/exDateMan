@@ -10,56 +10,44 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ["./stocks.component.scss"]
 })
 export class StocksComponent implements OnInit {
-  oof: boolean = false;
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
+  // Flags
+  oof = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
 
-  inventoryId: number;
-  thingNumber: number;
+  // UUIDs
+  inventoryUuid: string;
+  thingUuid: string;
 
+  /**
+   * An array of all Stocks to be listed in this component
+   */
   stocks: Stock[] = [];
 
-  constructor(
-    private ss: StockService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private ss: StockService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    this.getInventoryIdAndThingNumber();
-    this.getStocks().then();
-    setTimeout(() => {
-      if (this.unauthorized) {
-        this.router.navigate(["/login"]);
-      }
-    }, 3000);
+  async ngOnInit(): Promise<void> {
+    // Get the inventory UUID
+    this.inventoryUuid = this.route.snapshot.params.inventoryId;
+
+    // Get the Thing UUID
+    this.thingUuid = this.route.snapshot.params.thingNumber;
+
+    // Fetch the Stocks
+    await this.getStocks();
   }
 
   async getStocks(): Promise<void> {
     try {
-      this.stocks = await this.ss.getStocks(this.inventoryId, this.thingNumber);
+      this.stocks = await this.ss.getStocks(this.inventoryUuid, this.thingUuid);
       this.loading = false;
     } catch (error) {
       this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
+      console.log(
+        "Unknown error in getStocks [StocksComponent] while creating"
+      );
     }
-  }
-
-  getInventoryIdAndThingNumber(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
-    this.thingNumber = this.route.snapshot.params["thingNumber"];
   }
 
   onAddStock(): void {}
