@@ -162,27 +162,27 @@ export class ThingService {
     }
   }
 
-  /**
-   * Get all things in an array of an inventory from the local projection
-   *
-   * @param inventoryUuid The UUID of the inventory of which to get the things of
-   */
-  async getThings(inventoryUuid: string): Promise<Thing[]> {
-    // Wait the ThingService itself is ready
-    await this.ready;
+  // /**
+  //  * Get all things in an array of an inventory from the local projection
+  //  *
+  //  * @param inventoryUuid The UUID of the inventory of which to get the things of
+  //  */
+  // async getThings(inventoryUuid: string): Promise<Thing[]> {
+  //   // Wait the ThingService itself is ready
+  //   await this.ready;
 
-    try {
-      // Get and return the thing array
-      return ThingService.inventoryTingsProjection[inventoryUuid];
-    } catch (err) {
-      // When the inventory couldn't be found
-      console.error(err);
+  //   try {
+  //     // Get and return the thing array
+  //     return ThingService.inventoryTingsProjection[inventoryUuid];
+  //   } catch (err) {
+  //     // When the inventory couldn't be found
+  //     console.error(err);
 
-      throw new Error(
-        " The inventory with UUID " + inventoryUuid + " couldn't be found."
-      );
-    }
-  }
+  //     throw new Error(
+  //       " The inventory with UUID " + inventoryUuid + " couldn't be found."
+  //     );
+  //   }
+  // }
 
   /**
    * Creates a thing by adding a thingCreatedEvent to the event log

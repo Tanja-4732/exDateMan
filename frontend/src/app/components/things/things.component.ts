@@ -45,7 +45,7 @@ export class ThingsComponent implements OnInit {
     try {
       console.log("Getting things");
 
-      this.things = await this.ts.getThings(this.inventoryUuid);
+      this.things = this.ts.things[this.inventoryUuid];
       console.log(this.things);
       console.log(JSON.stringify(this.things));
 
