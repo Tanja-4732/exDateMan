@@ -3,6 +3,7 @@ import { ThingService } from "../../services/thing/thing.service";
 import { Thing } from "../../models/thing/thing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Validators, FormBuilder, FormGroup } from "@angular/forms";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-add-thing",
@@ -56,6 +57,7 @@ export class AddThingComponent implements OnInit {
     try {
       this.copyData();
       this.thing.categoryUuids = [];
+      this.thing.uuid = v4();
       console.log(this.inventoryUuid);
       await this.ts.newThing(this.thing, this.inventoryUuid);
       this.oof = false;

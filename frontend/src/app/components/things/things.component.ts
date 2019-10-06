@@ -31,12 +31,14 @@ export class ThingsComponent implements OnInit {
     // Fetch the things of this inventory
     await this.getThings();
 
+    /*
     // Navigate to the login component 3 seconds after being unauthorized
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
       }
     }, 3000);
+    */
   }
 
   async getThings(): Promise<void> {
@@ -45,24 +47,16 @@ export class ThingsComponent implements OnInit {
 
       this.things = await this.ts.getThings(this.inventoryUuid);
       console.log(this.things);
+      console.log(JSON.stringify(this.things));
 
       console.log("Got things");
 
       this.loading = false;
     } catch (error) {
       this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
+
+      console.log("Unknown error in getThings while creating");
+      console.log(error);
     }
   }
 

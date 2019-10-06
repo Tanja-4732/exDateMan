@@ -1,14 +1,15 @@
-<a routerLink="{{ thing.id }}/stocks" class="noUnderline">
+<a routerLink="{{ thing.uuid }}/stocks" class="noUnderline">
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{ thing.name }}</mat-card-title>
 
       <mat-card-subtitle>
-        <span *ngIf="thing.categories.length === 0">
+        <span *ngIf="thing.categoryUuids.length === 0">
           No categories set
         </span>
-        <span *ngFor="let category of thing.categories">
-          {{ category.name }},
+        <span *ngFor="let category of thing.categoryUuids">
+          <!-- {{ category.name }}, -->
+          {{ category }},
         </span>
       </mat-card-subtitle>
     </mat-card-header>

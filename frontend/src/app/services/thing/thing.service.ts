@@ -42,8 +42,6 @@ export class ThingService {
     // Ready declaration
     this.ready = new Promise((resolve, reject) => {
       if (ThingService.inventoryTingsProjection == null) {
-        console.log("should fetch all");
-
         this.fetchAllInventoryThings().then(result => {
           // Mark as ready
           resolve(null);
@@ -76,7 +74,7 @@ export class ThingService {
 
         const uuid = this.is.inventories[inventory].uuid;
 
-        console.log("and the uuid is:");
+        console.log("and the inventory uuid is:");
         console.log(uuid);
 
         // Initialize the inner array
@@ -196,7 +194,14 @@ export class ThingService {
     // Wait for ThingService to be ready
     await this.ready;
 
+    /**
+     * The current date
+     *
+     * This is stored in a constant, in order to have the exact same date for
+     * both the createdOn of the Thing and the date of the Event itself.
+     */
     const now = new Date();
+
     /**
      * The new-inventory event
      */
@@ -216,6 +221,7 @@ export class ThingService {
       }
     };
 
+    // Push the event to the API and append it to the log
     await this.ess.appendEventToInventoryLog(newInventoryEvent);
   }
 

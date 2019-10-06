@@ -25,9 +25,9 @@ export class ThingCardComponent implements OnInit {
 
   constructor(public ss: StockService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getInventoryId();
-    this.setStocks().then();
+    // await this.setStocks();
   }
 
   getInventoryId(): void {
@@ -40,18 +40,10 @@ export class ThingCardComponent implements OnInit {
       this.loading = false;
     } catch (error) {
       this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
+
+      console.log(
+        "Unknown error in setStocks [ThingCardComponent] while creating"
+      );
     }
   }
 }

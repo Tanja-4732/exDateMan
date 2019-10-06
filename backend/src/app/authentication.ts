@@ -256,7 +256,7 @@ export class Authentication {
     try {
       jwtBearerToken = jwt.sign({}, this.JWT_PRIVATE_KEY, {
         algorithm: "RS256",
-        expiresIn: "10h",
+        // expiresIn: "10h",
         subject: userUuid + "",
       });
     } catch (error) {
