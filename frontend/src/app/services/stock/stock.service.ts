@@ -49,7 +49,7 @@ export class StockService {
   }
 
   /**
-   * Iterates over all inventories and their Things and fetches their Stocks
+   * Iterates over all Inventories and their Things and fetches their Stocks
    */
   async fetchAllInventoryThingStocks() {
     console.log("fetch all Stocks");
@@ -60,26 +60,40 @@ export class StockService {
     await this.ess.ready;
 
     // Initialize the array
-    ThingService.inventoryTingsProjection = ([] as unknown) as {
-      [uuid: string]: Thing[];
-    };
+    StockService.inventoryTingsStocksProjection = {};
 
+    // Iterate over all Inventories
     for (const inventory in this.is.inventories) {
       if (this.is.inventories.hasOwnProperty(inventory)) {
-        console.log("no oof");
-
-        const uuid = this.is.inventories[inventory].uuid;
+        /**
+         * The UUID of the Inventory of the current iteration
+         */
+        const inventoryUuid = this.is.inventories[inventory].uuid;
 
         console.log("and the inventory uuid is:");
-        console.log(uuid);
+        console.log(inventoryUuid);
 
-        // Initialize the inner array
-        ThingService.inventoryTingsProjection[uuid] = [];
+        // Iterate over all Things of the Inventory being iterated over
+        for (const thing in this.ts.things[inventoryUuid]) {
+          if (this.ts.things[inventoryUuid].hasOwnProperty(thing)) {
+            // Initialize the inner array
+            StockService.inventoryTingsStocksProjection[inventoryUuid][
+              thing
+            ] = [];
 
-        // Fetch and apply the Things of the Inventory
-        await this.fetchInventoryThings(uuid);
+            // Fetch and apply the Stocks of the Things of the Inventory
+            await this.applyStockEvent(inventoryUuid);
+          }
+        }
       }
     }
+  }
+
+  async applyStockEvent(inventoryUuid: string, thingUuid: string) {
+    StockService.inventoryTingsStocksProjection[inventoryUuid][thingUuid];
+
+    await this.is.ready;
+    this.ess.events;
   }
 
   async getStock(
