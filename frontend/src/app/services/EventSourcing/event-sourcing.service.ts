@@ -288,6 +288,16 @@ export interface Event {
        * This field may only be set in an category-created event
        */
       createdOn?: Date;
+
+      /**
+       * The UUID of the Thing this stock belongs to
+       */
+      thingUuid: string;
+
+      /**
+       * The percentage of how much of the Stock is left
+       */
+      percentLeft: number;
     };
   };
 }

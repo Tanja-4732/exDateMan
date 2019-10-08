@@ -4,9 +4,15 @@ import { environment } from "../../../environments/environment";
 import { Stock } from "../../models/stock/stock";
 import { ThingService } from "../thing/thing.service";
 import { InventoryService } from "../inventory/inventory.service";
-import { EventSourcingService } from "../EventSourcing/event-sourcing.service";
+import {
+  EventSourcingService,
+  itemType,
+  Event,
+  crudType
+} from "../EventSourcing/event-sourcing.service";
 import { AuthService } from "../auth/auth.service";
 import { Thing } from "../../models/thing/thing";
+import { StocksComponent } from "../../components/stocks/stocks.component";
 
 @Injectable({
   providedIn: "root"
@@ -21,6 +27,15 @@ export class StockService {
     [inventoryUuid: string]: { [thingUuid: string]: Stock[] };
   };
 
+  /**
+   * The Stocks projection
+   *
+   * Usage:
+   * [inventoryUuid][thingUuid]
+   */
+  get stocks() {
+    return StockService.inventoryTingsStocksProjection;
+  }
   /**
    * Sneaky stuff
    *
@@ -51,7 +66,7 @@ export class StockService {
   /**
    * Iterates over all Inventories and their Things and fetches their Stocks
    */
-  async fetchAllInventoryThingStocks() {
+  private async fetchAllInventoryThingStocks() {
     console.log("fetch all Stocks");
 
     // Wait for the InventoryService & EventSourcingService to be ready
@@ -59,131 +74,107 @@ export class StockService {
     await this.is.ready;
     await this.ess.ready;
 
-    // Initialize the array
+    // Initialize the dict
     StockService.inventoryTingsStocksProjection = {};
 
-    // Iterate over all Inventories
-    for (const inventory in this.is.inventories) {
-      if (this.is.inventories.hasOwnProperty(inventory)) {
-        /**
-         * The UUID of the Inventory of the current iteration
-         */
-        const inventoryUuid = this.is.inventories[inventory].uuid;
+    // Iterate over the Inventories projection
+    for (const inventoryUuid in this.is.inventories) {
+      if (this.is.inventories.hasOwnProperty(inventoryUuid)) {
+        // Initialize the dict for the Inventory
+        StockService.inventoryTingsStocksProjection[inventoryUuid] = {};
 
-        console.log("and the inventory uuid is:");
-        console.log(inventoryUuid);
-
-        // Iterate over all Things of the Inventory being iterated over
-        for (const thing in this.ts.things[inventoryUuid]) {
-          if (this.ts.things[inventoryUuid].hasOwnProperty(thing)) {
-            // Initialize the inner array
+        // Iterate over the Things of the Inventory using the projections
+        for (const thingUuid in this.ts.things) {
+          if (this.ts.things.hasOwnProperty(thingUuid)) {
+            // Initialize the Stocks array
             StockService.inventoryTingsStocksProjection[inventoryUuid][
-              thing
+              thingUuid
             ] = [];
+          }
+        }
+      }
+    }
 
-            // Fetch and apply the Stocks of the Things of the Inventory
-            await this.applyStockEvent(inventoryUuid);
+    // Iterate over all Inventory-UUIDs of the EventsLogs
+    for (const inventoryUuid in this.ess.events) {
+      if (this.ess.events.hasOwnProperty(inventoryUuid)) {
+        // Iterate over the Events of the Inventory
+        for (const event of this.ess.events[inventoryUuid]) {
+          // But only if when the Event is a StockEvent
+          if (event.data.itemType === itemType.STOCK) {
+            // Apply the Event
+            await this.applyStockEvent(event);
           }
         }
       }
     }
   }
 
-  async applyStockEvent(inventoryUuid: string, thingUuid: string) {
-    StockService.inventoryTingsStocksProjection[inventoryUuid][thingUuid];
-
+  private async applyStockEvent(stockEvent: Event) {
     await this.is.ready;
-    this.ess.events;
-  }
 
-  async getStock(
-    inventoryId: number,
-    thingNumber: number,
-    stockNumber: number
-  ): Promise<Stock> {
-    const qRes: Stock = await this.http
-      .get<Stock>(
-        this.baseUrl +
-          "/inv/" +
-          inventoryId +
-          "/things/" +
-          thingNumber +
-          "/stocks/" +
-          stockNumber
-      )
-      .toPromise();
-    if (qRes != null) {
-      qRes.openedOn = new Date(qRes.openedOn);
-      qRes.exDate = new Date(qRes.exDate);
-      qRes.addedOn = new Date(qRes.addedOn);
+    /**
+     * One date representing now
+     */
+    const addedOn = new Date();
+
+    const newStock = {
+      addedOn,
+      exDate: stockEvent.data.stockData.exDate,
+      openedOn: stockEvent.data.stockData.openedOn,
+      percentLeft: stockEvent.data.stockData.percentLeft,
+      quantity: stockEvent.data.stockData.quantity,
+      useUpIn: stockEvent.data.stockData.useUpIn,
+      uuid: stockEvent.data.uuid
+    };
+
+    switch (stockEvent.data.crudType) {
+      case crudType.DELETE:
+        // Delete a Stock from the projection
+        delete StockService.inventoryTingsStocksProjection[
+          stockEvent.inventoryUuid
+        ][stockEvent.data.stockData.thingUuid][stockEvent.data.uuid];
+        break;
+      case crudType.CREATE:
+        // Push a new Stock onto the Projection
+        StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
+          stockEvent.data.stockData.thingUuid
+        ].push(newStock);
+        break;
+      case crudType.UPDATE:
+        // Update a Stock already included in the projection
+
+        // Remove immutable values
+        delete newStock.uuid;
+        delete newStock.addedOn;
+
+        // Delete all null values
+        Object.keys(newStock).forEach(
+          key => newStock[key] == null && delete newStock[key]
+        );
+
+        // Assign the changed values
+        Object.assign(
+          StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
+            stockEvent.data.stockData.thingUuid
+          ][stockEvent.data.uuid],
+          newStock
+        );
+        break;
     }
-    return qRes;
   }
 
-  async getStocks(inventoryUuid: string, thingUuid: string): Promise<Stock[]> {
-    if (inventoryUuid == null || thingUuid == null) {
-      throw new Error("Arguments invalid");
-    }
+  async newStock(stock: Stock, inventoryId: number, thingNumber: number) {}
 
-    return qRes;
-  }
+  async updateStock(stock: Stock, inventoryId: number, thingNumber: number) {}
 
-  async newStock(
-    stock: Stock,
-    inventoryId: number,
-    thingNumber: number
-  ): Promise<Stock> {
-    return await this.http
-      .post<Stock>(
-        this.baseUrl +
-          "/inv/" +
-          inventoryId +
-          "/things/" +
-          thingNumber +
-          "/stocks",
-        stock
-      )
-      .toPromise();
-  }
+  async deleteStock(stock: Stock, inventoryId: number, thingNumber: number) {}
 
-  async updateStock(
-    stock: Stock,
-    inventoryId: number,
-    thingNumber: number
-  ): Promise<Stock> {
-    return await this.http
-      .put<Stock>(
-        this.baseUrl +
-          "/inv/" +
-          inventoryId +
-          "/things/" +
-          thingNumber +
-          "/stocks/" +
-          stock.number,
-        stock
-      )
-      .toPromise();
-  }
-
-  async deleteStock(
-    stock: Stock,
-    inventoryId: number,
-    thingNumber: number
-  ): Promise<unknown> {
-    const qRes: unknown = this.http
-      .delete<Stock>(
-        this.baseUrl +
-          "/inv/" +
-          inventoryId +
-          "/things/" +
-          thingNumber +
-          "/stocks/" +
-          stock.number
-      )
-      .toPromise();
-    return qRes;
-  }
-
+  /**
+   * Calculates the effective date of expiration for a given Stock
+   *
+   * @param stock The Stock to calculate the exDate of
+   */
   calculateExDate(stock: Stock): Date {
     console.log(stock);
 

@@ -44,7 +44,7 @@ export class ThingsComponent implements OnInit {
   async getThings(): Promise<void> {
     try {
       console.log("Getting things");
-
+      await this.ts.ready;
       this.things = this.ts.things[this.inventoryUuid];
       console.log(this.things);
       console.log(JSON.stringify(this.things));
@@ -56,7 +56,7 @@ export class ThingsComponent implements OnInit {
       this.oof = true;
 
       console.log("Unknown error in getThings while creating");
-      console.log(error);
+      console.error(error);
     }
   }
 

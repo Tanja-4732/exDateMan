@@ -1,25 +1,35 @@
 <span class="mat-typography" *ngIf="unauthorized">
   <h2>Unauthorized</h2>
-  We couldn't fetch your stocks, because you aren't authorized. <br>
-  Try logging in again to resolve this. <br>
-  <br>
+  We couldn't fetch your stocks, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
   Redirecting you to the login page in 3 seconds...
 </span>
 
 <span *ngIf="!unauthorized">
-  <span class="mat-typography" *ngIf="loading && (!notFound)">
+  <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading stocks...</h2>
-    We're getting the inventory's thing's stocks... <br>
+    We're getting the inventory's thing's stocks... <br />
     Please hang on
   </span>
 
   <span *ngIf="!loading && !notFound">
-
-    <button mat-raised-button routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}" color="accent">Edit
-      thing</button> &nbsp;
-    <button mat-stroked-button routerLink="/inventories/{{inventoryId}}/things/">Go up</button>
-    <br>
-    <br>
+    <button
+      mat-raised-button
+      routerLink="/inventories/{{ inventoryUuid }}/things/{{ thingUuid }}"
+      color="accent"
+    >
+      Edit thing
+    </button>
+    &nbsp;
+    <button
+      mat-stroked-button
+      routerLink="/inventories/{{ inventoryUuid }}/things/"
+    >
+      Go up
+    </button>
+    <br />
+    <br />
 
     <div *ngIf="stocks.length === 0" class="mat-typography">
       Add stocks by hitting the plus button.

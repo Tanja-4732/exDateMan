@@ -40,10 +40,15 @@ export class StocksComponent implements OnInit {
 
   async getStocks(): Promise<void> {
     try {
-      this.stocks = await this.ss.getStocks(this.inventoryUuid, this.thingUuid);
+      // Wait for the StockService to be ready
+      await this.ss.ready;
+
+      // Get the Stocks
+      this.stocks = this.ss.stocks[this.inventoryUuid][this.thingUuid];
       this.loading = false;
     } catch (error) {
       this.oof = true;
+      console.error(error);
       console.log(
         "Unknown error in getStocks [StocksComponent] while creating"
       );
