@@ -25,7 +25,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: repeat(3, auto);
   gap: 10px 10px;
   // grid-auto-columns: 1fr, 1fr;
   // gap: 1rem 1rem;
