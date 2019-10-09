@@ -235,9 +235,55 @@ export class ThingService {
     await this.ess.appendEventToInventoryLog(newInventoryEvent);
   }
 
-  // TODO
-  async updateThing(thing: Thing, inventoryUuid: string): Promise<Thing> {}
+  /**
+   * Updates a Thing by issuing a new Event, sending it to the DB via the API,
+   * adding it to the local Event log and applying it immediately to the
+   * projection.
+   *
+   * @param thing The thing to be updated with the new values
+   * @param inventoryUuid The UUID of the Things Inventory
+   */
+  async updateThing(thing: Thing, inventoryUuid: string): Promise<void> {
+    const event: Event = {
+      date: new Date(),
+      inventoryUuid,
+      data: {
+        itemType: itemType.THING,
+        crudType: crudType.UPDATE,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        uuid: thing.uuid,
+        thingData: {
+          name: thing.name,
+          categoryUuids: thing.categoryUuids
+        }
+      }
+    };
 
-  // TODO
-  async removeThing(thing: Thing, inventoryUuid: string): Promise<void> {}
+    await this.ess.appendEventToInventoryLog(event);
+    this.applyThingEvent(event, inventoryUuid);
+  }
+
+  /**
+   * Removes a Thing by issuing a new Event, sending it to the DB via the API,
+   * adding it to the local Event log and applying it immediately to the
+   * projection.
+   *
+   * @param thing The thing to be removed
+   * @param inventoryUuid The UUID of the Things Inventory
+   */
+  async removeThing(thing: Thing, inventoryUuid: string): Promise<void> {
+    const event: Event = {
+      date: new Date(),
+      inventoryUuid,
+      data: {
+        itemType: itemType.THING,
+        crudType: crudType.DELETE,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        uuid: thing.uuid
+      }
+    };
+
+    await this.ess.appendEventToInventoryLog(event);
+    this.applyThingEvent(event, inventoryUuid);
+  }
 }
