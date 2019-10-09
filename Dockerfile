@@ -11,6 +11,9 @@ WORKDIR /app/frontend
 # Install any needed packages
 RUN npm install
 
+# Install any needed packages
+RUN npm install -g typescript
+
 # Build the frontend
 RUN /bin/sh -c "npm run build | true"
 
