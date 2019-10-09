@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from "@angular/router";
-import { Component, OnInit, Inject } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
@@ -19,8 +19,8 @@ export class EditThingComponent implements OnInit {
   oof = false;
   reallyDelete = false;
 
-  inventoryId: number;
-  thingNumber: number;
+  inventoryUuid: string;
+  thingUuid: string;
 
   thing: Thing;
 
@@ -42,11 +42,10 @@ export class EditThingComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.getIds();
-    this.getThing().then(() => {
-      this.form.patchValue(this.thing);
-    });
+  async ngOnInit(): Promise<void> {
+    this.getUuids();
+    await this.getThing();
+    this.form.patchValue(this.thing);
     setTimeout(() => {
       if (this.unauthorized) {
         this.router.navigate(["/login"]);
@@ -55,69 +54,40 @@ export class EditThingComponent implements OnInit {
   }
 
   private copyData(): void {
-    this.thing = this.form.value;
-    this.thing.uuid = this.thingNumber;
+    this.thing.name = this.form.value.name;
+    this.thing.uuid = this.thingUuid;
   }
 
-  getIds(): void {
-    this.inventoryId = this.route.snapshot.params.inventoryId;
-    this.thingNumber = this.route.snapshot.params.thingNumber;
+  getUuids(): void {
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
   }
 
   async getThing(): Promise<void> {
-    try {
-      this.thing = await this.ts.getThing(this.inventoryId, this.thingNumber);
-      this.loading = false;
-    } catch (error) {
-      this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in edit-thing while getting thing");
-      }
-    }
+    await this.ts.ready;
+    this.thing = this.ts.things[this.inventoryUuid].find(
+      value => value.uuid === this.thingUuid
+    );
+    this.loading = false;
   }
 
-  onEditThing(): void {
-    this.editThing().then(() => {
-      if (!this.oof) {
-        this.router.navigate(["stocks"], { relativeTo: this.route });
-      }
-    });
+  async onEditThing(): Promise<void> {
+    await this.editThing();
+    if (!this.oof) {
+      this.router.navigate(["stocks"], { relativeTo: this.route });
+    }
   }
 
   async editThing(): Promise<void> {
-    try {
-      this.copyData();
-      await this.ts.updateThing(this.thing, this.inventoryId);
-      this.oof = false;
-    } catch (error) {
-      this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
-    }
+    this.copyData();
+    await this.ts.updateThing(this.thing, this.inventoryUuid);
+    this.oof = false;
   }
 
   onDeleteThing(): void {
     this.deleteThing().then(() => {
       if (this.reallyDelete) {
-        this.router.navigate(["inventories", this.inventoryId, "things"]);
+        this.router.navigate(["inventories", this.inventoryUuid, "things"]);
       }
     });
   }
@@ -136,7 +106,7 @@ export class EditThingComponent implements OnInit {
       try {
         const res: unknown = await this.ts.removeThing(
           this.thing,
-          this.inventoryId
+          this.inventoryUuid
         );
       } catch (error) {
         // Catch sending-to-the-server errors

@@ -137,12 +137,10 @@ export class ThingService {
               : ThingService.inventoryTingsProjection[inventoryUuid][
                   event.data.uuid
                 ].categoryUuids,
-          createdOn:
-            event.data.thingData.createdOn != null
-              ? event.data.thingData.createdOn
-              : ThingService.inventoryTingsProjection[inventoryUuid][
-                  event.data.uuid
-                ].createdOn
+          createdOn: event.data.thingData.createdOn =
+            ThingService.inventoryTingsProjection[inventoryUuid][
+              event.data.uuid
+            ].createdOn
         };
         break;
       case crudType.DELETE:
@@ -152,47 +150,6 @@ export class ThingService {
         break;
     }
   }
-
-  async getThing(inventoryUuid: string, thingUuid: string): Promise<Thing> {
-    // Wait the ThingService itself is ready
-    await this.ready;
-
-    try {
-      // Get and return the thing
-      return ThingService.inventoryTingsProjection[inventoryUuid][thingUuid];
-    } catch (err) {
-      // When the thing couldn't be found
-      throw new Error(
-        "The thing with UUID " +
-          thingUuid +
-          " of inventory with UUID " +
-          inventoryUuid +
-          " couldn't be found."
-      );
-    }
-  }
-
-  // /**
-  //  * Get all things in an array of an inventory from the local projection
-  //  *
-  //  * @param inventoryUuid The UUID of the inventory of which to get the things of
-  //  */
-  // async getThings(inventoryUuid: string): Promise<Thing[]> {
-  //   // Wait the ThingService itself is ready
-  //   await this.ready;
-
-  //   try {
-  //     // Get and return the thing array
-  //     return ThingService.inventoryTingsProjection[inventoryUuid];
-  //   } catch (err) {
-  //     // When the inventory couldn't be found
-  //     console.error(err);
-
-  //     throw new Error(
-  //       " The inventory with UUID " + inventoryUuid + " couldn't be found."
-  //     );
-  //   }
-  // }
 
   /**
    * Creates a thing by adding a thingCreatedEvent to the event log
