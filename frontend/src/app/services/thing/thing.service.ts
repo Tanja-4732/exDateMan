@@ -100,46 +100,56 @@ export class ThingService {
       }
 
       // Apply the event
-      switch (event.data.crudType) {
-        case crudType.CREATE:
-          ThingService.inventoryTingsProjection[inventoryUuid].push({
-            uuid: event.data.uuid,
-            name: event.data.thingData.name,
-            categoryUuids: event.data.thingData.categoryUuids,
-            createdOn: event.data.thingData.createdOn
-          });
-          break;
-        case crudType.UPDATE:
-          // Only update from values not equaling null
-          ThingService.inventoryTingsProjection[inventoryUuid][
-            event.data.uuid
-          ] = {
-            name:
-              event.data.thingData.name != null
-                ? event.data.thingData.name
-                : ThingService.inventoryTingsProjection[inventoryUuid][
-                    event.data.uuid
-                  ].name,
-            categoryUuids:
-              event.data.thingData.categoryUuids != null
-                ? event.data.thingData.categoryUuids
-                : ThingService.inventoryTingsProjection[inventoryUuid][
-                    event.data.uuid
-                  ].categoryUuids,
-            createdOn:
-              event.data.thingData.createdOn != null
-                ? event.data.thingData.createdOn
-                : ThingService.inventoryTingsProjection[inventoryUuid][
-                    event.data.uuid
-                  ].createdOn
-          };
-          break;
-        case crudType.DELETE:
-          delete ThingService.inventoryTingsProjection[inventoryUuid][
-            event.data.uuid
-          ];
-          break;
-      }
+      this.applyThingEvent(event, inventoryUuid);
+    }
+  }
+
+  /**
+   * Applies an Event to the Things projection
+   *
+   * @param event The Event to be applied
+   * @param inventoryUuid The UUID of the Inventory
+   */
+  private applyThingEvent(event: Event, inventoryUuid: string) {
+    switch (event.data.crudType) {
+      case crudType.CREATE:
+        ThingService.inventoryTingsProjection[inventoryUuid].push({
+          uuid: event.data.uuid,
+          name: event.data.thingData.name,
+          categoryUuids: event.data.thingData.categoryUuids,
+          createdOn: event.data.thingData.createdOn
+        });
+        break;
+      case crudType.UPDATE:
+        // Only update from values not equaling null
+        ThingService.inventoryTingsProjection[inventoryUuid][
+          event.data.uuid
+        ] = {
+          name:
+            event.data.thingData.name != null
+              ? event.data.thingData.name
+              : ThingService.inventoryTingsProjection[inventoryUuid][
+                  event.data.uuid
+                ].name,
+          categoryUuids:
+            event.data.thingData.categoryUuids != null
+              ? event.data.thingData.categoryUuids
+              : ThingService.inventoryTingsProjection[inventoryUuid][
+                  event.data.uuid
+                ].categoryUuids,
+          createdOn:
+            event.data.thingData.createdOn != null
+              ? event.data.thingData.createdOn
+              : ThingService.inventoryTingsProjection[inventoryUuid][
+                  event.data.uuid
+                ].createdOn
+        };
+        break;
+      case crudType.DELETE:
+        delete ThingService.inventoryTingsProjection[inventoryUuid][
+          event.data.uuid
+        ];
+        break;
     }
   }
 
