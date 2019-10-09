@@ -52,3 +52,4 @@ src/environments/*
 !src/environments/environment.ts
 !src/environments/environment.example.ts
 !src/environments/environment.d.ts
+!src/environments/environment.prod.ts

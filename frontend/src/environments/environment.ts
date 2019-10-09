@@ -6,7 +6,7 @@ import { Environment } from "./environment.d";
 
 export const environment: Environment = {
   production: false,
-  baseUrl: "example.com"
+  baseUrl: window.location.host + "/api/v2"
 };
 
 /*

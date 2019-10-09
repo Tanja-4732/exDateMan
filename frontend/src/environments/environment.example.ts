@@ -2,5 +2,5 @@ import { Environment } from "./environment.d";
 
 export const environment: Environment = {
   production: true,
-  baseUrl: "https://example.com/api/v2" // don't append a slash
+  baseUrl: window.location.host + "/api/v2" // don't append a slash
 };
