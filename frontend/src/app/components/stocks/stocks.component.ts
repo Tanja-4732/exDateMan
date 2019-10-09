@@ -29,10 +29,10 @@ export class StocksComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // Get the inventory UUID
-    this.inventoryUuid = this.route.snapshot.params.inventoryId;
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
 
     // Get the Thing UUID
-    this.thingUuid = this.route.snapshot.params.thingNumber;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
 
     // Fetch the Stocks
     await this.getStocks();
@@ -44,6 +44,9 @@ export class StocksComponent implements OnInit {
       await this.ss.ready;
 
       // Get the Stocks
+      console.log("Stocks array:");
+      console.log(this.ss.stocks);
+
       this.stocks = this.ss.stocks[this.inventoryUuid][this.thingUuid];
       this.loading = false;
     } catch (error) {

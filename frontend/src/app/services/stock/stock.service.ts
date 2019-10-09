@@ -84,13 +84,11 @@ export class StockService {
         StockService.inventoryTingsStocksProjection[inventoryUuid] = {};
 
         // Iterate over the Things of the Inventory using the projections
-        for (const thingUuid in this.ts.things) {
-          if (this.ts.things.hasOwnProperty(thingUuid)) {
-            // Initialize the Stocks array
-            StockService.inventoryTingsStocksProjection[inventoryUuid][
-              thingUuid
-            ] = [];
-          }
+        for (const thing of this.ts.things[inventoryUuid]) {
+          // Initialize the Stocks array
+          StockService.inventoryTingsStocksProjection[inventoryUuid][
+            thing.uuid
+          ] = [];
         }
       }
     }
