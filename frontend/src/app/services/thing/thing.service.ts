@@ -233,6 +233,7 @@ export class ThingService {
 
     // Push the event to the API and append it to the log
     await this.ess.appendEventToInventoryLog(newInventoryEvent);
+    this.applyThingEvent(newInventoryEvent, inventoryUuid);
   }
 
   /**
