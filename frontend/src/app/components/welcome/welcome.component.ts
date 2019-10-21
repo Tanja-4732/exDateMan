@@ -5,6 +5,10 @@ import {
 } from "../../services/auth/auth.service";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { User } from "../../models/user/user";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-welcome",
@@ -26,6 +30,13 @@ export class WelcomeComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.testLogin().then();
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Welcome,
+        title: "Welcome"
+      }
+    ];
   }
 
   async testLogin(): Promise<void> {

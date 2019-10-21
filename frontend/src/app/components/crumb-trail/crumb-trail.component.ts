@@ -31,7 +31,8 @@ export enum Icon {
   Events = "blur_on",
   Scan = "camera",
   Inventory = "work",
-  Add = "add"
+  Add = "add",
+  Welcome = "home"
 }
 
 /**

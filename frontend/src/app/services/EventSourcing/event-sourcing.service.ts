@@ -25,10 +25,28 @@ export class EventSourcingService implements AsyncConstructor {
     return EventSourcingService.eventLogs;
   }
 
+  private static _eventLogs: { [uuid: string]: Event[] };
+
   /**
    * The event-logs (every inventory has its own)
    */
-  private static eventLogs: { [uuid: string]: Event[] };
+  private static get eventLogs(): { [uuid: string]: Event[] } {
+    return EventSourcingService._eventLogs;
+    return JSON.parse(window.localStorage.getItem("events"));
+  }
+
+  /**
+   * The event-logs (every inventory has its own)
+   */
+  private static set eventLogs(events: { [uuid: string]: Event[] }) {
+    console.log("Setting some events");
+
+    EventSourcingService._eventLogs = events;
+
+    console.log("The events be like:\n" + JSON.stringify(events));
+
+    window.localStorage.setItem("events", JSON.stringify(events));
+  }
 
   /**
    * Sneaky stuff
@@ -49,7 +67,7 @@ export class EventSourcingService implements AsyncConstructor {
     // Ready declaration
     this.ready = new Promise(resolve => {
       if (EventSourcingService.eventLogs == null) {
-        this.fetchAllInventoryEvents().then(() => {
+        this.reFetchAll().then(() => {
           // Mark as ready
           resolve(null);
         });
@@ -61,7 +79,12 @@ export class EventSourcingService implements AsyncConstructor {
   }
 
   /**
-   * Re-fetches all events from the API
+   * Writes the events to the localStorage
+   */
+  private saveEvents(): void {}
+
+  /**
+   * Refreshes all Events
    */
   public async reFetchAll(): Promise<void> {
     await this.fetchAllInventoryEvents();
