@@ -3,6 +3,10 @@ import { Inventory } from "../../models/inventory/inventory";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-inventories",
@@ -18,6 +22,13 @@ export class InventoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadInventories();
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: "Inventories"
+      }
+    ];
   }
 
   async loadInventories(): Promise<void> {

@@ -53,6 +53,7 @@ import { CategoriesComponent } from "./components/categories/categories.componen
 import { EditCategoryComponent } from "./components/edit-category/edit-category.component";
 import { AddCategoryComponent } from "./components/add-category/add-category.component";
 import { CategoryCardComponent } from "./components/category-card/category-card.component";
+import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { CategoryCardComponent } from "./components/category-card/category-card.
     CategoriesComponent,
     EditCategoryComponent,
     AddCategoryComponent,
-    CategoryCardComponent
+    CategoryCardComponent,
+    CrumbTrailComponent
   ],
   imports: [
     BrowserModule,

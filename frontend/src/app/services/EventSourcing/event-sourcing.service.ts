@@ -1,24 +1,21 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
+import { AsyncConstructor } from "../../interfaces/async-constructor";
 
+/**
+ * This Service stores & sorts Events and syncs them with the API.
+ *
+ * This class needs to await async operations before it can be used, but
+ * TypeScript does not support await to be used in constructors, so the user
+ * has to await the ready promise of this class.
+ */
 @Injectable({
   providedIn: "root"
 })
-export class EventSourcingService {
+export class EventSourcingService implements AsyncConstructor {
   constructor(private api: HttpClient) {
-    // Ready declaration
-    this.ready = new Promise(resolve => {
-      if (EventSourcingService.eventLogs == null) {
-        this.fetchAllInventoryEvents().then(() => {
-          // Mark as ready
-          resolve(null);
-        });
-      } else {
-        // Mark as ready
-        resolve(null);
-      }
-    });
+    this.prepare();
   }
 
   /**
@@ -44,6 +41,24 @@ export class EventSourcingService {
    * The API base url
    */
   private baseUrl: string = environment.baseUrl;
+
+  /**
+   * Prepares this class for operaton and resolves the ready promise when done
+   */
+  private prepare() {
+    // Ready declaration
+    this.ready = new Promise(resolve => {
+      if (EventSourcingService.eventLogs == null) {
+        this.fetchAllInventoryEvents().then(() => {
+          // Mark as ready
+          resolve(null);
+        });
+      } else {
+        // Mark as ready
+        resolve(null);
+      }
+    });
+  }
 
   /**
    * Re-fetches all events from the API

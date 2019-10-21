@@ -8,24 +8,21 @@ import {
 } from "../EventSourcing/event-sourcing.service";
 import { v4 } from "uuid";
 import { AuthService } from "../auth/auth.service";
+import { AsyncConstructor } from "../../interfaces/async-constructor";
 
+/**
+ * This Service parses and projects inventory events.
+ *
+ * This class needs to await async operations before it can be used, but
+ * TypeScript does not support await to be used in constructors, so the user
+ * has to await the ready promise of this class.
+ */
 @Injectable({
   providedIn: "root"
 })
-export class InventoryService {
+export class InventoryService implements AsyncConstructor {
   constructor(private ess: EventSourcingService, private as: AuthService) {
-    // Ready declaration
-    this.ready = new Promise((resolve, reject) => {
-      if (InventoryService.inventoriesProjection == null) {
-        this.fetchInventoryEvents().then(result => {
-          // Mark as ready
-          resolve(null);
-        });
-      } else {
-        // Mark as ready
-        resolve(null);
-      }
-    });
+    this.prepare();
   }
 
   /**
@@ -45,7 +42,25 @@ export class InventoryService {
    *
    * Used to get around the "no async constructors" limitation
    */
-  public ready: Promise<any>;
+  public ready: Promise<null>;
+
+  /**
+   * Prepares this class for operaton and resolves the ready promise when done
+   */
+  private prepare() {
+    // Ready declaration
+    this.ready = new Promise((resolve, reject) => {
+      if (InventoryService.inventoriesProjection == null) {
+        this.fetchInventoryEvents().then(result => {
+          // Mark as ready
+          resolve(null);
+        });
+      } else {
+        // Mark as ready
+        resolve(null);
+      }
+    });
+  }
 
   /**
    * Re-fetches all events from the EventSourcingService
