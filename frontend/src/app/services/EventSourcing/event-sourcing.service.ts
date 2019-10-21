@@ -19,32 +19,28 @@ export class EventSourcingService implements AsyncConstructor {
   }
 
   /**
-   * Public accessor for the event log
+   * The event-logs (every inventory has its own)
    */
-  get events(): { [uuid: string]: Event[] } {
-    return EventSourcingService.eventLogs;
-  }
+  private static get eventsProjection(): LocalEventStorage[] {
+    // Get the events from LocalStorage
+    const events = JSON.parse(window.localStorage.getItem("events"));
 
-  private static _eventLogs: { [uuid: string]: Event[] };
+    // Prevent empty response
+    if (events == null) {
+      EventSourcingService.eventsProjection = [];
+      return [];
+    }
+
+    return events;
+  }
 
   /**
    * The event-logs (every inventory has its own)
    */
-  private static get eventLogs(): { [uuid: string]: Event[] } {
-    return EventSourcingService._eventLogs;
-    return JSON.parse(window.localStorage.getItem("events"));
-  }
-
-  /**
-   * The event-logs (every inventory has its own)
-   */
-  private static set eventLogs(events: { [uuid: string]: Event[] }) {
-    console.log("Setting some events");
-
-    EventSourcingService._eventLogs = events;
-
+  private static set eventsProjection(events: LocalEventStorage[]) {
     console.log("The events be like:\n" + JSON.stringify(events));
 
+    // Set the localStorage to the new value
     window.localStorage.setItem("events", JSON.stringify(events));
   }
 
@@ -66,7 +62,7 @@ export class EventSourcingService implements AsyncConstructor {
   private prepare() {
     // Ready declaration
     this.ready = new Promise(resolve => {
-      if (EventSourcingService.eventLogs == null) {
+      if (EventSourcingService.eventsProjection.length === 0) {
         this.reFetchAll().then(() => {
           // Mark as ready
           resolve(null);
@@ -98,8 +94,8 @@ export class EventSourcingService implements AsyncConstructor {
    * This method gets called in the EventSourcingService constructor
    */
   private async fetchAllInventoryEvents() {
-    // Initiate the eventLogs
-    EventSourcingService.eventLogs = {};
+    // // Initiate the eventLogs
+    // EventSourcingService.eventLogs = {};
 
     // Get a list of all accessible inventory uuids from the API
     const accessibleUuids = await this.api
@@ -125,7 +121,7 @@ export class EventSourcingService implements AsyncConstructor {
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();
 
-    EventSourcingService.eventLogs[inventoryUuid] = res;
+    EventSourcingService.eventLogs.find(el => el.) = inventoryUuid = res;
   }
 
   /**
@@ -162,17 +158,19 @@ interface LocalEventStorage {
    *
    * This works since the user-access-separation is made on the inventory level
    */
-  inventories: {
-    /**
-     * The uuid of the inventory this event stream is dedicated to
-     */
-    uuid: string;
+  // inventories: {
 
-    /**
-     * The event log of the inventory
-     */
-    events: Event[];
-  }[];
+  /**
+   * The uuid of the inventory this event stream is dedicated to
+   */
+  uuid: string;
+
+  /**
+   * The event log of the inventory
+   */
+  events: Event[];
+
+  // }[];
 }
 
 /**
