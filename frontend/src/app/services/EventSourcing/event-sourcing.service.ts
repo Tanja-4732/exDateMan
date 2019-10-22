@@ -19,30 +19,9 @@ export class EventSourcingService implements AsyncConstructor {
   }
 
   /**
-   * The event-logs (every inventory has its own)
+   * The events of all inventories cached in memory
    */
-  static get eventsProjection(): LocalEventStorage[] {
-    // Get the events from LocalStorage
-    const events = JSON.parse(window.localStorage.getItem("events"));
-
-    // Prevent empty response
-    if (events == null) {
-      EventSourcingService.eventsProjection = [];
-      return [];
-    }
-
-    return events;
-  }
-
-  /**
-   * The event-logs (every inventory has its own)
-   */
-  static set eventsProjection(events: LocalEventStorage[]) {
-    console.log("The events be like:\n" + JSON.stringify(events));
-
-    // Set the localStorage to the new value
-    window.localStorage.setItem("events", JSON.stringify(events));
-  }
+  public static events: LocalEventStorage[];
 
   /**
    * Sneaky stuff
@@ -57,12 +36,41 @@ export class EventSourcingService implements AsyncConstructor {
   private baseUrl: string = environment.baseUrl;
 
   /**
+   * Stores the events in localStorage
+   */
+  static saveEvents(): void {
+    // Set the localStorage to the new value
+    window.localStorage.setItem(
+      "events",
+      JSON.stringify(EventSourcingService.events)
+    );
+  }
+
+  /**
+   * Loads the events from localStorage into memory
+   */
+  static loadEvents(): void {
+    // Get the events from LocalStorage
+    const events = JSON.parse(window.localStorage.getItem("events"));
+
+    // Prevent undefined array
+    if (events == null) {
+      EventSourcingService.events = [];
+    } else {
+      EventSourcingService.events = events;
+    }
+  }
+
+  /**
    * Prepares this class for operaton and resolves the ready promise when done
    */
   private prepare() {
     // Ready declaration
     this.ready = new Promise(resolve => {
-      if (EventSourcingService.eventsProjection.length === 0) {
+      if (
+        EventSourcingService.events == null ||
+        EventSourcingService.events.length === 0
+      ) {
         this.reFetchAll().then(() => {
           // Mark as ready
           resolve(null);
@@ -83,6 +91,7 @@ export class EventSourcingService implements AsyncConstructor {
    * Refreshes all Events
    */
   public async reFetchAll(): Promise<void> {
+    EventSourcingService.events = [];
     await this.fetchAllInventoryEvents();
   }
 
@@ -121,7 +130,7 @@ export class EventSourcingService implements AsyncConstructor {
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();
 
-    let inventoryEvents = EventSourcingService.eventsProjection.find(
+    let inventoryEvents = EventSourcingService.events.find(
       el => el.uuid === inventoryUuid
     );
 
@@ -130,11 +139,13 @@ export class EventSourcingService implements AsyncConstructor {
         uuid: inventoryUuid,
         events: []
       };
-      EventSourcingService.eventsProjection.push(newValue);
+      EventSourcingService.events.push(newValue);
       inventoryEvents = newValue;
     }
 
     inventoryEvents.events = res;
+
+    this.saveEvents();
   }
 
   /**
@@ -144,13 +155,18 @@ export class EventSourcingService implements AsyncConstructor {
    */
   public async appendEventToInventoryLog(event: Event): Promise<void> {
     try {
+      // After a successful transmission, the event gets appended to the local event log
+      // EventSourcingService.eventLogs[event.inventoryUuid].push(event);
+      EventSourcingService.events
+        .find(el => el.uuid === event.inventoryUuid)
+        .events.push(event);
+
+      this.saveEvents();
+
       // Transmit the event to the server to be stored in the db
       const res: Event[] = await this.api
         .put<Event[]>(this.baseUrl + "/events/", event)
         .toPromise();
-
-      // After a successful transmission, the event gets appended to the local event log
-      EventSourcingService.eventLogs[event.inventoryUuid].push(event);
     } catch (err) {
       console.log("Couldn't push event");
 

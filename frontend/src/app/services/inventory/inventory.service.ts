@@ -81,7 +81,7 @@ export class InventoryService implements AsyncConstructor {
     await this.ess.ready;
 
     // Iterate over all event logs
-    for (const eventLog of EventSourcingService.eventsProjection) {
+    for (const eventLog of EventSourcingService.events) {
       // Iterate over the events in the log
       for (const event of eventLog.events) {
         // Check if the event is about an inventory
