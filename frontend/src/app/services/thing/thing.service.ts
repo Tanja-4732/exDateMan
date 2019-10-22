@@ -93,7 +93,9 @@ export class ThingService {
    */
   async fetchInventoryThings(inventoryUuid: string) {
     // Iterate over the events
-    for (const event of this.ess.events[inventoryUuid]) {
+    for (const event of EventSourcingService.eventsProjection.find(
+      ep => ep.uuid === inventoryUuid
+    ).events) {
       // Only apply Thing events
       if (event.data.itemType !== itemType.THING) {
         continue;

@@ -3,7 +3,12 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { FormControl, Validators, FormGroup, FormBuilder } from "@angular/forms";
+import {
+  FormControl,
+  Validators,
+  FormGroup,
+  FormBuilder
+} from "@angular/forms";
 
 @Component({
   selector: "app-add-stock",
@@ -11,14 +16,14 @@ import { FormControl, Validators, FormGroup, FormBuilder } from "@angular/forms"
   styleUrls: ["./add-stock.component.scss"]
 })
 export class AddStockComponent implements OnInit {
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  oof: boolean = false;
+  unauthorized = false;
+  notFound = false;
+  oof = false;
 
   inventoryId: number;
   thingNumber: number;
 
-  stock: Stock = new Stock();
+  stock: Stock = {};
 
   form: FormGroup;
 
@@ -29,9 +34,9 @@ export class AddStockComponent implements OnInit {
     fb: FormBuilder
   ) {
     this.form = fb.group({
-      "exDate": ["", [Validators.required]],
-      "quantity": [""],
-      "useUpIn": []
+      exDate: ["", [Validators.required]],
+      quantity: [""],
+      useUpIn: []
     });
   }
 
@@ -40,11 +45,15 @@ export class AddStockComponent implements OnInit {
   }
 
   getExDateErrorMessage(): string {
-    return this.form.value.exDate.hasError('required') ? "We need you to enter an expiration date" : "";
+    return this.form.value.exDate.hasError("required")
+      ? "We need you to enter an expiration date"
+      : "";
   }
 
   getQuantityErrorMessage(): string {
-    return this.form.value.quantity.hasError('required') ? "We need you to enter a quantity" : "";
+    return this.form.value.quantity.hasError("required")
+      ? "We need you to enter a quantity"
+      : "";
   }
 
   onAddStock(): void {
@@ -81,7 +90,7 @@ export class AddStockComponent implements OnInit {
   }
 
   getInventoryIdAndThingNumber(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
-    this.thingNumber = this.route.snapshot.params["thingNumber"];
+    this.inventoryId = this.route.snapshot.params.inventoryId;
+    this.thingNumber = this.route.snapshot.params.thingNumber;
   }
 }

@@ -21,7 +21,7 @@ export class EventSourcingService implements AsyncConstructor {
   /**
    * The event-logs (every inventory has its own)
    */
-  private static get eventsProjection(): LocalEventStorage[] {
+  static get eventsProjection(): LocalEventStorage[] {
     // Get the events from LocalStorage
     const events = JSON.parse(window.localStorage.getItem("events"));
 
@@ -37,7 +37,7 @@ export class EventSourcingService implements AsyncConstructor {
   /**
    * The event-logs (every inventory has its own)
    */
-  private static set eventsProjection(events: LocalEventStorage[]) {
+  static set eventsProjection(events: LocalEventStorage[]) {
     console.log("The events be like:\n" + JSON.stringify(events));
 
     // Set the localStorage to the new value
@@ -121,7 +121,20 @@ export class EventSourcingService implements AsyncConstructor {
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();
 
-    EventSourcingService.eventLogs.find(el => el.) = inventoryUuid = res;
+    let inventoryEvents = EventSourcingService.eventsProjection.find(
+      el => el.uuid === inventoryUuid
+    );
+
+    if (inventoryEvents == null) {
+      const newValue = {
+        uuid: inventoryUuid,
+        events: []
+      };
+      EventSourcingService.eventsProjection.push(newValue);
+      inventoryEvents = newValue;
+    }
+
+    inventoryEvents.events = res;
   }
 
   /**
