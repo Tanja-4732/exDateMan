@@ -36,23 +36,9 @@ export class EventSourcingService implements AsyncConstructor {
   private baseUrl: string = environment.baseUrl;
 
   /**
-   * Stores the events in localStorage
-   */
-  static saveEvents(): void {
-    console.log("The events are being saved.");
-    console.log(JSON.stringify(EventSourcingService.events));
-
-    // Set the localStorage to the new value
-    window.localStorage.setItem(
-      "events",
-      JSON.stringify(EventSourcingService.events)
-    );
-  }
-
-  /**
    * Loads the events from localStorage into memory
    */
-  static loadEvents(): void {
+  loadEvents(): void {
     // Get the events from LocalStorage
     const events = JSON.parse(window.localStorage.getItem("events"));
 
@@ -62,6 +48,20 @@ export class EventSourcingService implements AsyncConstructor {
     } else {
       EventSourcingService.events = events;
     }
+  }
+
+  /**
+   * Stores the events in localStorage
+   */
+  saveEvents(): void {
+    console.log("The events are being saved.");
+    console.log(JSON.stringify(EventSourcingService.events));
+
+    // Set the localStorage to the new value
+    window.localStorage.setItem(
+      "events",
+      JSON.stringify(EventSourcingService.events)
+    );
   }
 
   /**
@@ -86,16 +86,12 @@ export class EventSourcingService implements AsyncConstructor {
   }
 
   /**
-   * Writes the events to the localStorage
-   */
-  private saveEvents(): void {}
-
-  /**
    * Refreshes all Events
    */
   public async reFetchAll(): Promise<void> {
     EventSourcingService.events = [];
     await this.fetchAllInventoryEvents();
+    this.saveEvents();
   }
 
   /**
