@@ -104,7 +104,7 @@ export class EditThingComponent implements OnInit {
   async onEditThing(): Promise<void> {
     await this.editThing();
     if (!this.oof) {
-      this.router.navigate(["stocks"], { relativeTo: this.route });
+      this.router.navigate([`/inventories/${this.inventoryUuid}/things`]);
     }
   }
 
