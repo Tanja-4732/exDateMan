@@ -6,6 +6,11 @@ import { ThingService } from "../../services/thing/thing.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { InventoryService } from "../../services/inventory/inventory.service";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-edit-thing",
@@ -27,7 +32,9 @@ export class EditThingComponent implements OnInit {
   form: FormGroup;
 
   constructor(
+    private is: InventoryService,
     private ts: ThingService,
+
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
@@ -36,21 +43,44 @@ export class EditThingComponent implements OnInit {
     this.createForm();
   }
 
+  async ngOnInit(): Promise<void> {
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
+
+    await this.is.ready;
+    await this.ts.ready;
+
+    this.thing = this.ts.things[this.inventoryUuid].find(
+      thing => thing.uuid === this.thingUuid
+    );
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.is.inventories[this.inventoryUuid].name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: "Things",
+        routerLink: `/inventories/${this.inventoryUuid}/things`
+      },
+      {
+        title: this.ts.things[this.inventoryUuid].find(
+          thing => thing.uuid === this.thingUuid
+        ).name
+      }
+    ];
+
+    this.loading = false;
+
+    this.form.patchValue(this.thing);
+  }
+
   createForm(): void {
     this.form = this.fb.group({
       name: ["", [Validators.required]]
     });
-  }
-
-  async ngOnInit(): Promise<void> {
-    this.getUuids();
-    await this.getThing();
-    this.form.patchValue(this.thing);
-    setTimeout(() => {
-      if (this.unauthorized) {
-        this.router.navigate(["/login"]);
-      }
-    }, 3000);
   }
 
   private copyData(): void {

@@ -3,10 +3,20 @@ import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material/dialog";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialog
+} from "@angular/material/dialog";
 import { MatSliderChange } from "@angular/material/slider";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
+import { InventoryService } from "../../services/inventory/inventory.service";
+import { ThingService } from "../../services/thing/thing.service";
 
 @Component({
   selector: "app-edit-stock",
@@ -14,28 +24,71 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
   styleUrls: ["./edit-stock.component.scss"]
 })
 export class EditStockComponent implements OnInit {
-  unauthorized: boolean = false;
-  notFound: boolean = false;
-  loading: boolean = true;
-  oof: boolean = false;
-  reallyDelete: boolean = false;
+  unauthorized = false;
+  notFound = false;
+  loading = true;
+  oof = false;
+  reallyDelete = false;
 
-  inventoryId: number;
-  thingNumber: number;
-  stockNumber: number;
+  inventoryUuid: string;
+  thingUuid: string;
+  stockUuid: string;
 
   stock: Stock;
 
   form: FormGroup;
 
   constructor(
+    private is: InventoryService,
+    private ts: ThingService,
     private ss: StockService,
+
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder
   ) {
     this.createForm();
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.inventoryUuid = this.route.snapshot.params.inventoryId;
+    this.thingUuid = this.route.snapshot.params.thingNumber;
+    this.stockUuid = this.route.snapshot.params.stockNumber;
+
+    await this.is.ready;
+    await this.ts.ready;
+    await this.ss.ready;
+
+    this.stock = this.ss.stocks[this.inventoryUuid][this.thingUuid].find(
+      stock => stock.uuid === this.stockUuid
+    );
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.is.inventories[this.inventoryUuid].name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: this.ts.things[this.inventoryUuid].find(
+          thing => thing.uuid === this.thingUuid
+        ).name,
+        routerLink: `/inventories/${this.inventoryUuid}/things`
+      },
+      {
+        icon: Icon.Stock,
+        title: "Stocks",
+        routerLink: `/inventories/${this.inventoryUuid}/things/${this.thingUuid}/stocks`
+      },
+      {
+        title: this.stock.exDate + "(" + this.stock.percentLeft + "%)"
+      }
+    ];
+
+    await this.getStock();
+    this.form.patchValue(this.stock);
   }
 
   createForm(): void {
@@ -45,18 +98,6 @@ export class EditStockComponent implements OnInit {
       quantity: ["8 kg"],
       percentLeft: [75]
     });
-  }
-
-  ngOnInit(): void {
-    this.getIds();
-    this.getStock().then(() => {
-      this.form.patchValue(this.stock);
-    });
-    setTimeout(() => {
-      if (this.unauthorized) {
-        this.router.navigate(["/login"]);
-      }
-    }, 3000);
   }
 
   onEditStock(): void {
@@ -80,7 +121,7 @@ export class EditStockComponent implements OnInit {
         this.stock.openedOn = new Date();
       }
       // Send changes to the server
-      await this.ss.updateStock(this.stock, this.inventoryId, this.thingNumber);
+      await this.ss.updateStock(this.stock, this.inventoryUuid, this.thingUuid);
       this.oof = false;
     } catch (error) {
       // Catch sending-to-the-server errors
@@ -102,21 +143,15 @@ export class EditStockComponent implements OnInit {
 
   private copyData(): void {
     this.stock = this.form.value;
-    this.stock.number = this.stockNumber;
-  }
-
-  getIds(): void {
-    this.inventoryId = this.route.snapshot.params["inventoryId"];
-    this.thingNumber = this.route.snapshot.params["thingNumber"];
-    this.stockNumber = this.route.snapshot.params["stockNumber"];
+    this.stock.number = this.stockUuid;
   }
 
   async getStock(): Promise<void> {
     try {
       this.stock = await this.ss.getStock(
-        this.inventoryId,
-        this.thingNumber,
-        this.stockNumber
+        this.inventoryUuid,
+        this.thingUuid,
+        this.stockUuid
       );
       this.loading = false;
     } catch (error) {
@@ -158,8 +193,8 @@ export class EditStockComponent implements OnInit {
       try {
         const res: unknown = await this.ss.deleteStock(
           this.stock,
-          this.inventoryId,
-          this.thingNumber
+          this.inventoryUuid,
+          this.thingUuid
         );
       } catch (error) {
         // Catch sending-to-the-server errors
