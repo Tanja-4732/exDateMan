@@ -3,6 +3,12 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
+import { InventoryService } from "../../services/inventory/inventory.service";
+import { ThingService } from "../../services/thing/thing.service";
 
 @Component({
   selector: "app-stocks",
@@ -25,7 +31,12 @@ export class StocksComponent implements OnInit {
    */
   stocks: Stock[] = [];
 
-  constructor(private ss: StockService, private route: ActivatedRoute) {}
+  constructor(
+    private ss: StockService,
+    private route: ActivatedRoute,
+    private is: InventoryService,
+    private ts: ThingService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     // Get the inventory UUID
@@ -33,6 +44,23 @@ export class StocksComponent implements OnInit {
 
     // Get the Thing UUID
     this.thingUuid = this.route.snapshot.params.thingUuid;
+
+    await this.is.ready;
+    await this.ts.ready;
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.is.inventories[this.inventoryUuid].name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: this.ts.things[this.inventoryUuid][this.thingUuid].name,
+        routerLink: `/inventories/${this.inventoryUuid}/things`
+      },
+      {}
+    ];
 
     // Fetch the Stocks
     await this.getStocks();
