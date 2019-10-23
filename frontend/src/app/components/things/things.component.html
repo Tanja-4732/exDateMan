@@ -7,19 +7,6 @@
 </span>
 
 <span *ngIf="!unauthorized">
-  <button
-    mat-raised-button
-    routerLink="{{ '/inventories/' + inventoryUuid + '/' }}"
-    color="accent"
-  >
-    Edit inventory
-  </button>
-  &nbsp;
-  <!-- <button mat-raised-button routerLink="../categories" color="primary">Categories</button> &nbsp; -->
-  <button mat-stroked-button routerLink="/inventories/">Go up</button> &nbsp;
-  <br />
-  <br />
-
   <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading things...</h2>
     We're getting the inventory's things... <br />

@@ -156,9 +156,17 @@ export class EventSourcingService implements AsyncConstructor {
     try {
       // After a successful transmission, the event gets appended to the local event log
       // EventSourcingService.eventLogs[event.inventoryUuid].push(event);
-      EventSourcingService.events
-        .find(el => el.uuid === event.inventoryUuid)
-        .events.push(event);
+      let inventoryEvents = EventSourcingService.events.find(
+        el => el.uuid === event.inventoryUuid
+      );
+
+      if (inventoryEvents == null) {
+        const newLog = { events: [], uuid: event.inventoryUuid };
+        EventSourcingService.events.push(newLog);
+        inventoryEvents = newLog;
+      }
+
+      inventoryEvents.events.push(event);
 
       // Persist the data offline & refresh everything
       this.saveEvents();

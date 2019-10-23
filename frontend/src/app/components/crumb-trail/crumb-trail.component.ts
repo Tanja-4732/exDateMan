@@ -31,6 +31,7 @@ export enum Icon {
   Events = "blur_on",
   Scan = "camera",
   Inventory = "work",
+  Thing = "fullscreen",
   Add = "add",
   Welcome = "home"
 }

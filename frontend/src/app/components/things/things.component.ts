@@ -3,6 +3,12 @@ import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
+import { InventoryService } from "../../services/inventory/inventory.service";
+import { Inventory } from "../../models/inventory/inventory";
 
 @Component({
   selector: "app-things",
@@ -16,17 +22,35 @@ export class ThingsComponent implements OnInit {
   oof = false;
 
   things: Thing[] = [];
+
   inventoryUuid: string;
+  inventory: Inventory;
 
   constructor(
     private ts: ThingService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private is: InventoryService
   ) {}
 
   async ngOnInit(): Promise<void> {
     // Get Inventory UUID
     this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+
+    await this.is.ready;
+    this.inventory = this.is.inventories[this.inventoryUuid];
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.inventory.name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: "Things"
+      }
+    ];
 
     // Fetch the things of this inventory
     await this.getThings();
