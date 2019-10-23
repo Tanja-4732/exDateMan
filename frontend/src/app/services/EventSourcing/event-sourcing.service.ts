@@ -91,6 +91,8 @@ export class EventSourcingService implements AsyncConstructor {
   public async reFetchAll(): Promise<void> {
     EventSourcingService.events = [];
     await this.fetchAllInventoryEvents();
+
+    // Persist the data offline & refresh everything
     this.saveEvents();
   }
 
@@ -143,8 +145,6 @@ export class EventSourcingService implements AsyncConstructor {
     }
 
     inventoryEvents.events = res;
-
-    this.saveEvents();
   }
 
   /**
@@ -160,6 +160,7 @@ export class EventSourcingService implements AsyncConstructor {
         .find(el => el.uuid === event.inventoryUuid)
         .events.push(event);
 
+      // Persist the data offline & refresh everything
       this.saveEvents();
 
       // Transmit the event to the server to be stored in the db
