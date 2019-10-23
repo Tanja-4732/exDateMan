@@ -56,13 +56,15 @@ export class StocksComponent implements OnInit {
       },
       {
         icon: Icon.Thing,
-        title: this.ts.things[this.inventoryUuid][this.thingUuid].name,
+        title: this.ts.things[this.inventoryUuid].find(
+          thing => thing.uuid === this.thingUuid
+        ).name,
         routerLink: `/inventories/${this.inventoryUuid}/things`
       },
       {
         icon: Icon.Stock,
         title: "Stocks"
-       }
+      }
     ];
 
     // Fetch the Stocks
