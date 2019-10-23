@@ -59,7 +59,10 @@ export class StocksComponent implements OnInit {
         title: this.ts.things[this.inventoryUuid][this.thingUuid].name,
         routerLink: `/inventories/${this.inventoryUuid}/things`
       },
-      {}
+      {
+        icon: Icon.Stock,
+        title: "Stocks"
+       }
     ];
 
     // Fetch the Stocks
