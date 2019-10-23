@@ -113,7 +113,15 @@ export class ThingService {
    * @param inventoryUuid The UUID of the Inventory
    */
   private applyThingEvent(event: Event, inventoryUuid: string) {
+    /**
+     * The index of the event in the projection, if any
+     */
+    const index = ThingService.inventoryTingsProjection[
+      inventoryUuid
+    ].findIndex(thing => thing.uuid === event.data.uuid);
+
     switch (event.data.crudType) {
+      // Handle Thing creation
       case crudType.CREATE:
         ThingService.inventoryTingsProjection[inventoryUuid].push({
           uuid: event.data.uuid,
@@ -122,33 +130,25 @@ export class ThingService {
           createdOn: event.data.thingData.createdOn
         });
         break;
+
+      // Handle Thing alteration
       case crudType.UPDATE:
         // Only update from values not equaling null
-        ThingService.inventoryTingsProjection[inventoryUuid][
-          event.data.uuid
-        ] = {
-          name:
-            event.data.thingData.name != null
-              ? event.data.thingData.name
-              : ThingService.inventoryTingsProjection[inventoryUuid][
-                  event.data.uuid
-                ].name,
-          categoryUuids:
-            event.data.thingData.categoryUuids != null
-              ? event.data.thingData.categoryUuids
-              : ThingService.inventoryTingsProjection[inventoryUuid][
-                  event.data.uuid
-                ].categoryUuids,
-          createdOn: event.data.thingData.createdOn =
-            ThingService.inventoryTingsProjection[inventoryUuid][
-              event.data.uuid
-            ].createdOn
-        };
+        if (event.data.thingData.name != null) {
+          ThingService.inventoryTingsProjection[inventoryUuid][index].name =
+            event.data.thingData.name;
+        }
+
+        if (event.data.thingData.categoryUuids != null) {
+          ThingService.inventoryTingsProjection[inventoryUuid][
+            index
+          ].categoryUuids = event.data.thingData.categoryUuids;
+        }
         break;
+
+      // Handle Thing deletion
       case crudType.DELETE:
-        delete ThingService.inventoryTingsProjection[inventoryUuid][
-          event.data.uuid
-        ];
+        delete ThingService.inventoryTingsProjection[inventoryUuid][index];
         break;
     }
   }
