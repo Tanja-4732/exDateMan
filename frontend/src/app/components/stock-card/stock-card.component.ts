@@ -12,11 +12,12 @@ export class StockCardComponent implements OnInit {
   @Input()
   stock: Stock;
 
-  ced: Date;
+  calculatedExDate: Date;
 
   constructor(private ss: StockService) {}
 
   ngOnInit(): void {
-    this.ced = this.ss.calculateExDate(this.stock);
+    this.calculatedExDate = this.ss.calculateExDate(this.stock);
+    console.log(this.stock);
   }
 }

@@ -77,8 +77,7 @@ export class StocksComponent implements OnInit {
       await this.ss.ready;
 
       // Get the Stocks
-      console.log("Stocks array:");
-      console.log(this.ss.stocks);
+      console.log("Stocks array:\n" + JSON.stringify(this.ss.stocks));
 
       this.stocks = this.ss.stocks[this.inventoryUuid][this.thingUuid];
       this.loading = false;

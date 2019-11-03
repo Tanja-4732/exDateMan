@@ -9,6 +9,7 @@ import {
   FormGroup,
   FormBuilder
 } from "@angular/forms";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-add-stock",
@@ -40,8 +41,9 @@ export class AddStockComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.getInventoryIdAndThingNumber();
+  async ngOnInit() {
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
   }
 
   getExDateErrorMessage(): string {
@@ -66,6 +68,7 @@ export class AddStockComponent implements OnInit {
 
   async createStock(stock: Stock): Promise<void> {
     try {
+      this.stock.uuid = v4();
       this.stock.percentLeft = 100;
       this.stock.exDate = this.form.value.exDate;
       this.stock.useUpIn = this.form.value.useUpIn;
@@ -87,10 +90,5 @@ export class AddStockComponent implements OnInit {
         console.log("Unknown error in add-stock while creating");
       }
     }
-  }
-
-  getInventoryIdAndThingNumber(): void {
-    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
-    this.thingUuid = this.route.snapshot.params.thingUuid;
   }
 }
