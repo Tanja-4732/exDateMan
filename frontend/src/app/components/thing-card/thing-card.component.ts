@@ -21,28 +21,29 @@ export class ThingCardComponent implements OnInit {
 
   stocks: Stock[];
 
-  inventoryId: number;
+  inventoryUuid: string;
 
   constructor(public ss: StockService, private route: ActivatedRoute) {}
 
   async ngOnInit(): Promise<void> {
-    this.getInventoryId();
-    // await this.setStocks();
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+
+    await this.fetchStocks();
   }
 
-  getInventoryId(): void {
-    this.inventoryId = this.route.snapshot.params.inventoryId;
-  }
-
-  async setStocks(): Promise<void> {
+  async fetchStocks(): Promise<void> {
     try {
-      this.stocks = await this.ss.getStocks(this.inventoryId, this.thing.uuid);
+      // Wait for the stockService to be ready
+      await this.ss.ready;
+
+      // Fetch the stocks from the stockService
+      this.stocks = this.ss.stocks[this.inventoryUuid][this.thing.uuid];
       this.loading = false;
     } catch (error) {
       this.oof = true;
 
       console.log(
-        "Unknown error in setStocks [ThingCardComponent] while creating"
+        "Unknown error in fetchStocks [ThingCardComponent] while creating"
       );
     }
   }
