@@ -20,10 +20,10 @@ export class AddStockComponent implements OnInit {
   notFound = false;
   oof = false;
 
-  inventoryId: number;
-  thingNumber: number;
+  inventoryUuid: string;
+  thingUuid: string;
 
-  stock: Stock = {};
+  stock = {} as Stock;
 
   form: FormGroup;
 
@@ -70,7 +70,7 @@ export class AddStockComponent implements OnInit {
       this.stock.exDate = this.form.value.exDate;
       this.stock.useUpIn = this.form.value.useUpIn;
       this.stock.quantity = this.form.value.quantity;
-      await this.ss.newStock(stock, this.inventoryId, this.thingNumber);
+      await this.ss.newStock(stock, this.inventoryUuid, this.thingUuid);
       this.oof = false;
     } catch (error) {
       this.oof = true;
@@ -90,7 +90,7 @@ export class AddStockComponent implements OnInit {
   }
 
   getInventoryIdAndThingNumber(): void {
-    this.inventoryId = this.route.snapshot.params.inventoryId;
-    this.thingNumber = this.route.snapshot.params.thingNumber;
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
   }
 }
