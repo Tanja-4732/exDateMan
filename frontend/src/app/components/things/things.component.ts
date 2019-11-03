@@ -69,10 +69,6 @@ export class ThingsComponent implements OnInit {
     try {
       await this.ts.ready;
       this.things = this.ts.things[this.inventoryUuid];
-      console.log(this.things);
-      console.log(JSON.stringify(this.things));
-
-      console.log("Got things");
 
       this.loading = false;
     } catch (error) {
