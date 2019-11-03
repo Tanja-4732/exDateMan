@@ -57,8 +57,6 @@ export class ThingService {
    * Iterates over all inventories and fetches their things
    */
   async fetchAllInventoryThings() {
-    console.log("fetch all");
-
     // Wait for the InventoryService & EventSourcingService to be ready
     await this.is.ready;
     await this.ess.ready;
@@ -70,12 +68,7 @@ export class ThingService {
 
     for (const inventory in this.is.inventories) {
       if (this.is.inventories.hasOwnProperty(inventory)) {
-        console.log("no oof");
-
         const uuid = this.is.inventories[inventory].uuid;
-
-        console.log("and the inventory uuid is:");
-        console.log(uuid);
 
         // Initialize the inner array
         ThingService.inventoryTingsProjection[uuid] = [];

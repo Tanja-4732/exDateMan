@@ -54,8 +54,10 @@ export class EventSourcingService implements AsyncConstructor {
    * Stores the events in localStorage
    */
   saveEvents(): void {
-    console.log("The events are being saved.");
-    console.log(JSON.stringify(EventSourcingService.events));
+    console.log(
+      "The events are being saved.\n" +
+        JSON.stringify(EventSourcingService.events)
+    );
 
     // Set the localStorage to the new value
     window.localStorage.setItem(
