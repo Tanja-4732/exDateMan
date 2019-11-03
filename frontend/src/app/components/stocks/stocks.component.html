@@ -14,23 +14,6 @@
   </span>
 
   <span *ngIf="!loading && !notFound">
-    <button
-      mat-raised-button
-      routerLink="/inventories/{{ inventoryUuid }}/things/{{ thingUuid }}"
-      color="accent"
-    >
-      Edit thing
-    </button>
-    &nbsp;
-    <button
-      mat-stroked-button
-      routerLink="/inventories/{{ inventoryUuid }}/things/"
-    >
-      Go up
-    </button>
-    <br />
-    <br />
-
     <div *ngIf="stocks.length === 0" class="mat-typography">
       Add stocks by hitting the plus button.
     </div>
