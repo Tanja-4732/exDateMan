@@ -31,7 +31,7 @@ export class StockService {
    * The Stocks projection
    *
    * Usage:
-   * [inventoryUuid][thingUuid]
+   * `[inventoryUuid][thingUuid]`
    */
   get stocks() {
     return StockService.inventoryTingsStocksProjection;
@@ -94,15 +94,13 @@ export class StockService {
     }
 
     // Iterate over all Inventory-UUIDs of the EventsLogs
-    for (const inventoryUuid in this.ess.events) {
-      if (this.ess.events.hasOwnProperty(inventoryUuid)) {
-        // Iterate over the Events of the Inventory
-        for (const event of this.ess.events[inventoryUuid]) {
-          // But only if when the Event is a StockEvent
-          if (event.data.itemType === itemType.STOCK) {
-            // Apply the Event
-            await this.applyStockEvent(event);
-          }
+    for (const inventoryEvents of EventSourcingService.events) {
+      // Iterate over the Events of the Inventory
+      for (const event of inventoryEvents.events) {
+        // But only if when the Event is a StockEvent
+        if (event.data.itemType === itemType.STOCK) {
+          // Apply the Event
+          await this.applyStockEvent(event);
         }
       }
     }
@@ -162,11 +160,116 @@ export class StockService {
     }
   }
 
-  async newStock(stock: Stock, inventoryId: number, thingNumber: number) {}
+  /**
+   * Creates a Stock
+   *
+   * @param stock The stock to be created
+   * @param inventoryUuid The UUID of the Inventory
+   * @param thingUuid THe UUID of the Thing
+   */
+  async newStock(
+    stock: Stock,
+    inventoryUuid: string,
+    thingUuid: string
+  ): Promise<void> {
+    const now = new Date();
+    const event = {
+      date: now,
+      inventoryUuid,
+      data: {
+        uuid: stock.uuid,
+        crudType: crudType.CREATE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        stockData: {
+          createdOn: now,
+          exDate: stock.exDate,
+          useUpIn: stock.useUpIn,
+          openedOn: stock.openedOn,
+          percentLeft: stock.percentLeft,
+          thingUuid
+        }
+      }
+    };
 
-  async updateStock(stock: Stock, inventoryId: number, thingNumber: number) {}
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyStockEvent(event);
+  }
 
-  async deleteStock(stock: Stock, inventoryId: number, thingNumber: number) {}
+  /**
+   * Updates a Stock
+   *
+   * @param stock The stock to be updated
+   * @param inventoryUuid The UUID of the Inventory
+   * @param thingUuid THe UUID of the Thing
+   */
+  async updateStock(
+    stock: Stock,
+    inventoryUuid: string,
+    thingUuid: string
+  ): Promise<void> {
+    const now = new Date();
+    const event = {
+      inventoryUuid,
+      date: now,
+      data: {
+        crudType: crudType.UPDATE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        stockData: {}
+      }
+    } as Event;
+
+    if (stock.exDate != null) {
+      event.data.stockData.exDate = stock.exDate;
+    }
+
+    if (stock.openedOn != null) {
+      event.data.stockData.openedOn = stock.openedOn;
+    }
+
+    if (stock.percentLeft != null) {
+      event.data.stockData.percentLeft = stock.percentLeft;
+    }
+
+    if (stock.quantity != null) {
+      event.data.stockData.quantity = stock.quantity;
+    }
+
+    if (stock.useUpIn != null) {
+      event.data.stockData.useUpIn = stock.useUpIn;
+    }
+
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyStockEvent(event);
+  }
+
+  /**
+   * Deletes a Stock
+   *
+   * @param stock The stock to be deleted
+   * @param inventoryUuid The UUID of the Inventory
+   * @param thingUuid THe UUID of the Thing
+   */
+  async deleteStock(
+    stock: Stock,
+    inventoryUuid: string,
+    thingUuid: string
+  ): Promise<void> {
+    const now = new Date();
+    const event = {
+      inventoryUuid,
+      date: now,
+      data: {
+        crudType: crudType.DELETE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid
+      }
+    } as Event;
+
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyStockEvent(event);
+  }
 
   /**
    * Calculates the effective date of expiration for a given Stock
