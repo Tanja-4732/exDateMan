@@ -26,7 +26,7 @@ import { ThingService } from "../../services/thing/thing.service";
 export class EditStockComponent implements OnInit {
   unauthorized = false;
   notFound = false;
-  loading = true;
+  loading = false;
   oof = false;
   reallyDelete = false;
 
@@ -52,13 +52,15 @@ export class EditStockComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.inventoryUuid = this.route.snapshot.params.inventoryId;
-    this.thingUuid = this.route.snapshot.params.thingNumber;
-    this.stockUuid = this.route.snapshot.params.stockNumber;
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+    this.thingUuid = this.route.snapshot.params.thingUuid;
+    this.stockUuid = this.route.snapshot.params.stockUuid;
 
     await this.is.ready;
     await this.ts.ready;
     await this.ss.ready;
+
+    console.log(this.ss.stocks);
 
     this.stock = this.ss.stocks[this.inventoryUuid][this.thingUuid].find(
       stock => stock.uuid === this.stockUuid
@@ -87,7 +89,6 @@ export class EditStockComponent implements OnInit {
       }
     ];
 
-    await this.getStock();
     this.form.patchValue(this.stock);
   }
 
@@ -126,49 +127,13 @@ export class EditStockComponent implements OnInit {
     } catch (error) {
       // Catch sending-to-the-server errors
       this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
+      console.error(error);
     }
   }
 
   private copyData(): void {
     this.stock = this.form.value;
     this.stock.number = this.stockUuid;
-  }
-
-  async getStock(): Promise<void> {
-    try {
-      this.stock = await this.ss.getStock(
-        this.inventoryUuid,
-        this.thingUuid,
-        this.stockUuid
-      );
-      this.loading = false;
-    } catch (error) {
-      this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in edit-stock while getting stock");
-      }
-    }
   }
 
   onDeleteStock(): void {
