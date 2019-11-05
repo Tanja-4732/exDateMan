@@ -58,22 +58,28 @@ export class AddStockComponent implements OnInit {
       : "";
   }
 
+  /**
+   * Handle the form submission
+   */
   onAddStock(): void {
-    this.createStock(this.stock).then(() => {
+    this.createStock().then(() => {
       if (this.oof === false) {
         this.router.navigate([".."], { relativeTo: this.route });
       }
     });
   }
 
-  async createStock(stock: Stock): Promise<void> {
+  /**
+   * Persist the new Stock
+   */
+  async createStock(): Promise<void> {
     try {
       this.stock.uuid = v4();
       this.stock.percentLeft = 100;
       this.stock.exDate = this.form.value.exDate;
       this.stock.useUpIn = this.form.value.useUpIn;
       this.stock.quantity = this.form.value.quantity;
-      await this.ss.newStock(stock, this.inventoryUuid, this.thingUuid);
+      await this.ss.newStock(this.stock, this.inventoryUuid, this.thingUuid);
       this.oof = false;
     } catch (error) {
       this.oof = true;

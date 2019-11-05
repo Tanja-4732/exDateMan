@@ -109,9 +109,17 @@ export class EditStockComponent implements OnInit {
     });
   }
 
+  /**
+   * Persist the changes made to the Stock
+   */
   async editStock(): Promise<void> {
     try {
-      this.copyData();
+      // Copy the data to the new Stock object to be persisted
+      this.stock = this.form.value;
+      console.log(this.stock);
+
+      this.stock.uuid = this.stockUuid;
+
       // Confirm that it has been opened for the first time just now.
       if (
         ((this.stock.openedOn as unknown) as number) - 0 ===
@@ -129,11 +137,6 @@ export class EditStockComponent implements OnInit {
       this.oof = true;
       console.error(error);
     }
-  }
-
-  private copyData(): void {
-    this.stock = this.form.value;
-    this.stock.number = this.stockUuid;
   }
 
   onDeleteStock(): void {

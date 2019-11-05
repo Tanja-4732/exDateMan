@@ -186,6 +186,7 @@ export class StockService {
           exDate: stock.exDate,
           useUpIn: stock.useUpIn,
           openedOn: stock.openedOn,
+          quantity: stock.quantity,
           percentLeft: stock.percentLeft,
           thingUuid
         }
