@@ -124,6 +124,18 @@ export class StockService {
       uuid: stockEvent.data.uuid
     };
 
+    console.log("This is the stocksProjection");
+    console.log(StockService.inventoryTingsStocksProjection);
+
+    /**
+     * The index of the event in the projection, if any
+     */
+    const index = StockService.inventoryTingsStocksProjection[
+      stockEvent.inventoryUuid
+    ][stockEvent.data.stockData.thingUuid].findIndex(
+      stock => stock.uuid === stockEvent.data.uuid
+    );
+
     switch (stockEvent.data.crudType) {
       case crudType.DELETE:
         // Delete a Stock from the projection
@@ -153,7 +165,7 @@ export class StockService {
         Object.assign(
           StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
             stockEvent.data.stockData.thingUuid
-          ][stockEvent.data.uuid],
+          ][index],
           newStock
         );
         break;
@@ -217,7 +229,8 @@ export class StockService {
         crudType: crudType.UPDATE,
         itemType: itemType.STOCK,
         userUuid: (await this.as.getCurrentUser()).user.uuid,
-        stockData: {}
+        stockData: {},
+        uuid: stock.uuid
       }
     } as Event;
 
