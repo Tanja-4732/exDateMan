@@ -1,0 +1,39 @@
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch your stocks, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
+  Redirecting you to the login page in 3 seconds...
+</span>
+
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading && !notFound">
+    <h2>Loading stocks...</h2>
+    We're getting the inventory's thing's stocks... <br />
+    Please hang on
+  </span>
+
+  <span *ngIf="!loading && !notFound">
+    <div *ngIf="stocks.length === 0" class="mat-typography">
+      Add stocks by hitting the plus button.
+    </div>
+
+    <div class="grid">
+      <div *ngFor="let stock of stocks">
+        <app-stock-card [stock]="stock"></app-stock-card>
+      </div>
+    </div>
+
+    <a routerLink="new">
+      <button mat-fab class="fab" (click)="onAddStock()">
+        <i class="material-icons">add</i>
+      </button>
+    </a>
+  </span>
+  <div *ngIf="notFound" class="mat-typography">
+    <h2>
+      Oh, no.
+    </h2>
+    We couldn't find the data you requested.
+  </div>
+</span>

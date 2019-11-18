@@ -1,0 +1,31 @@
+<p class="crumb-trail mat-typography">
+  <ng-container *ngFor="let crumb of crumbs; index as i">
+    <!-- Button with routerLink -->
+    <button
+      mat-button
+      routerLink="{{ crumb.routerLink }}"
+      *ngIf="crumb.routerLink !== undefined"
+    >
+      <mat-icon *ngIf="crumb.icon !== undefined">
+        {{ crumb.icon }}
+      </mat-icon>
+      {{ crumb.title }}
+    </button>
+
+    <!-- Button without routerLink -->
+    <button
+      mat-button
+      *ngIf="crumb.routerLink === undefined"
+      matTooltip="You are here"
+      matTooltipPosition="right"
+    >
+      <mat-icon *ngIf="crumb.icon !== undefined">
+        {{ crumb.icon }}
+      </mat-icon>
+      {{ crumb.title }}
+    </button>
+
+    <!-- Add an arrow in between crumbs -->
+    <mat-icon *ngIf="crumbs.length - 1 !== i">keyboard_arrow_right</mat-icon>
+  </ng-container>
+</p>

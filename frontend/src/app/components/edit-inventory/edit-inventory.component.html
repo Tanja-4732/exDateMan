@@ -1,0 +1,187 @@
+<!-- Unauthorized message -->
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch this inventory, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
+  Redirecting you to the login page in 3 seconds...
+</span>
+
+<!-- Main content -->
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading && !notFound">
+    <h2>Loading inventory...</h2>
+    We're getting your inventory... <br />
+    Please hang on
+  </span>
+
+  <!-- Continue if ok -->
+  <span *ngIf="!notFound && !loading">
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+      <!-- Inventory name -->
+      <mat-form-field appearance="outline">
+        <mat-label>Inventory name</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Someones inventory"
+          formControlName="inventoryName"
+          required
+        />
+        <i matSuffix class="material-icons">crop_free</i>
+      </mat-form-field>
+      <br />
+
+      <!-- Inventory owner -->
+      <mat-form-field appearance="outline">
+        <mat-label>Owner</mat-label>
+        <mat-chip-list #OwnerChipList aria-label="Owner">
+          <mat-chip [selectable]="selectable" [removable]="false">
+            {{ owner.name }} <br />
+            ({{ owner.email }})
+          </mat-chip>
+          <input
+            placeholder="someone@example.com"
+            [matChipInputFor]="OwnerChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="onAddOwner($event)"
+            formControlName="ownerEmail"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">build</i>
+        <mat-error *ngIf="owner == null || owner.email == null">
+          The owner must be specified.
+        </mat-error>
+      </mat-form-field>
+      <br />
+
+      <!-- Inventory admins -->
+      <mat-form-field appearance="outline">
+        <mat-label>Admins</mat-label>
+        <mat-chip-list #AdminsChipList aria-label="Admins">
+          <mat-chip
+            *ngFor="let admin of admins"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeAdmin(admin)"
+          >
+            <!-- {{ admin.name }}<br /> -->
+            <!-- ({{ admin.email }}) -->
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="someone@example.com"
+            [matChipInputFor]="AdminsChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addAdmin($event)"
+            formControlName="adminEmail"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">build</i>
+      </mat-form-field>
+      <br />
+
+      <!-- Writables -->
+      <mat-form-field appearance="outline">
+        <mat-label>Writables</mat-label>
+        <mat-chip-list #WritablesChipList>
+          <mat-chip
+            *ngFor="let writable of writables"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeWritable(writable)"
+          >
+            <!-- {{ writable.name }}<br /> -->
+            <!-- ({{ writable.email }}) -->
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="someone@example.com"
+            [matChipInputFor]="WritablesChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addWritable($event)"
+            formControlName="writableEmail"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">create</i>
+      </mat-form-field>
+      <br />
+
+      <!-- Readables -->
+      <mat-form-field appearance="outline">
+        <mat-label>Readables</mat-label>
+        <mat-chip-list #readablesChipList>
+          <mat-chip
+            *ngFor="let readable of readables"
+            [selectable]="selectable"
+            [removable]="removable"
+            (removed)="removeReadable(readable)"
+          >
+            <!-- {{ readable.name }}<br /> -->
+            <!-- ({{ readable.email }}) -->
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="someone@example.com"
+            [matChipInputFor]="readablesChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="addReadable($event)"
+            formControlName="readableEmail"
+          />
+        </mat-chip-list>
+        <i matSuffix class="material-icons">import_contacts</i>
+      </mat-form-field>
+    </form>
+
+    <br />
+
+    <button
+      mat-raised-button
+      color="accent"
+      type="submit"
+      [disabled]="!isValid()"
+    >
+      Save changes
+    </button>
+    &nbsp;
+    <button mat-raised-button (click)="onDeleteInventory()" color="warn">
+      Delete inventory
+    </button>
+    &nbsp;
+    <button
+      mat-stroked-button
+      routerLink="/inventories/{{ inventory.uuid }}/things/"
+    >
+      Go back
+    </button>
+
+    <div *ngIf="userNotFound" class="mat-typography">
+      <br />
+      <br />
+      We couldn't find that user.
+      <br />
+    </div>
+  </span>
+
+  <div *ngIf="notFound" class="mat-typography">
+    <h2>
+      Oh, no.
+    </h2>
+    We couldn't find the inventory with the UUID
+    <code>{{ inventory.uuid }}</code>
+  </div>
+</span>
+
+<mat-chip-list>
+  <!-- <mat-chip
+    *ngFor="let element of myUl"
+    [selectable]="selectable"
+    [removable]="removable"
+  >
+    {{ element.hi }}</mat-chip
+  > -->
+</mat-chip-list>

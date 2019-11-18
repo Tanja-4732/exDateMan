@@ -6,12 +6,12 @@ The easy, intuitive and efficient way to manage a shared food inventory - WIP
 
 ## Contents
 
-- [Expiration date manager](#Expiration-date-manager)
-  - [Contents](#Contents)
-  - [Description](#Description)
-  - [Features](#Features)
-  - [Technologies used](#Technologies-used)
-  - [License](#License)
+- [Expiration date manager](#expiration-date-manager)
+  - [Contents](#contents)
+  - [Description](#description)
+  - [Features](#features)
+  - [Technologies used](#technologies-used)
+  - [License](#license)
 
 ## Description
 

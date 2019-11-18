@@ -1,0 +1,7 @@
+<div class="mat-typography">
+  <button mat-raised-button (click)="getEvents()">Get events</button>
+
+  <p *ngFor="let event of events">
+    {{ event }}
+  </p>
+</div>

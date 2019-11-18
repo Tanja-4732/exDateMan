@@ -1,0 +1,122 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="30853AD2-89EF-7760-CF0E-C06C442180AA" name="Stock">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:26:32 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<ordsAlias>table_5</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="03329344-39E5-318F-674E-63F9F65BFAE3">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:02 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Thing_id" id="A6CEFE9B-B026-56C4-11AB-1AC40D77E6A5">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:56 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C4E8F080-BADB-75D3-3960-C9FB337C3722" referredColumn="0C1FDAE0-BEF8-6F55-AF21-716F6C76C6DA"/>
+</associations>
+</Column>
+<Column name="exDate" id="EFCEE4A0-1AC4-FD22-9E88-99B596BA3181">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:52:22 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="quantity" id="9116BCC1-3E9F-DF5A-5BC9-602A0B351531">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:52:45 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="useUpIn" id="DE626189-A0C1-635C-9A02-AAF9EE4988D9">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:52:45 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="percentLeft" id="1B7B71B8-B42A-8D83-0CF2-EC225C87B45D">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:52:56 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="openedOn" id="48D7EAF8-7013-8B6C-12D8-E14E07BFC9D3">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:53:12 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="addedOn" id="0735F0D6-6850-725F-47B8-09092C8FF3D0">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:53:33 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EA38FCCA-197A-C394-E78A-FDF13572F148" name="Stock_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:02 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="03329344-39E5-318F-674E-63F9F65BFAE3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8F64F8EC-3216-0A35-EA8F-1522BBB0F48A" name="Stock_Thing_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:29:56 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A6CEFE9B-B026-56C4-11AB-1AC40D77E6A5"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

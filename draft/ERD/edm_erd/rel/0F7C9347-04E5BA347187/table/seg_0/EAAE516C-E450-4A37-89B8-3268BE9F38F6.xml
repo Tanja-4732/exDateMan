@@ -1,0 +1,93 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EAAE516C-E450-4A37-89B8-3268BE9F38F6" name="InventoryUser">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:26:18 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<ordsAlias>table_2</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="4B476AB6-6AB5-BB56-E7F2-39206BF32BCA">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:26:49 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="accessRights" id="14B98F30-C1A6-939D-2C7A-168D45CE8360">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:27:36 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="User_id" id="56490EA6-CB70-15B9-41DF-8B2C61C30C1D">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:27:42 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C551748E-CFC3-7D3B-4231-8A036DDD9C3D" referredColumn="F9CFEC33-6788-C366-150E-660F882BF9C4"/>
+</associations>
+</Column>
+<Column name="Inventory_id" id="3EC459BA-D2D5-38B1-8A40-DB7EFA0BE3BB">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:28:05 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="ED8ECF98-57B5-1144-4EA5-522C557925D7" referredColumn="BAFBEA3C-B3C3-EC2F-C840-AF502DFFFCC0"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C0796DF3-FCB0-CA75-6FE3-6A76BB0B5C5A" name="InventoryUser_PK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:26:49 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4B476AB6-6AB5-BB56-E7F2-39206BF32BCA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2F3571F5-08AD-E610-54A9-479B62147312" name="InventoryUser_User_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:27:42 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="56490EA6-CB70-15B9-41DF-8B2C61C30C1D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D9D79927-A89C-A13C-124A-60847630682B" name="InventoryUser_Inventory_FK">
+<createdBy>bernd</createdBy>
+<createdTime>2019-08-10 19:28:05 UTC</createdTime>
+<ownerDesignName>edm_erd</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3EC459BA-D2D5-38B1-8A40-DB7EFA0BE3BB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,37 @@
+<div class="wrap">
+  <!-- Navigation toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <!-- Sidenav toggle button -->
+    <button mat-icon-button (click)="sidenav.toggle()" color="basic">
+      <!-- Burger icon -->
+      <mat-icon>menu</mat-icon>
+    </button>
+    <!-- Navigation bar heading -->
+    {{ title }}
+  </mat-toolbar>
+
+  <mat-sidenav-container class="sidenav-container">
+    <!-- The main content (not the sidenav) -->
+    <mat-sidenav-content>
+      <!-- Add a bit of space around the edges -->
+      <div class="defaultMargin">
+        <app-crumb-trail></app-crumb-trail>
+        <mat-divider></mat-divider>
+        <br />
+        <!-- Main app content -->
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+
+    <!-- The sidenav content -->
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      [(opened)]="sideNavOpened"
+      class="sidenav-main"
+    >
+      <!-- The SideNav component -->
+      <app-side-nav></app-side-nav>
+    </mat-sidenav>
+  </mat-sidenav-container>
+</div>

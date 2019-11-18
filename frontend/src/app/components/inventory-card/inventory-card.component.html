@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      {{ inventory.name }}
+    </mat-card-title>
+    <mat-card-subtitle
+      >Created on: {{ inventory.createdOn | date }}</mat-card-subtitle
+    >
+  </mat-card-header>
+
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      routerLink="{{ inventory.uuid }}/things"
+      color="accent"
+    >
+      Things
+    </button>
+    &nbsp;
+    <button
+      mat-stroked-button
+      routerLink="{{ '/inventories/' + inventory.uuid + '/' }}"
+      color="basic"
+    >
+      Edit
+    </button>
+  </mat-card-actions>
+</mat-card>

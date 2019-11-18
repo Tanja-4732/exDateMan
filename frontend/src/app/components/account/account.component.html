@@ -1,0 +1,157 @@
+<span class="mat-typography" *ngIf="unauthorized">
+  <h2>Unauthorized</h2>
+  We couldn't fetch your inventories, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
+  Redirecting you to the login page in 3 seconds...
+</span>
+
+<span *ngIf="!unauthorized">
+  <span class="mat-typography" *ngIf="loading">
+    <h2>Loading account...</h2>
+    We're fetching your account... <br />
+    Please hang on
+  </span>
+
+  <span *ngIf="!loading" class="mat-typography">
+    <form [formGroup]="form" (ngSubmit)="onSave()">
+      <h1>Personal</h1>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          type="name"
+          placeholder="Bob"
+          formControlName="name"
+          required
+        />
+        <i matSuffix class="material-icons">person</i>
+      </mat-form-field>
+      <br />
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          placeholder="someone@example.com"
+          formControlName="email"
+          required
+        />
+        <i matSuffix class="material-icons">alternate_email</i>
+      </mat-form-field>
+      <br />
+
+      <h1>Password</h1>
+      <ng-container formGroupName="passwords">
+        <mat-form-field appearance="outline">
+          <mat-label>Change Password</mat-label>
+          <input
+            matInput
+            type="password"
+            placeholder="XWf%=7&eF8CxX_j^AC7x"
+            formControlName="password"
+            autocomplete="new-password"
+          />
+          <i matSuffix class="material-icons">vpn_key</i>
+          <mat-hint>
+            You may leave this empty.
+          </mat-hint>
+        </mat-form-field>
+        <br />
+
+        <mat-form-field appearance="outline">
+          <mat-label>Repeat password</mat-label>
+          <input
+            matInput
+            type="password"
+            placeholder="XWf%=7&eF8CxX_j^AC7x"
+            formControlName="repeat_password"
+            autocomplete="repeat-password"
+          />
+          <i matSuffix class="material-icons">lock</i>
+        </mat-form-field>
+      </ng-container>
+      <br />
+
+      <h1>Two factor authentication</h1>
+      <!-- <div *ngIf="!user.tfaEnabled">
+        <p>Two factor authentication is disabled.</p>
+        <p>
+          2FA is an optional process which enhances your security by requiring
+          any login attempt to type in a timed code from your phone. This way, a
+          password alone is not sufficient for an attacker, as they'd also
+          access to your phone.
+        </p>
+
+        <qrcode
+          [qrdata]="user.tfaUrl"
+          [colorlight]="'#303030'"
+          [level]="'L'"
+        ></qrcode>
+        <code>{{ user.tfaSecret }}</code>
+        <br />
+        <p>
+          You may enable 2FA by scanning the QR code below using an app like
+          Google Authenticator or Authy , and then typing in your code in the
+          field below. If you can't scan the QR code, enter the value bellow the
+          QR code into your 2FA app manually.
+        </p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Enable 2FA</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="267829"
+            formControlName="tfa"
+          />
+          <i matSuffix class="material-icons">phonelink_lock</i>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="user.tfaEnabled">
+        <mat-slide-toggle color="accent" formControlName="use2FA">
+          Enable two factor authentication
+        </mat-slide-toggle>
+        <br />
+        <br />
+        <p>
+          2FA is an optional process which enhances your security by requiring
+          any login attempt to type in a timed code from your phone. This way, a
+          password alone is not sufficient for an attacker, as they'd also
+          access to your phone.
+        </p>
+      </div> -->
+
+      <br />
+
+      <h1 *ngIf="oof">Error</h1>
+      <ng-container [ngSwitch]="error">
+        <p *ngSwitchCase="'Email already in use'">
+          Email already in use. <br />
+          Please use a different one.
+        </p>
+        <p *ngSwitchCase="'Invalid 2FA token'">
+          The 2FA token entered is invalid. <br />
+          Make sure to enter the token while it's valid. <br />
+          Tokens have a validity time of 30 seconds (see your 2FA app for the
+          timer).
+        </p>
+      </ng-container>
+
+      <button
+        mat-raised-button
+        type="submit"
+        color="accent"
+        [disabled]="!form.valid"
+      >
+        Save changes
+      </button>
+      &nbsp;
+      <button mat-stroked-button type="button" routerLink="/inventories">
+        Cancel
+      </button>
+    </form>
+  </span>
+</span>
