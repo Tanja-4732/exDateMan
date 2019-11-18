@@ -11,6 +11,11 @@ The easy, intuitive and efficient way to manage a shared food inventory - WIP
   - [Description](#description)
   - [Features](#features)
   - [Technologies used](#technologies-used)
+  - [Environment variables](#environment-variables)
+    - [SSL](#ssl)
+    - [Database connectivity](#database-connectivity)
+    - [JSON Web Tokens](#json-web-tokens)
+  - [Usage](#usage)
   - [License](#license)
 
 ## Description
@@ -43,7 +48,55 @@ A Docker image will be available in the future.
 
 The application consists of a Frontend and a Backend.
 
-The frontend is implemented in [Angular](https://angular.io)
+The frontend is a [SPA](https://en.wikipedia.org/wiki/Single-page_application) and implemented in [Angular](https://angular.io), using the [Angular Material](https://material.angular.io) UI library. The backend is implemented in [TypeScript](https://www.typescriptlang.org/) and runs on [Node.js](https://nodejs.org). All data is persisted in Postgres as Events, with one single table. The JSON of each event is stored in the binary JSON format BSON.
+
+## Environment variables
+
+The host-specific configuration is done in environment variables.
+
+The port can be specified using the `PORT` environment variable, and the non-SSL port can be specified using the `INSECURE_PORT` environment variable. They default to 443 and 80 respectively, except when `EDM_SSL` is not set to `yes`, then it will be 80.
+
+### SSL
+
+SSL is optional and can be provided directly by this application. However, it needs to be configured:
+
+| Variable       | Meaning                                              |
+| -------------- | ---------------------------------------------------- |
+| `EDM_SSL`      | If SSL should be used                                |
+| `EDM_SSL_PK`   | The path to the SSL private key file                 |
+| `EDM_SSL_CERT` | The path to the SSL certificate file                 |
+| `EDM_SSL_CA`   | The path to the SSL certificate authority chain file |
+
+### Database connectivity
+
+Connecting to the database requires some configuration:
+
+| Variable        | Meaning                                           |
+| --------------- | ------------------------------------------------- |
+| `EDM_DB_HOST`   | The host name of the database                     |
+| `EDM_DB_DB`     | The name of the database                          |
+| `EDM_DB_USER`   | The username used to connect to the database      |
+| `EDM_DB_PORT`   | The port used to connect to the database          |
+| `EDM_DB_PWD`    | The password used to connect to the database      |
+| `EDM_DB_SSL`    | If SSL should be used to connect to the database  |
+| `EDM_DB_SCHEMA` | The name of the schema in which to store the data |
+
+### JSON Web Tokens
+
+| Variable              | Meaning                                            |
+| --------------------- | -------------------------------------------------- |
+| `EDM_JWT_PRIVATE_KEY` | The path to the private key used to sign JWTs      |
+| `EDM_JWT_PUBLIC_KEY`  | The path to the public key used to verify the JWTs |
+
+## Usage
+
+1. Set all environment variables as specified above
+2. Install Postgres and Node.js on your server
+3. Clone the repo
+4. `cd` into the frontend directory
+5. Run `npm install && npm run build`
+6. `cd` into the backend directory
+7. Run `npm install && npm start`
 
 ## License
 
