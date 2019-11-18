@@ -15,40 +15,35 @@ The easy, intuitive and efficient way to manage a shared food inventory - WIP
 
 ## Description
 
-The purpose of ExDateMan is to know what's in the fridge at a glance, form anywhere, by anyone. It is meant to be deployed to a webserver capable of running node apps.
+ExDateMan (short for "Expiration date manager") is a offline-capable, installable [PWA](https://developers.google.com/web/progressive-web-apps).
 
-The user can easily and efficiently add, edit, remove and view the things stocked in ones fridge.
-Using a centralized approach, all authorized users (eg. your flatmates) can work together in an intuitive manner when managing their shared food inventory.
+It's goal is to provide a simple and intuitive way for people to manage their shared food inventories, allowing them to give read or write access to their inventories.
+
+The items in such an inventory are referred to as "Things", of which each inventory can have multiple. However, they themselves don't actually represent the presence of them in the inventory. Instead, "Stocks" represent the individual instances of the Things in an inventory. They each have an expiration date and get removed from the inventory, after they are removed from the physical inventory.
+
+Designed to be deployed in a [cloud-native](https://github.com/cncf/toc/blob/master/DEFINITION.md) environment, it uses a Postgres database to store its data in an event-sourced fashion, meaning it simply stores events, and only derives the current state form that. This allows one to retroactively view the state of the data from some time ago. This is often also referred to as [CQS](https://en.wikipedia.org/wiki/Command%E2%80%93query_separation).
+
+A Docker image will be available in the future.
 
 ## Features
 
-- Items sorted by type
-- Quantity of each stock stored as string
-- Capable of handling of use-up-in-n-days-after-opening values
-- Item types can be assigned categories
-- Date pickers
-- Mobile friendly
-- View the entire inventory and all expiration dates on the start screen at a glance
-- Get warned when something is about to expire (wip)
-- Added-on dates
-- Calculates real expiry date when a use-up-in-n-days-after-opening value is set
-- The db schema to be used can be overwritten using the `EDM_SCHEMA` environment variable (defaults to `edm_dev`). (make sure to set up the schema first, and synchronize it using typeorm (even for production, but then only once))
+- Offline capable
+- PWA compliant
+- Synchronization
+- Multi-user capable
+- Rights management
+- Event sourced data store (CQS)
+- Support for occasionally connected devices
+- Access management per inventory
+- "Things" can be defined in inventories
+- Categories can be defined for things
+- Every physical item has its expression date stored
 
 ## Technologies used
 
-The entire front-end is one single single-page-application made using the best web framework, Angular.
-The back-end is written in JavaScript for Node.js.I'm currently working on re-implementing the back-end in TypeScript using [ts-node](https://github.com/TypeStrong/ts-node), as seen on the `ts-node` branch.
-The back-end is set up to communicate with the front-end via JSON messages using HTTPS. A postgres database is expected to be available using the following credential mapped as follows:
+The application consists of a Frontend and a Backend.
 
-| Environment variable | Expected value                            |
-| -------------------- | ----------------------------------------- |
-| `HP_DB`              | The name of the Postgres database         |
-| `HP_HOST`            | The host address of the Postgres database |
-| `HP_PORT`            | The port of the Postgres database         |
-| `HP_PWD`             | The password for the Postgres database    |
-| `HP_USER`            | The username for the Postgres database    |
-
-The project has a `Procfile` because this project is meant to be deployed to Heroku.
+The frontend is implemented in [Angular](https://angular.io)
 
 ## License
 
