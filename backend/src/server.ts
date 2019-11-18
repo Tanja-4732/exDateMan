@@ -119,7 +119,7 @@ export class ExpressServer {
       // Don't use SSL
       // Start the http app server
       await pEvent(this.app.listen(process.env.PORT || 80 + ""), "listening");
-      log("HTTP app server listening on port " + process.env.PORT || 80 + "");
+      log("HTTP app server listening on port " + (process.env.PORT || 80 + ""));
     }
   }
 }

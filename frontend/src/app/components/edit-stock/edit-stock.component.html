@@ -1,15 +1,15 @@
 <span class="mat-typography" *ngIf="unauthorized">
   <h2>Unauthorized</h2>
-  We couldn't fetch your stock, because you aren't authorized. <br>
-  Try logging in again to resolve this. <br>
-  <br>
+  We couldn't fetch your stock, because you aren't authorized. <br />
+  Try logging in again to resolve this. <br />
+  <br />
   Redirecting you to the login page in 3 seconds...
 </span>
 
 <span *ngIf="!unauthorized">
   <span class="mat-typography" *ngIf="loading && !notFound">
     <h2>Loading stock...</h2>
-    We're getting the inventory's thing's stock... <br>
+    We're getting the inventory's thing's stock... <br />
     We'll be done shortly.
   </span>
 
@@ -17,42 +17,97 @@
     <form [formGroup]="form" (ngSubmit)="onEditStock()">
       <mat-form-field appearance="outline">
         <mat-label>Expiration date</mat-label>
-        <input matInput placeholder="12/31/2018" [matDatepicker]="exDatePicker" formControlName="exDate" required>
-        <mat-datepicker-toggle matSuffix [for]="exDatePicker"></mat-datepicker-toggle>
+        <input
+          matInput
+          placeholder="12/31/2018"
+          [matDatepicker]="exDatePicker"
+          formControlName="exDate"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="exDatePicker"
+        ></mat-datepicker-toggle>
         <mat-datepicker #exDatePicker></mat-datepicker>
       </mat-form-field>
-      <br>
+      <br />
 
       <mat-form-field appearance="outline">
         <mat-label>Use up in # days</mat-label>
-        <input matInput type="number" placeholder="3" formControlName="useUpIn">
+        <input
+          matInput
+          type="number"
+          placeholder="3"
+          formControlName="useUpIn"
+        />
         <i matSuffix class="material-icons">update</i>
       </mat-form-field>
-      <br>
+      <br />
 
       <mat-form-field appearance="outline">
         <mat-label>Quantity</mat-label>
-        <input matInput type="text" placeholder="3 kg" formControlName="quantity" required>
+        <input
+          matInput
+          type="text"
+          placeholder="3 kg"
+          formControlName="quantity"
+          required
+        />
         <i matSuffix class="material-icons">equalizer</i>
       </mat-form-field>
-      <br>
+      <br />
 
       <mat-form-field appearance="outline">
         <mat-label>Percent left</mat-label>
-        <input matInput type="number" placeholder="50%" formControlName="percentLeft" (input)="percentMoved($event)" required>
+        <input
+          matInput
+          type="number"
+          placeholder="50%"
+          formControlName="percentLeft"
+          (input)="percentMoved($event)"
+          required
+        />
         <i matSuffix class="material-icons">pie_chart</i>
       </mat-form-field>
-      <br>
+      <br />
 
       <span class="mat-typography">Or use the slider:</span>
-      <mat-slider min="0" max="100" step="1" formControlName="percentLeft" (input)="sliderMoved($event)"></mat-slider>
-      <br>
-      <br>
-      <button mat-raised-button type="submit" color="accent" [disabled]="!form.valid">Save changes</button>
+      <mat-slider
+        min="0"
+        max="100"
+        step="1"
+        formControlName="percentLeft"
+        (input)="sliderMoved($event)"
+      ></mat-slider>
+      <br />
+      <br />
+      <button
+        mat-raised-button
+        type="submit"
+        color="accent"
+        [disabled]="!form.valid"
+      >
+        Save changes
+      </button>
       &nbsp;
-      <button mat-raised-button type="button" (click)="onDeleteStock()" color="warn">Delete stock</button>
+      <button
+        mat-raised-button
+        type="button"
+        (click)="onDeleteStock()"
+        color="warn"
+      >
+        Delete stock
+      </button>
       &nbsp;
-      <button mat-stroked-button type="button" routerLink="/inventories/{{inventoryId}}/things/{{thingNumber}}/stocks">Go back</button>
+      <button
+        mat-stroked-button
+        type="button"
+        routerLink="/inventories/{{ inventoryUuid }}/things/{{
+          thingUuid
+        }}/stocks"
+      >
+        Go back
+      </button>
     </form>
   </span>
 
