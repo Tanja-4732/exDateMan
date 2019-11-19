@@ -35,20 +35,21 @@ A Docker image will be available in the future.
 - Offline capable
 - PWA compliant
 - Synchronization
+- Sort by category
 - Multi-user capable
 - Rights management
+- Two factor authentication
 - Event sourced data store (CQS)
-- Support for occasionally connected devices
 - Access management per inventory
-- "Things" can be defined in inventories
-- Categories can be defined for things
+- Support for occasionally connected devices
 - Every physical item has its expression date stored
+- A barcode reader to speed up reading in the physical inventory
 
 ## Technologies used
 
 The application consists of a Frontend and a Backend.
 
-The frontend is a [SPA](https://en.wikipedia.org/wiki/Single-page_application) and implemented in [Angular](https://angular.io), using the [Angular Material](https://material.angular.io) UI library. The backend is implemented in [TypeScript](https://www.typescriptlang.org/) and runs on [Node.js](https://nodejs.org). All data is persisted in Postgres as Events, with one single table. The JSON of each event is stored in the binary JSON format BSON.
+The frontend is a [SPA](https://en.wikipedia.org/wiki/Single-page_application) implemented in [Angular](https://angular.io), using the [Angular Material](https://material.angular.io) UI library. The backend is implemented in [TypeScript](https://www.typescriptlang.org/) and runs on [Node.js](https://nodejs.org). All data is persisted in Postgres as Events, with one single table. The JSON of each event is stored in the binary JSON format BSON.
 
 ## Environment variables
 
