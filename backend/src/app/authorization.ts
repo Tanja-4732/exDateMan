@@ -56,8 +56,8 @@ export class Authorization {
 
       // Iterate over all inventoryUuids
       for (const uuid of await ExdatemanApplication.ce.getAllInventoryUuids()) {
-        log("[Authorization (loop)] uuid:");
-        log(Authorization.inventoriesProjection);
+        // log("[Authorization (loop)] uuid:");
+        // log(Authorization.inventoriesProjection);
         // log(uuid);
 
         // Check if the user has read access
