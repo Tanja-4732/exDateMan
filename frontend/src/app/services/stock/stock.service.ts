@@ -102,7 +102,9 @@ export class StockService {
           try {
             // Apply the Event
             await this.applyStockEvent(event);
-          } catch (err) {}
+          } catch (err) {
+            // Ignore errors caused by deleted Things
+          }
         }
       }
     }
