@@ -141,7 +141,7 @@ export class ThingService {
 
       // Handle Thing deletion
       case crudType.DELETE:
-        delete ThingService.inventoryTingsProjection[inventoryUuid][index];
+        ThingService.inventoryTingsProjection[inventoryUuid].splice(index);
         break;
     }
   }

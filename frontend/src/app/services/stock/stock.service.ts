@@ -99,8 +99,10 @@ export class StockService {
       for (const event of inventoryEvents.events) {
         // But only if when the Event is a StockEvent
         if (event.data.itemType === itemType.STOCK) {
-          // Apply the Event
-          await this.applyStockEvent(event);
+          try {
+            // Apply the Event
+            await this.applyStockEvent(event);
+          } catch (err) {}
         }
       }
     }
