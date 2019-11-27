@@ -143,10 +143,11 @@ export class StockService {
     switch (stockEvent.data.crudType) {
       case crudType.DELETE:
         // Delete a Stock from the projection
-        delete StockService.inventoryTingsStocksProjection[
-          stockEvent.inventoryUuid
-        ][stockEvent.data.stockData.thingUuid][stockEvent.data.uuid];
+        StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
+          stockEvent.data.stockData.thingUuid
+        ].splice(index, 1);
         break;
+
       case crudType.CREATE:
         // Push a new Stock onto the Projection
         StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
