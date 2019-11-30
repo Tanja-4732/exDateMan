@@ -1,15 +1,19 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { InventoryService } from "../../services/inventory/inventory.service";
 import { Inventory } from "../../models/inventory/inventory";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-add-inventory",
   templateUrl: "./add-inventory.component.html",
   styleUrls: ["./add-inventory.component.scss"]
 })
-export class AddInventoryComponent {
+export class AddInventoryComponent implements OnInit {
   /**
    * Error flag
    */
@@ -30,6 +34,19 @@ export class AddInventoryComponent {
     this.form = this.fb.group({
       name: ["", [Validators.required]]
     });
+  }
+
+  ngOnInit(): void {
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: "Inventories",
+        routerLink: `/inventories`
+      },
+      {
+        title: "New"
+      }
+    ];
   }
 
   /**

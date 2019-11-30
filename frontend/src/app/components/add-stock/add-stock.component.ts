@@ -54,7 +54,6 @@ export class AddStockComponent implements OnInit {
 
     await this.is.ready;
     await this.ts.ready;
-    await this.ss.ready;
 
     CrumbTrailComponent.crumbs = [
       {
