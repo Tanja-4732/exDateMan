@@ -42,9 +42,23 @@ export class AuthService {
    * This will remove the JWT thus signing out the user.
    */
   async logout(): Promise<any> {
-    return await this.http
+    const res = await this.http
       .post(this.baseUrl + "/authentication/logout", null)
       .toPromise();
+
+    // Clear the LocalStorage
+    window.localStorage.clear();
+
+    /* window.localStorage.setItem(
+      "user",
+      JSON.stringify({
+        offline: false,
+        user: null,
+        authorized: false
+      } as GetStatusResponse)
+    ); */
+
+    return res;
   }
 
   /**
@@ -68,8 +82,7 @@ export class AuthService {
    * Fetches info from the server about the current login status
    */
   async getCurrentUser(): Promise<GetStatusResponse> {
-    let response: GetStatusResponse = {} as GetStatusResponse;
-    response.offline = false;
+    let response: GetStatusResponse;
 
     try {
       // Try to get the data from the API
@@ -77,14 +90,21 @@ export class AuthService {
         .get<GetStatusResponse>(this.baseUrl + "/authentication/status")
         .toPromise();
 
+      // The API doesn't set this flag
+      response.offline = false;
+
       // Persist the data offline
       window.localStorage.setItem("user", JSON.stringify(response));
 
       // Set the offline flag to false
     } catch (error) {
-      if (error instanceof HttpErrorResponse) {
+      // Check, if the error was caused by the user being offline
+      if (error.status !== 504) {
         // The user is online, but couldn't be authenticated
         response.authorized = false;
+
+        // The API doesn't set this flag
+        response.offline = false;
       } else {
         // Serve the data from LocalStorage
         response = JSON.parse(window.localStorage.getItem("user"));
@@ -93,9 +113,15 @@ export class AuthService {
     }
 
     // Return the response object
+
     return response;
   }
 
+  /**
+   * Persists changes to the user account by sending an event to the API
+   *
+   * @param user The edited user object
+   */
   async saveUser(
     user: RegisterRequest
   ): Promise<{ status: string; user: User }> {
