@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { HttpErrorResponse } from "@angular/common/http";
 import {
   CrumbTrailComponent,
   Icon

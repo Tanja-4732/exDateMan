@@ -3,7 +3,6 @@ import { Thing } from "../../models/thing/thing";
 import { StockService } from "../../services/stock/stock.service";
 import { Stock } from "../../models/stock/stock";
 import { ActivatedRoute } from "@angular/router";
-import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-thing-card",
@@ -45,6 +44,7 @@ export class ThingCardComponent implements OnInit {
       console.log(
         "Unknown error in fetchStocks [ThingCardComponent] while creating"
       );
+      console.error(error);
     }
   }
 }

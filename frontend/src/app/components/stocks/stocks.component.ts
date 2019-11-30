@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import {
   CrumbTrailComponent,
   Icon
@@ -83,12 +82,10 @@ export class StocksComponent implements OnInit {
       this.loading = false;
     } catch (error) {
       this.oof = true;
-      console.error(error);
       console.log(
         "Unknown error in getStocks [StocksComponent] while creating"
       );
+      console.error(error);
     }
   }
-
-  onAddStock(): void {}
 }

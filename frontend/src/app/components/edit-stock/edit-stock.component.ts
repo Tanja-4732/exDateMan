@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit, Inject, EventEmitter } from "@angular/core";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -167,18 +166,9 @@ export class EditStockComponent implements OnInit {
       } catch (error) {
         // Catch sending-to-the-server errors
         this.oof = true;
-        if (error instanceof HttpErrorResponse) {
-          switch (error.status) {
-            case 401:
-              // Set flag for html change and timeout above
-              this.unauthorized = true;
-              break;
-            case 404:
-              this.notFound = true;
-          }
-        } else {
-          console.log("Unknown error in add-stock while creating");
-        }
+
+        console.log("Unknown error in add-stock while creating");
+        console.error(error);
       }
     }
   }
