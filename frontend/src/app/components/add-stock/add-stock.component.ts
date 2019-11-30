@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Stock } from "../../models/stock/stock";
 import { StockService } from "../../services/stock/stock.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import {
   FormControl,
   Validators,
@@ -10,6 +9,12 @@ import {
   FormBuilder
 } from "@angular/forms";
 import { v4 } from "uuid";
+import { InventoryService } from "../../services/inventory/inventory.service";
+import { ThingService } from "../../services/thing/thing.service";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-add-stock",
@@ -29,6 +34,8 @@ export class AddStockComponent implements OnInit {
   form: FormGroup;
 
   constructor(
+    private is: InventoryService,
+    private ts: ThingService,
     private ss: StockService,
     private route: ActivatedRoute,
     private router: Router,
@@ -44,6 +51,32 @@ export class AddStockComponent implements OnInit {
   async ngOnInit() {
     this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
     this.thingUuid = this.route.snapshot.params.thingUuid;
+
+    await this.is.ready;
+    await this.ts.ready;
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.is.inventories[this.inventoryUuid].name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: this.ts.things[this.inventoryUuid].find(
+          thing => thing.uuid === this.thingUuid
+        ).name,
+        routerLink: `/inventories/${this.inventoryUuid}/things`
+      },
+      {
+        icon: Icon.Stock,
+        title: "Stocks",
+        routerLink: `/inventories/${this.inventoryUuid}/things/${this.thingUuid}/stocks`
+      },
+      {
+        title: "New"
+      }
+    ];
   }
 
   getExDateErrorMessage(): string {
@@ -83,18 +116,9 @@ export class AddStockComponent implements OnInit {
       this.oof = false;
     } catch (error) {
       this.oof = true;
-      if (error instanceof HttpErrorResponse) {
-        switch (error.status) {
-          case 401:
-            // Set flag for html change and timeout above
-            this.unauthorized = true;
-            break;
-          case 404:
-            this.notFound = true;
-        }
-      } else {
-        console.log("Unknown error in add-stock while creating");
-      }
+
+      console.log("Unknown error in add-stock while creating");
+      console.error(error);
     }
   }
 }

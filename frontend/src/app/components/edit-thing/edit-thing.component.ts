@@ -3,7 +3,6 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Thing } from "../../models/thing/thing";
 import { ThingService } from "../../services/thing/thing.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import { DeleteConfirmationDialogComponent } from "../delete-confirmation-dialog/delete-confirmation-dialog.component";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { InventoryService } from "../../services/inventory/inventory.service";
@@ -141,18 +140,9 @@ export class EditThingComponent implements OnInit {
       } catch (error) {
         // Catch sending-to-the-server errors
         this.oof = true;
-        if (error instanceof HttpErrorResponse) {
-          switch (error.status) {
-            case 401:
-              // Set flag for html change and timeout above
-              this.unauthorized = true;
-              break;
-            case 404:
-              this.notFound = true;
-          }
-        } else {
-          console.log("Unknown error in add-stock while creating");
-        }
+
+        console.log("Unknown error in add-stock while creating");
+        console.error(error);
       }
     }
   }

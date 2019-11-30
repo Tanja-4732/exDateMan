@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Inventory } from "../../models/inventory/inventory";
 import { InventoryService } from "../../services/inventory/inventory.service";
-import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import {
   CrumbTrailComponent,
@@ -41,17 +40,8 @@ export class InventoriesComponent implements OnInit {
       );
       this.loading = false;
     } catch (error) {
-      if (error instanceof HttpErrorResponse) {
-        if (error.status === 401) {
-          // Set flag for html change and timeout above
-          this.unauthorized = true;
-          setTimeout(() => {
-            this.router.navigate(["/login"]);
-          }, 3000);
-        } else {
-          console.log("Unknown error in inventories while fetching");
-        }
-      }
+      console.log("Unknown error in inventories while fetching");
+      console.error(error);
     }
   }
 }

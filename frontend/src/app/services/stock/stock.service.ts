@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
 import { Stock } from "../../models/stock/stock";
 import { ThingService } from "../thing/thing.service";
 import { InventoryService } from "../inventory/inventory.service";
@@ -99,8 +97,12 @@ export class StockService {
       for (const event of inventoryEvents.events) {
         // But only if when the Event is a StockEvent
         if (event.data.itemType === itemType.STOCK) {
-          // Apply the Event
-          await this.applyStockEvent(event);
+          try {
+            // Apply the Event
+            await this.applyStockEvent(event);
+          } catch (err) {
+            // Ignore errors caused by deleted Things
+          }
         }
       }
     }
@@ -139,10 +141,11 @@ export class StockService {
     switch (stockEvent.data.crudType) {
       case crudType.DELETE:
         // Delete a Stock from the projection
-        delete StockService.inventoryTingsStocksProjection[
-          stockEvent.inventoryUuid
-        ][stockEvent.data.stockData.thingUuid][stockEvent.data.uuid];
+        StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][
+          stockEvent.data.stockData.thingUuid
+        ].splice(index, 1);
         break;
+
       case crudType.CREATE:
         // Push a new Stock onto the Projection
         StockService.inventoryTingsStocksProjection[stockEvent.inventoryUuid][

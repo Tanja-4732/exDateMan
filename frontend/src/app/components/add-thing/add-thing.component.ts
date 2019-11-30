@@ -4,6 +4,11 @@ import { Thing } from "../../models/thing/thing";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Validators, FormBuilder, FormGroup } from "@angular/forms";
 import { v4 } from "uuid";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
+import { InventoryService } from "../../services/inventory/inventory.service";
 
 @Component({
   selector: "app-add-thing",
@@ -20,6 +25,7 @@ export class AddThingComponent implements OnInit {
   form: FormGroup;
 
   constructor(
+    private is: InventoryService,
     private ts: ThingService,
     private route: ActivatedRoute,
     private router: Router,
@@ -34,13 +40,26 @@ export class AddThingComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
-    setTimeout(() => {
-      if (this.unauthorized) {
-        this.router.navigate(["/login"]);
+
+    await this.is.ready;
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.is.inventories[this.inventoryUuid].name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Thing,
+        title: "Things",
+        routerLink: `/inventories/${this.inventoryUuid}/things`
+      },
+      {
+        title: "New"
       }
-    }, 3000);
+    ];
   }
 
   onAddThing(): void {

@@ -29,9 +29,9 @@
     </div>
   </span>
 
-  <a routerLink="new" *ngIf="!loading">
-    <button mat-fab class="fab">
+  <ng-container *ngIf="!loading">
+    <button mat-fab class="fab" routerLink="new">
       <i class="material-icons">add</i>
     </button>
-  </a>
+  </ng-container>
 </span>

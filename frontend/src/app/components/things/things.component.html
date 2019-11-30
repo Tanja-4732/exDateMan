@@ -24,11 +24,9 @@
       </div>
     </div>
 
-    <a routerLink="new">
-      <button mat-fab class="fab" (click)="onAddThing()">
-        <i class="material-icons">add</i>
-      </button>
-    </a>
+    <button mat-fab class="fab" routerLink="new">
+      <i class="material-icons">add</i>
+    </button>
   </span>
 
   <div *ngIf="notFound" class="mat-typography">

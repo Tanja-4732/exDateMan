@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
 import { Thing } from "../../models/thing/thing";
 import { InventoryService } from "../inventory/inventory.service";
 import {
@@ -141,7 +139,7 @@ export class ThingService {
 
       // Handle Thing deletion
       case crudType.DELETE:
-        delete ThingService.inventoryTingsProjection[inventoryUuid][index];
+        ThingService.inventoryTingsProjection[inventoryUuid].splice(index, 1);
         break;
     }
   }
