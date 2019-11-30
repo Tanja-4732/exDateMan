@@ -13,48 +13,9 @@
 
   <h2>Start</h2>
   <p>
-    Until the navigation overhaul is completed, please use the buttons below to
-    get to your inventories, log in, register, log out & manage your account.
+    Use the SideNav to navigate between the views of this application. It can be
+    open or closed using the burger button in the top left corner.
   </p>
-  <ng-container *ngIf="!loading">
-    <ng-container *ngIf="loggedIn">
-      <p>Logged in as {{ user.name }} ({{ user.email }}).</p>
-      <button mat-raised-button routerLink="/inventories" color="accent">
-        Inventories
-      </button>
-      &nbsp;
-      <button mat-raised-button routerLink="/account" color="primary">
-        Account
-      </button>
-      &nbsp;
-      <button mat-stroked-button (click)="onLogout()" color="basic">
-        Logout
-      </button>
-      &nbsp;
-    </ng-container>
-
-    <ng-container *ngIf="!loggedIn">
-      <p *ngIf="!invalidJWT">
-        You're not logged in. Use the buttons below to log in or register.
-      </p>
-      <p *ngIf="invalidJWT">
-        Your login has expired. Use the buttons below to log in or register.
-      </p>
-      <button mat-raised-button routerLink="/login" color="accent">
-        Login
-      </button>
-      &nbsp;
-      <button mat-raised-button routerLink="/register" color="primary">
-        Register
-      </button>
-      &nbsp;
-    </ng-container>
-  </ng-container>
-
-  <ng-container *ngIf="loading">Please wait...</ng-container>
-
-  <br />
-  <br />
 
   <h2>Usage</h2>
   <p>Using ExDateMan is easy. Just follow these steps:</p>
