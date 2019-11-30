@@ -47,9 +47,6 @@ export class LoginComponent implements OnInit {
       );
       this.oof = false;
 
-      // Refresh the inventories
-      // await this.is.reFetchAll();
-
       // Reload the login state
       document.dispatchEvent(new Event("auth"));
 

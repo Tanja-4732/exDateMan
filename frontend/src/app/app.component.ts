@@ -74,10 +74,12 @@ export class AppComponent implements OnInit {
     try {
       await this.as.logout();
 
-      this.authStatus.authorized = false;
       this.router.navigate(["/welcome"]);
     } catch (error) {
       console.log(error);
     }
+
+    // Reload the login status
+    document.dispatchEvent(new Event("auth"));
   }
 }

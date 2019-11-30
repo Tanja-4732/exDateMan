@@ -56,8 +56,8 @@ export class RegisterComponent implements OnInit {
       this.oof = false;
       this.emailInUse = false;
 
-      // Refresh the inventories
-      // await this.is.reFetchAll();
+      // Reload the login state
+      document.dispatchEvent(new Event("auth"));
 
       this.router.navigate(["/inventories"], { relativeTo: this.route });
     } catch (error) {
