@@ -114,9 +114,6 @@ export class EventSourcingService implements AsyncConstructor {
    * This method gets called in the EventSourcingService constructor
    */
   private async fetchAllInventoryEvents() {
-    // // Initiate the eventLogs
-    // EventSourcingService.eventLogs = {};
-
     // Get a list of all accessible inventory uuids from the API
     const accessibleUuids = await this.api
       .get<string[]>(this.baseUrl + "/authorization/accessibleInventoryUuids")
@@ -156,6 +153,10 @@ export class EventSourcingService implements AsyncConstructor {
       EventSourcingService.events.push(newValue);
       inventoryEvents = newValue;
     }
+
+    // Merge the event streams from the API with the local one
+    // TODO implement merge logic
+    // TODO implement upload logic
 
     // Write the received events in the event log of the inventory
     inventoryEvents.events = res;
