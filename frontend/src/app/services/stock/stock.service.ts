@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
 import { Stock } from "../../models/stock/stock";
 import { ThingService } from "../thing/thing.service";
 import { InventoryService } from "../inventory/inventory.service";

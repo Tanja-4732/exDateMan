@@ -91,11 +91,19 @@ export class EventSourcingService implements AsyncConstructor {
    * Refreshes all Events
    */
   public async reFetchAll(): Promise<void> {
+    // Reset all current event logs
     EventSourcingService.events = [];
-    await this.fetchAllInventoryEvents();
 
-    // Persist the data offline & refresh everything
-    this.saveEvents();
+    try {
+      // Try to fetch all events from the API
+      await this.fetchAllInventoryEvents();
+
+      // Persist the data offline & refresh everything
+      this.saveEvents();
+    } catch (err) {
+      //  Use the offline data instead of the API
+      this.loadEvents();
+    }
   }
 
   /**
@@ -133,11 +141,14 @@ export class EventSourcingService implements AsyncConstructor {
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();
 
+    // Get the event log of the inventory
     let inventoryEvents = EventSourcingService.events.find(
       el => el.uuid === inventoryUuid
     );
 
+    // Check, if the event log doesn't exist yet
     if (inventoryEvents == null) {
+      // If so, create it
       const newValue = {
         uuid: inventoryUuid,
         events: []
@@ -146,6 +157,7 @@ export class EventSourcingService implements AsyncConstructor {
       inventoryEvents = newValue;
     }
 
+    // Write the received events in the event log of the inventory
     inventoryEvents.events = res;
   }
 
