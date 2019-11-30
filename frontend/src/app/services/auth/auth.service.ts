@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "../../models/user/user";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../../environments/environment";
 
 @Injectable({
@@ -68,7 +68,8 @@ export class AuthService {
    * Fetches info from the server about the current login status
    */
   async getCurrentUser(): Promise<GetStatusResponse> {
-    let response: GetStatusResponse;
+    let response: GetStatusResponse = {} as GetStatusResponse;
+    response.offline = false;
 
     try {
       // Try to get the data from the API
@@ -80,11 +81,15 @@ export class AuthService {
       window.localStorage.setItem("user", JSON.stringify(response));
 
       // Set the offline flag to false
-      response.offline = false;
     } catch (error) {
-      // Serve the data from LocalStorage
-      response = JSON.parse(window.localStorage.getItem("user"));
-      response.offline = true;
+      if (error instanceof HttpErrorResponse) {
+        // The user is online, but couldn't be authenticated
+        response.authorized = false;
+      } else {
+        // Serve the data from LocalStorage
+        response = JSON.parse(window.localStorage.getItem("user"));
+        response.offline = true;
+      }
     }
 
     // Return the response object

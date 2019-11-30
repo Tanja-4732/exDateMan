@@ -18,6 +18,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatMenuModule } from "@angular/material/menu";
 
 import { QRCodeModule } from "angularx-qrcode";
 import { ZXingScannerModule } from "@zxing/ngx-scanner";
@@ -53,7 +54,7 @@ import { CategoriesComponent } from "./components/categories/categories.componen
 import { EditCategoryComponent } from "./components/edit-category/edit-category.component";
 import { AddCategoryComponent } from "./components/add-category/add-category.component";
 import { CategoryCardComponent } from "./components/category-card/category-card.component";
-import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.component';
+import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.component";
 
 @NgModule({
   declarations: [
@@ -107,8 +108,9 @@ import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.compon
     MatListModule,
     MatChipsModule,
     ReactiveFormsModule,
-    QRCodeModule,
     MatSlideToggleModule,
+    MatMenuModule,
+    QRCodeModule,
     ZXingScannerModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production

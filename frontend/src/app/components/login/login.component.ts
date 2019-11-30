@@ -50,6 +50,9 @@ export class LoginComponent implements OnInit {
       // Refresh the inventories
       // await this.is.reFetchAll();
 
+      // Reload the login state
+      document.dispatchEvent(new Event("auth"));
+
       this.router.navigate(["/inventories"], { relativeTo: this.route });
     } catch (error) {
       this.oof = true;

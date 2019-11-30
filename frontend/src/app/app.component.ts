@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService, GetStatusResponse } from "./services/auth/auth.service";
 import { InventoryService } from "./services/inventory/inventory.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -44,27 +45,24 @@ export class AppComponent implements OnInit {
    */
   authStatus: GetStatusResponse = {} as GetStatusResponse;
 
-  constructor(private as: AuthService) {}
+  constructor(private as: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.testLogin();
+  async ngOnInit(): Promise<void> {
+    await this.testLogin();
+    document.addEventListener("auth", () => this.testLogin());
   }
 
   /**
    * Tests if the user is logged in
    */
   async testLogin(): Promise<void> {
-    try {
-      const res = await this.as.getCurrentUser();
-      console.log(res);
+    console.log("Testing login");
 
-      this.authStatus = res;
-    } catch (error) {
-      if (error.error.reason === "JWT invalid") {
-        this.invalidJWT = true;
-      }
-      this.authStatus.authorized = false;
-    }
+    const res = await this.as.getCurrentUser();
+    console.log(res);
+
+    this.authStatus = res;
+
     this.loading = false;
   }
 
@@ -76,10 +74,8 @@ export class AppComponent implements OnInit {
     try {
       await this.as.logout();
 
-      // Refresh the inventories
-      // await this.is.reFetchAll();
-
       this.authStatus.authorized = false;
+      this.router.navigate(["/welcome"]);
     } catch (error) {
       console.log(error);
     }

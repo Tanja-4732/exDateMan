@@ -13,17 +13,44 @@
     <span class="example-fill-remaining-space"></span>
 
     <!-- On the right side-->
-    <ng-container>
+    <ng-container class="user-right">
       <ng-container *ngIf="!loading">
         <ng-container *ngIf="authStatus.authorized">
-          <mat-icon>account_circle</mat-icon>
-          {{ authStatus.user.name }} ({{ authStatus.user.email }})
+          <button mat-stroked-button [matMenuTriggerFor]="appMenu">
+            <mat-icon>account_circle</mat-icon>
+            {{ authStatus.user.name }} ({{ authStatus.user.email }})
+          </button>
+
+          <mat-menu #appMenu="matMenu">
+            <button mat-menu-item routerLink="/account">Account</button>
+            <button
+              mat-menu-item
+              (click)="onLogout()"
+              [disabled]="authStatus.offline"
+            >
+              Logout
+            </button>
+          </mat-menu>
         </ng-container>
 
-        <ng-container *ngIf="!authStatus.authorized" class="user-right">
-          <p *ngIf="!invalidJWT">
-            You're not logged in. Use the buttons below to log in or register.
-          </p>
+        <ng-container *ngIf="!authStatus.authorized">
+          <button
+            mat-stroked-button
+            *ngIf="!invalidJWT"
+            color="basic"
+            routerLink="/register"
+          >
+            Register
+          </button>
+          &nbsp;
+          <button
+            mat-raised-button
+            *ngIf="!invalidJWT"
+            color="accent"
+            routerLink="/login"
+          >
+            Login
+          </button>
           <p *ngIf="invalidJWT">
             Your login has expired. Use the buttons below to log in or register.
           </p>
