@@ -8,6 +8,30 @@
     </button>
     <!-- Navigation bar heading -->
     {{ title }}
+
+    <!-- Middle -->
+    <span class="example-fill-remaining-space"></span>
+
+    <!-- On the right side-->
+    <ng-container>
+      <ng-container *ngIf="!loading">
+        <ng-container *ngIf="authStatus.authorized">
+          <mat-icon>account_circle</mat-icon>
+          {{ authStatus.user.name }} ({{ authStatus.user.email }})
+        </ng-container>
+
+        <ng-container *ngIf="!authStatus.authorized" class="user-right">
+          <p *ngIf="!invalidJWT">
+            You're not logged in. Use the buttons below to log in or register.
+          </p>
+          <p *ngIf="invalidJWT">
+            Your login has expired. Use the buttons below to log in or register.
+          </p>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="loading">Please wait...</ng-container>
+    </ng-container>
   </mat-toolbar>
 
   <mat-sidenav-container class="sidenav-container">

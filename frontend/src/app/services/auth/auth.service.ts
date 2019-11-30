@@ -68,9 +68,27 @@ export class AuthService {
    * Fetches info from the server about the current login status
    */
   async getCurrentUser(): Promise<GetStatusResponse> {
-    return await this.http
-      .get<GetStatusResponse>(this.baseUrl + "/authentication/status")
-      .toPromise();
+    let response: GetStatusResponse;
+
+    try {
+      // Try to get the data from the API
+      response = await this.http
+        .get<GetStatusResponse>(this.baseUrl + "/authentication/status")
+        .toPromise();
+
+      // Persist the data offline
+      window.localStorage.setItem("user", JSON.stringify(response));
+
+      // Set the offline flag to false
+      response.offline = false;
+    } catch (error) {
+      // Serve the data from LocalStorage
+      response = JSON.parse(window.localStorage.getItem("user"));
+      response.offline = true;
+    }
+
+    // Return the response object
+    return response;
   }
 
   async saveUser(
@@ -127,6 +145,7 @@ interface RegisterResponse {
 
 export interface GetStatusResponse {
   authorized: boolean;
+  offline: boolean;
   user: {
     uuid: string;
     email: string;
