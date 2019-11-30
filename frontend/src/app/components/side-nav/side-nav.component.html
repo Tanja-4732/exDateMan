@@ -11,7 +11,7 @@
       &nbsp; Inventories
     </a>
 
-    <a mat-list-item routerLink="/account">
+    <a mat-list-item routerLink="/account" *ngIf="!authStatus.offline">
       <mat-icon>account_circle</mat-icon>
       &nbsp; Account
     </a>

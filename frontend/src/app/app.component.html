@@ -22,13 +22,27 @@
           </button>
 
           <mat-menu #appMenu="matMenu">
-            <button mat-menu-item routerLink="/account">Account</button>
+            <button
+              mat-menu-item
+              routerLink="/account"
+              *ngIf="!authStatus.offline"
+            >
+              Account
+            </button>
             <button
               mat-menu-item
               (click)="onLogout()"
-              [disabled]="authStatus.offline"
+              *ngIf="!authStatus.offline"
             >
               Logout
+            </button>
+            <button
+              mat-menu-item
+              (click)="onLogout()"
+              *ngIf="authStatus.offline"
+              disabled
+            >
+              You're offline
             </button>
           </mat-menu>
         </ng-container>
