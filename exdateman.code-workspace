@@ -39,6 +39,7 @@
       "TOTP",
       "Uuids",
       "ZXing",
+      "autosize",
       "keycodes",
       "ngsw",
       "postgresql",
