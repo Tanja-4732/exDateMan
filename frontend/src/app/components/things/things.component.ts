@@ -77,6 +77,4 @@ export class ThingsComponent implements OnInit {
       console.error(error);
     }
   }
-
-  onAddThing(): void {}
 }
