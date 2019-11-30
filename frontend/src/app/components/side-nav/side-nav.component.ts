@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../services/auth/auth.service";
-import { User } from "../../models/user/user";
+import {
+  AuthService,
+  GetStatusResponse
+} from "../../services/auth/auth.service";
 
 @Component({
   selector: "app-side-nav",
@@ -9,39 +11,31 @@ import { User } from "../../models/user/user";
 })
 export class SideNavComponent implements OnInit {
   /**
-   * A flag which is set when the user is logged in
-   */
-  loggedIn = true;
-
-  /**
-   * The logged in user (if any)
-   */
-  user: User;
-
-  /**
    * A flag set while the component is loading its data
    */
   loading = true;
 
+  /**
+   * The user, cached here
+   */
+  authStatus: GetStatusResponse = {} as GetStatusResponse;
+
   constructor(private as: AuthService) {}
 
-  async ngOnInit() {
-    // await this.testLogin(); // TODO handle in one location
+  async ngOnInit(): Promise<void> {
+    await this.testLogin();
+    document.addEventListener("auth", () => this.testLogin());
   }
 
+  /**
+   * Tests if the user is logged in
+   */
   async testLogin(): Promise<void> {
-    try {
-      const res = await this.as.getCurrentUser();
-      console.log(res);
+    const res = await this.as.getCurrentUser();
+    console.log(res);
 
-      this.loggedIn = res.authorized;
-      this.user = res.user;
-    } catch (error) {
-      if (error.error.reason === "JWT invalid") {
-        this.loggedIn = false;
-      }
-      this.loggedIn = false;
-    }
+    this.authStatus = res;
+
     this.loading = false;
   }
 }

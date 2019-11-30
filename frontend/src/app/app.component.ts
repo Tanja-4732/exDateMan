@@ -56,8 +56,6 @@ export class AppComponent implements OnInit {
    * Tests if the user is logged in
    */
   async testLogin(): Promise<void> {
-    console.log("Testing login");
-
     const res = await this.as.getCurrentUser();
     console.log(res);
 

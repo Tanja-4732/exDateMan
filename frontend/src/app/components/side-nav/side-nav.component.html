@@ -5,35 +5,32 @@
     &nbsp; Home
   </a>
 
-  <a mat-list-item routerLink="/inventories">
-    <mat-icon>work</mat-icon>
-    &nbsp; Inventories
-  </a>
-
-  <a mat-list-item routerLink="/account">
-    <mat-icon>account_circle</mat-icon>
-    &nbsp; Account
-  </a>
-
-  <a mat-list-item routerLink="/login">
-    <mat-icon>vpn_key</mat-icon>
-    &nbsp; Login
-  </a>
-
-  <a mat-list-item routerLink="/register">
-    <mat-icon>vpn_key</mat-icon>
-    &nbsp; Register
-  </a>
-
-  <ng-container *ngIf="loggedIn">
-    <a mat-list-item routerLink="/events">
-      <mat-icon>blur_on</mat-icon>
-      &nbsp; Events
+  <ng-container *ngIf="authStatus.authorized">
+    <a mat-list-item routerLink="/inventories">
+      <mat-icon>work</mat-icon>
+      &nbsp; Inventories
     </a>
 
-    <a mat-list-item routerLink="/scan">
-      <mat-icon>camera</mat-icon>
-      &nbsp; Scan
+    <a mat-list-item routerLink="/account">
+      <mat-icon>account_circle</mat-icon>
+      &nbsp; Account
     </a>
   </ng-container>
+
+  <ng-container *ngIf="!authStatus.authorized">
+    <a mat-list-item routerLink="/login">
+      <mat-icon>vpn_key</mat-icon>
+      &nbsp; Login
+    </a>
+
+    <a mat-list-item routerLink="/register">
+      <mat-icon>vpn_key</mat-icon>
+      &nbsp; Register
+    </a>
+  </ng-container>
+
+  <a mat-list-item routerLink="/scan">
+    <mat-icon>camera</mat-icon>
+    &nbsp; Scan
+  </a>
 </mat-nav-list>
