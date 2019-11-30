@@ -15,8 +15,8 @@ export class AppComponent {
       case "false":
         return false;
       case null:
-        this.sideNavOpened = false;
-        return false;
+        this.sideNavOpened = true;
+        return true;
     }
   }
 
