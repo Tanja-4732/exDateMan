@@ -222,10 +222,12 @@ export class ClientEvents {
     if (ClientEvents.eventLogs[event.inventoryUuid] == null)
       ClientEvents.eventLogs[event.inventoryUuid] = [];
 
-    // Write the event to the local cache
-    ClientEvents.eventLogs[event.inventoryUuid].push(event);
-
-    // TODO sort the events
+    // Write the event to the local cache at the correct position
+    ClientEvents.sortedInsert(
+      ClientEvents.eventLogs[event.inventoryUuid],
+      event,
+      "date",
+    );
 
     return result.rows;
   }
@@ -233,17 +235,29 @@ export class ClientEvents {
   /**
    * Inserts an item into a sorted array keeping the array sorted
    *
+   * This assumes that the array is already sorted.
+   * This method can handle items which should be placed after the last element
+   * in the array.
+   *
    * @param array The array to insert into
    * @param item The item to be inserted
    * @param keyName The name of the key of the item
    */
-  static sortedInsert<T>(array: T[], item: T, keyName: string) {
+  static sortedInsert<T>(array: T[], item: T, keyName: string): void {
     for (let i = 0, length = array.length; i < length; i++) {
       if (item[keyName] < array[i][keyName]) {
+        // Insert the item before the one at i in the array
         array.splice(i, 0, item);
-        break;
+
+        // Stop this method to avoid duplicates
+        return;
       }
     }
+
+    // If the last item in the array is still smaller
+    // than the one to be inserted, append the item.
+    // This will also ensure that an empty array is handled properly.
+    array.push(item);
   }
 }
 
