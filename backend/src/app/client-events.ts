@@ -120,7 +120,7 @@ export class ClientEvents {
       // Send the events back
       res.json(result);
     } catch (err) {
-      error(err);
+      // error(err);
       res.status(400).json({
         message: "That didn't work",
         oof: true,
@@ -190,7 +190,7 @@ export class ClientEvents {
       // Send the events back
       res.json(result);
     } catch (err) {
-      error(err);
+      // error(err);
       res.status(400).json({
         message: "That didn't work",
         oof: true,

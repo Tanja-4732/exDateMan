@@ -134,7 +134,7 @@ export class EventSourcingService implements AsyncConstructor {
   private async fetchSingleInventoryEvents(
     inventoryUuid: string
   ): Promise<void> {
-    const res: Event[] = await this.api
+    let res: Event[] = await this.api
       .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
       .toPromise();
 

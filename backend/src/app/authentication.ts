@@ -350,6 +350,7 @@ export class Authentication {
    * @param jwtString The JWT to be verified
    */
   verifyJWT(jwtString: string): parsedJWT {
+    if (jwtString == null) throw new Error("Missing JWT string");
     return jwt.verify(jwtString, this.JWT_PUBLIC_KEY) as parsedJWT;
   }
 

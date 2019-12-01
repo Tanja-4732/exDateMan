@@ -71,7 +71,7 @@ export class Authorization {
       return;
     } catch (err) {
       res.sendStatus(400);
-      error(err);
+      // error(err);
       return;
     }
   }
