@@ -154,9 +154,33 @@ export class EventSourcingService implements AsyncConstructor {
       inventoryEvents = newValue;
     }
 
+    // Load the events of the current eventLog from LocalStorage
+    const localEvents = JSON.parse(window.localStorage.getItem("events")).find(
+      (eventLog: { uuid: string; events: Event[] }) =>
+        eventLog.uuid === inventoryUuid
+    ).events;
+
+    // Reload flag
+    let needsReload = false;
+
     // Merge the event streams from the API with the local one
-    // TODO implement merge logic
-    // TODO implement upload logic
+    for (const le of localEvents) {
+      // Check for events missing in the API response
+      if (!res.some(event => event.date === le.date)) {
+        // Upload the missing event to the API
+        await this.api.put<Event[]>(this.baseUrl + "/events/", le).toPromise();
+
+        // Set the needsReload flag
+        needsReload = true;
+      }
+    }
+
+    if (needsReload) {
+      // Reload the events list the API to make sure they are sorted
+      res = await this.api
+        .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
+        .toPromise();
+    }
 
     // Write the received events in the event log of the inventory
     inventoryEvents.events = res;
