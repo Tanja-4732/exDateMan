@@ -132,30 +132,34 @@ export class ClientEvents {
   private async getInventoryEvents(
     inventoryUuid: string,
   ): Promise<InventoryEvent[]> {
-    return (await (await db()).query(
-      `
+    return (
+      await (await db()).query(
+        `
       SELECT "inventoryUuid", date, data
         FROM ${process.env.EDM_DB_SCHEMA}.events
       WHERE "inventoryUuid" = $1
       ORDER BY date ASC;
       `,
-      [inventoryUuid],
-    )).rows;
+        [inventoryUuid],
+      )
+    ).rows;
   }
 
   /**
    * Gets all inventory uuids (with event logs) from the db
    */
   public async getAllInventoryUuids(): Promise<{ inventoryUuid: string }[]> {
-    return (await (await db()).query(
-      `
+    return (
+      await (await db()).query(
+        `
       SELECT "inventoryUuid"
         FROM ${process.env.EDM_DB_SCHEMA}.events
       WHERE "inventoryUuid" != $1
       GROUP BY "inventoryUuid";
       `,
-      [ServerEvents.userEventLogUuid],
-    )).rows;
+        [ServerEvents.userEventLogUuid],
+      )
+    ).rows;
   }
 
   /**
@@ -221,7 +225,25 @@ export class ClientEvents {
     // Write the event to the local cache
     ClientEvents.eventLogs[event.inventoryUuid].push(event);
 
+    // TODO sort the events
+
     return result.rows;
+  }
+
+  /**
+   * Inserts an item into a sorted array keeping the array sorted
+   *
+   * @param array The array to insert into
+   * @param item The item to be inserted
+   * @param keyName The name of the key of the item
+   */
+  static sortedInsert<T>(array: T[], item: T, keyName: string) {
+    for (let i = 0, length = array.length; i < length; i++) {
+      if (item[keyName] < array[i][keyName]) {
+        array.splice(i, 0, item);
+        break;
+      }
+    }
   }
 }
 
