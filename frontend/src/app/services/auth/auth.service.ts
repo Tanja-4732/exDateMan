@@ -98,22 +98,30 @@ export class AuthService {
 
       // Set the offline flag to false
     } catch (error) {
-      // Check, if the error was caused by the user being offline
-      if (error.status !== 504) {
-        // The user is online, but couldn't be authenticated
-        response.authorized = false;
+      switch (error.status) {
+        // Check, if the error was caused by the user being offline
+        case 504:
+          // Serve the data from LocalStorage
+          response = JSON.parse(window.localStorage.getItem("user"));
+          response.offline = true;
+          break;
+        // Check if the error was caused by the user not being logged in
+        case 401:
+          response = error.error;
+          response.offline = false;
+          response.user = null;
+          break;
+        default:
+          // The user is online, but couldn't be authenticated
+          response.authorized = false;
 
-        // The API doesn't set this flag
-        response.offline = false;
-      } else {
-        // Serve the data from LocalStorage
-        response = JSON.parse(window.localStorage.getItem("user"));
-        response.offline = true;
+          // The API doesn't set this flag
+          response.offline = false;
+          break;
       }
     }
 
     // Return the response object
-
     return response;
   }
 

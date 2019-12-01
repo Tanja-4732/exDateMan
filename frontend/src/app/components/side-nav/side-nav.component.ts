@@ -32,7 +32,6 @@ export class SideNavComponent implements OnInit {
    */
   async testLogin(): Promise<void> {
     const res = await this.as.getCurrentUser();
-    console.log(res);
 
     this.authStatus = res;
 
