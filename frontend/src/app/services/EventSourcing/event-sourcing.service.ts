@@ -101,6 +101,7 @@ export class EventSourcingService implements AsyncConstructor {
       // Persist the data offline & refresh everything
       this.saveEvents();
     } catch (err) {
+      console.error(err);
       //  Use the offline data instead of the API
       this.loadEvents();
     }
@@ -155,10 +156,14 @@ export class EventSourcingService implements AsyncConstructor {
     }
 
     // Load the events of the current eventLog from LocalStorage
-    const localEvents = JSON.parse(window.localStorage.getItem("events")).find(
+    const localEventLog = JSON.parse(
+      window.localStorage.getItem("events")
+    ).find(
       (eventLog: { uuid: string; events: Event[] }) =>
         eventLog.uuid === inventoryUuid
-    ).events;
+    );
+
+    const localEvents = localEventLog == null ? [] : localEventLog.events;
 
     // Reload flag
     let needsReload = false;
