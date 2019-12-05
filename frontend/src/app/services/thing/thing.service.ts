@@ -165,7 +165,7 @@ export class ThingService {
     /**
      * The new-inventory event
      */
-    const newInventoryEvent: Event = {
+    const newThingEvent: Event = {
       inventoryUuid,
       date: now,
       data: {
@@ -182,8 +182,11 @@ export class ThingService {
     };
 
     // Push the event to the API and append it to the log
-    await this.ess.appendEventToInventoryLog(newInventoryEvent);
-    this.applyThingEvent(newInventoryEvent, inventoryUuid);
+    await this.ess.appendEventToInventoryLog(newThingEvent);
+    this.applyThingEvent(newThingEvent, inventoryUuid);
+    document.dispatchEvent(
+      new CustomEvent("new-thing", { detail: newThingEvent })
+    );
   }
 
   /**
