@@ -50,6 +50,14 @@ export class StockService {
     // Ready declaration
     this.ready = new Promise((resolve, reject) => {
       if (StockService.inventoryTingsStocksProjection == null) {
+        // Subscribe to calls
+        document.addEventListener(
+          "new-thing",
+          (newThingEvent: CustomEvent) =>
+            this.handleNewThingEvent(newThingEvent.detail),
+          false
+        );
+
         this.fetchAllInventoryThingStocks().then(result => {
           // Mark as ready
           resolve(null);
@@ -303,5 +311,16 @@ export class StockService {
     } else {
       return stock.exDate;
     }
+  }
+
+  /**
+   * Creates an empty array of stocks for the specified thing
+   *
+   * @param event The event issued by the creation of a things
+   */
+  handleNewThingEvent(event: Event): void {
+    StockService.inventoryTingsStocksProjection[event.inventoryUuid][
+      event.data.uuid
+    ] = [];
   }
 }

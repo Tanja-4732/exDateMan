@@ -101,6 +101,7 @@ export class EventSourcingService implements AsyncConstructor {
       // Persist the data offline & refresh everything
       this.saveEvents();
     } catch (err) {
+      console.error(err);
       //  Use the offline data instead of the API
       this.loadEvents();
     }
@@ -154,32 +155,41 @@ export class EventSourcingService implements AsyncConstructor {
       inventoryEvents = newValue;
     }
 
-    // Load the events of the current eventLog from LocalStorage
-    const localEvents = JSON.parse(window.localStorage.getItem("events")).find(
-      (eventLog: { uuid: string; events: Event[] }) =>
-        eventLog.uuid === inventoryUuid
-    ).events;
+    // Make sure the local events are not null
+    if (window.localStorage.getItem("events") != null) {
+      // Load the events of the current eventLog from LocalStorage
+      const localEventLog = JSON.parse(
+        window.localStorage.getItem("events")
+      ).find(
+        (eventLog: { uuid: string; events: Event[] }) =>
+          eventLog.uuid === inventoryUuid
+      );
 
-    // Reload flag
-    let needsReload = false;
+      const localEvents = localEventLog == null ? [] : localEventLog.events;
 
-    // Merge the event streams from the API with the local one
-    for (const le of localEvents) {
-      // Check for events missing in the API response
-      if (!res.some(event => event.date === le.date)) {
-        // Upload the missing event to the API
-        await this.api.put<Event[]>(this.baseUrl + "/events/", le).toPromise();
+      // Reload flag
+      let needsReload = false;
 
-        // Set the needsReload flag
-        needsReload = true;
+      // Merge the event streams from the API with the local one
+      for (const le of localEvents) {
+        // Check for events missing in the API response
+        if (!res.some(event => event.date === le.date)) {
+          // Upload the missing event to the API
+          await this.api
+            .put<Event[]>(this.baseUrl + "/events/", le)
+            .toPromise();
+
+          // Set the needsReload flag
+          needsReload = true;
+        }
       }
-    }
 
-    if (needsReload) {
-      // Reload the events list the API to make sure they are sorted
-      res = await this.api
-        .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
-        .toPromise();
+      if (needsReload) {
+        // Reload the events list the API to make sure they are sorted
+        res = await this.api
+          .get<Event[]>(this.baseUrl + "/events/" + inventoryUuid)
+          .toPromise();
+      }
     }
 
     // Write the received events in the event log of the inventory
