@@ -36,7 +36,7 @@ VOLUME [ "/app/jwt" ]
 ENV EDM_SSL false
 
 # Define the DB connection
-ENV EDM_DB_HOST postgres-1
+ENV EDM_DB_HOST 127.0.0.1
 ENV EDM_DB_DB edm
 ENV EDM_DB_USER edm
 ENV EDM_DB_PORT 5432
