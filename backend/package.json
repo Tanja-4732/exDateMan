@@ -25,7 +25,8 @@
     "@types/express": "^4.17.1",
     "@types/jsonwebtoken": "^8.3.3",
     "@types/node": "^12.7.2",
-    "@types/pg": "^7.11.0"
+    "@types/pg": "^7.11.0",
+    "typescript": "^3.7.4"
   },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
