@@ -6,6 +6,7 @@ import {
   CrumbTrailComponent,
   Icon
 } from "../crumb-trail/crumb-trail.component";
+import { AuthService } from "src/app/services/auth/auth.service";
 
 @Component({
   selector: "app-inventories",
@@ -17,10 +18,18 @@ export class InventoriesComponent implements OnInit {
   loading = true;
   unauthorized = false;
 
-  constructor(private is: InventoryService, private router: Router) {}
+  constructor(
+    private is: InventoryService,
+    private router: Router,
+    private as: AuthService
+  ) {}
+
+  private giveUpCounter = 0;
 
   ngOnInit(): void {
-    this.loadInventories();
+    this.checkLogin();
+
+    this.tryReload();
 
     CrumbTrailComponent.crumbs = [
       {
@@ -28,6 +37,42 @@ export class InventoriesComponent implements OnInit {
         title: "Inventories"
       }
     ];
+  }
+
+  async checkLogin() {
+    /**
+     * The auth status of the user
+     */
+    const status = await this.as.getCurrentUser();
+
+    // TODO remove log
+    console.log(status);
+
+    // Based on the user being logged in or not, redirect to the login page
+    if (!status.authorized) {
+      this.router.navigateByUrl("/login");
+      return;
+    }
+  }
+
+  tryReload() {
+    this.loadInventories();
+    setTimeout(() => {
+      // Maybe give up
+      if (this.giveUpCounter > 20) {
+        // Reset counter
+        this.giveUpCounter = 0;
+
+        // Give up
+        return;
+      }
+
+      // Increment counter
+      this.giveUpCounter++;
+
+      // Retry
+      this.tryReload();
+    }, 100);
   }
 
   async loadInventories(): Promise<void> {
