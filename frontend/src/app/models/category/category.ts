@@ -1,4 +1,5 @@
 export class Category {
   name: string;
-  number: number;
+  uuid: string;
+  parentUuid: string;
 }
