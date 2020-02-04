@@ -24,8 +24,12 @@ export class InventoriesComponent implements OnInit {
     private as: AuthService
   ) {}
 
+  private giveUpCounter = 0;
+
   ngOnInit(): void {
-    this.loadInventories();
+    this.checkLogin();
+
+    this.tryReload();
 
     CrumbTrailComponent.crumbs = [
       {
@@ -35,7 +39,7 @@ export class InventoriesComponent implements OnInit {
     ];
   }
 
-  async loadInventories(): Promise<void> {
+  async checkLogin() {
     /**
      * The auth status of the user
      */
@@ -49,7 +53,29 @@ export class InventoriesComponent implements OnInit {
       this.router.navigateByUrl("/login");
       return;
     }
+  }
 
+  tryReload() {
+    this.loadInventories();
+    setTimeout(() => {
+      // Maybe give up
+      if (this.giveUpCounter > 20) {
+        // Reset counter
+        this.giveUpCounter = 0;
+
+        // Give up
+        return;
+      }
+
+      // Increment counter
+      this.giveUpCounter++;
+
+      // Retry
+      this.tryReload();
+    }, 100);
+  }
+
+  async loadInventories(): Promise<void> {
     try {
       // Wait for InventoryService to be ready
       await this.is.ready;

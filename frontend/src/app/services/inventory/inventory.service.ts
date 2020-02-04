@@ -51,6 +51,8 @@ export class InventoryService implements AsyncConstructor {
     // Ready declaration
     this.ready = new Promise((resolve, reject) => {
       if (InventoryService.inventoriesProjection == null) {
+        document.addEventListener("auth", () => this.reFetchAll());
+
         this.fetchInventoryEvents().then(result => {
           // Mark as ready
           resolve(null);
