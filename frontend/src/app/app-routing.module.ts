@@ -20,6 +20,7 @@ import { EventsComponent } from "./components/events/events.component";
 import { CategoriesComponent } from "./components/categories/categories.component";
 import { AddCategoryComponent } from "./components/add-category/add-category.component";
 import { EditCategoryComponent } from "./components/edit-category/edit-category.component";
+import { LoginGuard } from "./guards/login.guard";
 
 const routes: Routes = [
   // Default route
@@ -56,6 +57,8 @@ const routes: Routes = [
   // Inventories
   {
     path: "inventories",
+    // canActivate: [LoginGuard],
+    // canActivateChild: [LoginGuard],
     children: [
       { path: "", component: InventoriesComponent },
       { path: "new", component: AddInventoryComponent },

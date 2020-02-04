@@ -7,9 +7,17 @@ import { environment } from "../../../environments/environment";
   providedIn: "root"
 })
 export class AuthService {
-  baseUrl: string = environment.baseUrl;
-
   constructor(private http: HttpClient) {}
+
+  /**
+   * The latest (cached) response from getCurrentUser
+   */
+  static cachedUserStatus: GetStatusResponse;
+
+  /**
+   * The base URL for all API calls
+   */
+  baseUrl: string = environment.baseUrl;
 
   /**
    * Logs in the user
@@ -79,7 +87,7 @@ export class AuthService {
   }
 
   /**
-   * Fetches info from the server about the current login status
+   * (Performs refresh) Fetches info from the server about the current login status
    */
   async getCurrentUser(): Promise<GetStatusResponse> {
     let response: GetStatusResponse;
@@ -120,6 +128,9 @@ export class AuthService {
           break;
       }
     }
+
+    // Cache the response
+    AuthService.cachedUserStatus = response;
 
     // Return the response object
     return response;

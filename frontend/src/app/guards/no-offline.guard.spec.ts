@@ -1,15 +1,15 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, inject } from "@angular/core/testing";
 
-import { NoOfflineGuard } from './no-offline.guard';
+import { NoOfflineGuard } from "./no-offline.guard";
 
-describe('NoOfflineGuard', () => {
+describe("NoOfflineGuard", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [NoOfflineGuard]
     });
   });
 
-  it('should ...', inject([NoOfflineGuard], (guard: NoOfflineGuard) => {
+  it("should ...", inject([NoOfflineGuard], (guard: NoOfflineGuard) => {
     expect(guard).toBeTruthy();
   }));
 });
