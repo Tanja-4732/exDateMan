@@ -140,15 +140,37 @@ export class CategoryService {
 
     switch (categoryEvent.data.crudType) {
       case crudType.DELETE:
-        // Avoid deleting what doesn't exis'
+        // Avoid deleting what doesn't exist
         if (existingCategory != null) {
           throw new Error("The category does not exist");
         }
 
-        // TODO Delete a Stock from the projection
-        CategoryService.inventoryCategoriesProjection[
-          categoryEvent.inventoryUuid
-        ].splice(existingCategory, 1);
+        // Check if the Category is top-level
+        if (
+          existingCategory.parentUuid == null ||
+          existingCategory.parentUuid === ""
+        ) {
+          // Find the index of the Category
+          const index = CategoryService.inventoryCategoriesProjection[
+            categoryEvent.inventoryUuid
+          ].findIndex(c => c.uuid === categoryEvent.data.uuid);
+
+          // Remove a category from the projection
+          CategoryService.inventoryCategoriesProjection[
+            categoryEvent.inventoryUuid
+          ].splice(index, 1);
+        } else {
+          // Find the index of the Category
+          const index = this.getCategoryByUuid(
+            categoryEvent.inventoryUuid,
+            categoryEvent.data.categoryData.parentUuid
+          ).children.findIndex(c => c.uuid === categoryEvent.data.uuid);
+
+          // Remove a category from the projection
+          CategoryService.inventoryCategoriesProjection[
+            categoryEvent.inventoryUuid
+          ].splice(index, 1);
+        }
         break;
 
       case crudType.CREATE:
