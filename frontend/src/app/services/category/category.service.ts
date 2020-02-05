@@ -130,25 +130,51 @@ export class CategoryService {
     console.log("This is the categoriesProjection");
     console.log(CategoryService.inventoryCategoriesProjection);
 
-    // TODO maybe delete this
-    // /**
-    //  * The index of the event in the projection, if any
-    //  */
-    // const index = CategoryService.inventoryCategoriesProjection[
-    //   categoryEvent.inventoryUuid
-    // ][categoryEvent.data.stockData.thingUuid].findIndex(
-    //   stock => stock.uuid === categoryEvent.data.uuid
-    // );
+    /**
+     * The Category of the event in the projection, if any
+     */
+    const existingCategory = this.getCategoryByUuid(
+      categoryEvent.inventoryUuid,
+      categoryEvent.data.uuid
+    );
 
     switch (categoryEvent.data.crudType) {
       case crudType.DELETE:
-        // Delete a Stock from the projection
+        // Avoid deleting what doesn't exis'
+        if (existingCategory != null) {
+          throw new Error("The category does not exist");
+        }
+
+        // TODO Delete a Stock from the projection
         CategoryService.inventoryCategoriesProjection[
           categoryEvent.inventoryUuid
-        ][categoryEvent.data.stockData.thingUuid].splice(index, 1);
+        ].splice(existingCategory, 1);
         break;
 
       case crudType.CREATE:
+        // Check, if th parent UUID is null
+        if (existingCategory == null) {
+          throw new Error("The category does not exist");
+        }
+
+        // Check if the Category should be top-level
+        if (
+          categoryEvent.data.categoryData.parentUuid == null ||
+          categoryEvent.data.categoryData.parentUuid === ""
+        ) {
+          CategoryService.inventoryCategoriesProjection[
+            categoryEvent.inventoryUuid
+          ].push(newCategory);
+        } else {
+          // Push to the parent Category
+          this.getCategoryByUuid(
+            categoryEvent.inventoryUuid,
+            categoryEvent.data.categoryData.parentUuid
+          ).children.push(newCategory);
+        }
+
+        // Add the Category to its parent
+
         // Push a new Stock onto the Projection
         CategoryService.inventoryCategoriesProjection[
           categoryEvent.inventoryUuid
@@ -167,12 +193,8 @@ export class CategoryService {
         );
 
         // Assign the changed values
-        Object.assign(
-          CategoryService.inventoryCategoriesProjection[
-            categoryEvent.inventoryUuid
-          ][categoryEvent.data.stockData.thingUuid][index],
-          newCategory
-        );
+        // TODO check if this works (update category)
+        Object.assign(existingCategory, newCategory);
         break;
     }
   }
