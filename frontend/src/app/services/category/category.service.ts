@@ -3,7 +3,9 @@ import { Category } from "src/app/models/category/category";
 import { InventoryService } from "../inventory/inventory.service";
 import {
   EventSourcingService,
-  itemType
+  itemType,
+  Event,
+  crudType
 } from "../EventSourcing/event-sourcing.service";
 import { AuthService } from "../auth/auth.service";
 import { StockService } from "../stock/stock.service";
@@ -69,7 +71,7 @@ export class CategoryService {
    * Iterates over all Inventories and their Things and fetches their Stocks
    */
   private async fetchAllInventoryCategories() {
-    console.log("fetch all Stocks");
+    console.log("fetch all Categories");
 
     // Wait for the other services to be ready
     await this.is.ready;
@@ -81,16 +83,8 @@ export class CategoryService {
     // Iterate over the Inventories projection
     for (const inventoryUuid in this.is.inventories) {
       if (this.is.inventories.hasOwnProperty(inventoryUuid)) {
-        // Initialize the dict for the Inventory
-        CategoryService.inventoryCategoriesProjection[inventoryUuid] = {};
-
-        // Iterate over the Things of the Inventory using the projections
-        for (const thing of this.ts.things[inventoryUuid]) {
-          // Initialize the Stocks array
-          CategoryService.inventoryCategoriesProjection[inventoryUuid][
-            thing.uuid
-          ] = [];
-        }
+        // Initialize the outer array for the Inventory
+        CategoryService.inventoryCategoriesProjection[inventoryUuid] = [];
       }
     }
 
@@ -98,16 +92,142 @@ export class CategoryService {
     for (const inventoryEvents of EventSourcingService.events) {
       // Iterate over the Events of the Inventory
       for (const event of inventoryEvents.events) {
-        // But only if when the Event is a StockEvent
-        if (event.data.itemType === itemType.STOCK) {
+        // But only if when the Event is a CategoryEvent
+        if (event.data.itemType === itemType.CATEGORY) {
           try {
             // Apply the Event
-            await this.applyStockEvent(event);
+            await this.applyCategoryEvent(event);
           } catch (err) {
             // Ignore errors caused by deleted Things
           }
         }
       }
+    }
+  }
+
+  /**
+   * Modifies the current Category projection by applying an event
+   *
+   * This does not modify any stored data
+   */
+  private async applyCategoryEvent(categoryEvent: Event) {
+    await this.is.ready;
+
+    // TODO delete this field ("const addedOn")
+    /**
+     * One date representing now
+     */
+    const addedOn = new Date();
+
+    const newCategory = {
+      name: categoryEvent.data.categoryData.name,
+      uuid: categoryEvent.data.uuid,
+      parentUuid: categoryEvent.data.categoryData.parentUuid,
+      createdOn: categoryEvent.data.categoryData.createdOn,
+      children: []
+    } as Category;
+
+    console.log("This is the categoriesProjection");
+    console.log(CategoryService.inventoryCategoriesProjection);
+
+    // TODO maybe delete this
+    // /**
+    //  * The index of the event in the projection, if any
+    //  */
+    // const index = CategoryService.inventoryCategoriesProjection[
+    //   categoryEvent.inventoryUuid
+    // ][categoryEvent.data.stockData.thingUuid].findIndex(
+    //   stock => stock.uuid === categoryEvent.data.uuid
+    // );
+
+    switch (categoryEvent.data.crudType) {
+      case crudType.DELETE:
+        // Delete a Stock from the projection
+        CategoryService.inventoryCategoriesProjection[
+          categoryEvent.inventoryUuid
+        ][categoryEvent.data.stockData.thingUuid].splice(index, 1);
+        break;
+
+      case crudType.CREATE:
+        // Push a new Stock onto the Projection
+        CategoryService.inventoryCategoriesProjection[
+          categoryEvent.inventoryUuid
+        ][categoryEvent.data.stockData.thingUuid].push(newCategory);
+        break;
+      case crudType.UPDATE:
+        // Update a Stock already included in the projection
+
+        // Remove immutable values
+        delete newCategory.uuid;
+        delete newCategory.createdOn;
+
+        // Delete all null values
+        Object.keys(newCategory).forEach(
+          key => newCategory[key] == null && delete newCategory[key]
+        );
+
+        // Assign the changed values
+        Object.assign(
+          CategoryService.inventoryCategoriesProjection[
+            categoryEvent.inventoryUuid
+          ][categoryEvent.data.stockData.thingUuid][index],
+          newCategory
+        );
+        break;
+    }
+  }
+
+  /**
+   * Recursively finds and returns a category from the projection
+   *
+   * @param uuid The UUID of the Category to be found
+   */
+  public getCategoryByUuid(
+    inventoryUuid: string,
+    categoryUuid: string
+  ): Category {
+    for (const c of CategoryService.inventoryCategoriesProjection[
+      inventoryUuid
+    ]) {
+      const result = this.getCategoryByUuidRecursive(c, categoryUuid);
+      if (result != null) {
+        return result;
+      }
+    }
+
+    // If the category could not be found, return null
+    return null;
+  }
+
+  /**
+   * The recursive implementation of the Category search
+   *
+   * @param baseCategory The category on which to start the search
+   * @param targetCategoryUuid The category UUID to search for
+   *
+   * @returns The category to search for, null if not found
+   */
+  private getCategoryByUuidRecursive(
+    baseCategory: Category,
+    targetCategoryUuid: string
+  ): Category {
+    // Check if this is the right category
+    if (baseCategory.uuid === targetCategoryUuid) {
+      return baseCategory;
+    }
+
+    // If the UUID doesn't match, continue searching
+    for (const c of baseCategory.children) {
+      // Make a recursive call with the child
+      const result = this.getCategoryByUuidRecursive(c, targetCategoryUuid);
+
+      // If the recursive call was successful, return the result
+      if (result !== null) {
+        return result;
+      }
+
+      // If nothing was found return null
+      return null;
     }
   }
 }
