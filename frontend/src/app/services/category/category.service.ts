@@ -48,14 +48,6 @@ export class CategoryService {
     // Ready declaration
     this.ready = new Promise((resolve, reject) => {
       if (CategoryService.inventoryCategoriesProjection == null) {
-        // Subscribe to calls
-        document.addEventListener(
-          "new-category",
-          (newCategoryEvent: CustomEvent) =>
-            this.handleNewCategoryEvent(newCategoryEvent.detail),
-          false
-        );
-
         this.fetchAllInventoryCategories().then(result => {
           // Mark as ready
           resolve(null);
