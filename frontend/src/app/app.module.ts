@@ -19,6 +19,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSliderModule } from "@angular/material/slider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTreeModule } from "@angular/material/tree";
 
 import { QRCodeModule } from "angularx-qrcode";
 import { ZXingScannerModule } from "@zxing/ngx-scanner";
@@ -112,6 +113,7 @@ import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.compon
     MatMenuModule,
     QRCodeModule,
     ZXingScannerModule,
+    MatTreeModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production
       // enabled: true

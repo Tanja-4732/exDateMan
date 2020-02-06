@@ -75,7 +75,7 @@ export class StockService {
   private async fetchAllInventoryThingStocks() {
     console.log("fetch all Stocks");
 
-    // Wait for the InventoryService & EventSourcingService to be ready
+    // Wait for the other services to be ready
     await this.ts.ready;
     await this.is.ready;
     await this.ess.ready;
@@ -125,7 +125,7 @@ export class StockService {
     const addedOn = new Date();
 
     const newStock = {
-      addedOn,
+      addedOn: stockEvent.data.stockData.createdOn,
       exDate: stockEvent.data.stockData.exDate,
       openedOn: stockEvent.data.stockData.openedOn,
       percentLeft: stockEvent.data.stockData.percentLeft,

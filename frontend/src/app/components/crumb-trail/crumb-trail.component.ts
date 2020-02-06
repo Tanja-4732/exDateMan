@@ -28,13 +28,14 @@ export class CrumbTrailComponent implements OnInit {
  */
 export enum Icon {
   Auth = "vpn_key",
-  Events = "blur_on",
+  Event = "blur_on",
   Scan = "camera",
   Inventory = "work",
   Thing = "pages",
   Add = "add",
   Welcome = "home",
-  Stock = "fullscreen"
+  Stock = "fullscreen",
+  Category = "local_offer"
 }
 
 /**
