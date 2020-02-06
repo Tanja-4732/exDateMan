@@ -7,6 +7,12 @@ import {
   MatTreeFlatDataSource,
   MatTreeFlattener
 } from "@angular/material/tree";
+import {
+  CrumbTrailComponent,
+  Icon
+} from "../crumb-trail/crumb-trail.component";
+import { Inventory } from "src/app/models/inventory/inventory";
+import { InventoryService } from "src/app/services/inventory/inventory.service";
 
 @Component({
   selector: "app-categories",
@@ -16,9 +22,32 @@ import {
 export class CategoriesComponent implements OnInit {
   constructor(
     private cs: CategoryService,
+    private is: InventoryService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  name: string;
+  inventoryUuid: string;
+  inventory: Inventory;
+
+  async ngOnInit() {
+    // Get Inventory UUID
+    this.inventoryUuid = this.route.snapshot.params.inventoryUuid;
+
+    await this.is.ready;
+    this.inventory = this.is.inventories[this.inventoryUuid];
+
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Inventory,
+        title: this.inventory.name,
+        routerLink: `/inventories`
+      },
+      {
+        icon: Icon.Category,
+        title: "Categories"
+      }
+    ];
+  }
 }

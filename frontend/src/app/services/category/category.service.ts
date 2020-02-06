@@ -105,12 +105,6 @@ export class CategoryService {
   private async applyCategoryEvent(categoryEvent: Event) {
     await this.is.ready;
 
-    // TODO delete this field ("const addedOn")
-    /**
-     * One date representing now
-     */
-    const addedOn = new Date();
-
     const newCategory = {
       name: categoryEvent.data.categoryData.name,
       uuid: categoryEvent.data.uuid,
