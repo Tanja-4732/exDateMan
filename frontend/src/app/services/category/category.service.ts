@@ -300,61 +300,12 @@ export class CategoryService {
   }
 
   /**
-   * Updates a Stock
+   * Updates a Category
    *
-   * @param category The stock to be updated
+   * @param category The Category to be updated
    * @param inventoryUuid The UUID of the Inventory
    */
-  async updateStock(
-    category: Stock,
-    inventoryUuid: string,
-    thingUuid: string
-  ): Promise<void> {
-    // TODO implement this
-    const now = new Date();
-    const event = {
-      inventoryUuid,
-      date: now,
-      data: {
-        crudType: crudType.UPDATE,
-        itemType: itemType.STOCK,
-        userUuid: (await this.as.getCurrentUser()).user.uuid,
-        stockData: {},
-        uuid: category.uuid
-      }
-    } as Event;
-
-    if (category.exDate != null) {
-      event.data.stockData.exDate = category.exDate;
-    }
-
-    if (category.openedOn != null) {
-      event.data.stockData.openedOn = category.openedOn;
-    }
-
-    if (category.percentLeft != null) {
-      event.data.stockData.percentLeft = category.percentLeft;
-    }
-
-    if (category.quantity != null) {
-      event.data.stockData.quantity = category.quantity;
-    }
-
-    if (category.useUpIn != null) {
-      event.data.stockData.useUpIn = category.useUpIn;
-    }
-
-    await this.ess.appendEventToInventoryLog(event);
-    await this.applyStockEvent(event);
-  }
-
-  /**
-   * Deletes a Category
-   *
-   * @param category The Category to be deleted
-   * @param inventoryUuid The UUID of the Inventory
-   */
-  async deleteStock(
+  async updateCategory(
     category: Category,
     inventoryUuid: string,
     thingUuid: string
@@ -364,9 +315,46 @@ export class CategoryService {
       inventoryUuid,
       date: now,
       data: {
+        crudType: crudType.UPDATE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        uuid: category.uuid,
+        categoryData: {}
+      }
+    } as Event;
+
+    // Avoid removing unchanged data
+    if (category.name != null) {
+      event.data.categoryData.name = category.name;
+    }
+
+    if (category.parentUuid != null) {
+      event.data.categoryData.parentUuid = category.parentUuid;
+    }
+
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyCategoryEvent(event);
+  }
+
+  /**
+   * Deletes a Category
+   *
+   * @param category The Category to be deleted
+   * @param inventoryUuid The UUID of the Inventory
+   */
+  async deleteCategory(
+    category: Category,
+    inventoryUuid: string
+  ): Promise<void> {
+    const now = new Date();
+    const event = {
+      inventoryUuid,
+      date: now,
+      data: {
         crudType: crudType.DELETE,
         itemType: itemType.CATEGORY,
-        userUuid: (await this.as.getCurrentUser()).user.uuid
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        uuid: category.uuid
       }
     } as Event;
 
