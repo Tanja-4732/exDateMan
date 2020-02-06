@@ -260,4 +260,119 @@ export class CategoryService {
       return null;
     }
   }
+
+  /**
+   * Creates a Category
+   *
+   * @param category The category to be created
+   * @param inventoryUuid The UUID of the Inventory
+   */
+  async newCategory(category: Category, inventoryUuid: string): Promise<void> {
+    /**
+     * A date object which represents the current moment in time
+     */
+    const now = new Date();
+
+    /**
+     * The event to be appended to the event log
+     */
+    const event = {
+      date: now,
+      inventoryUuid,
+      data: {
+        uuid: category.uuid,
+        crudType: crudType.CREATE,
+        itemType: itemType.CATEGORY,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        categoryData: {
+          createdOn: now,
+          name: category.name,
+          parentUuid: category.parentUuid
+        }
+      }
+    } as Event;
+
+    // Write the event to the event log and the API
+    await this.ess.appendEventToInventoryLog(event);
+
+    // Update the categories projection
+    await this.applyCategoryEvent(event);
+  }
+
+  /**
+   * Updates a Stock
+   *
+   * @param category The stock to be updated
+   * @param inventoryUuid The UUID of the Inventory
+   */
+  async updateStock(
+    category: Stock,
+    inventoryUuid: string,
+    thingUuid: string
+  ): Promise<void> {
+    // TODO implement this
+    const now = new Date();
+    const event = {
+      inventoryUuid,
+      date: now,
+      data: {
+        crudType: crudType.UPDATE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid,
+        stockData: {},
+        uuid: category.uuid
+      }
+    } as Event;
+
+    if (category.exDate != null) {
+      event.data.stockData.exDate = category.exDate;
+    }
+
+    if (category.openedOn != null) {
+      event.data.stockData.openedOn = category.openedOn;
+    }
+
+    if (category.percentLeft != null) {
+      event.data.stockData.percentLeft = category.percentLeft;
+    }
+
+    if (category.quantity != null) {
+      event.data.stockData.quantity = category.quantity;
+    }
+
+    if (category.useUpIn != null) {
+      event.data.stockData.useUpIn = category.useUpIn;
+    }
+
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyStockEvent(event);
+  }
+
+  /**
+   * Deletes a Stock
+   *
+   * @param stock The stock to be deleted
+   * @param inventoryUuid The UUID of the Inventory
+   * @param thingUuid THe UUID of the Thing
+   */
+  async deleteStock(
+    stock: Stock,
+    inventoryUuid: string,
+    thingUuid: string
+  ): Promise<void> {
+    // TODO implement this
+    const now = new Date();
+    const event = {
+      inventoryUuid,
+      date: now,
+      data: {
+        crudType: crudType.DELETE,
+        itemType: itemType.STOCK,
+        userUuid: (await this.as.getCurrentUser()).user.uuid
+      }
+    } as Event;
+
+    await this.ess.appendEventToInventoryLog(event);
+    await this.applyStockEvent(event);
+  }
 }
