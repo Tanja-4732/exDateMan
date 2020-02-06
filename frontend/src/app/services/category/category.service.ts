@@ -349,30 +349,28 @@ export class CategoryService {
   }
 
   /**
-   * Deletes a Stock
+   * Deletes a Category
    *
-   * @param stock The stock to be deleted
+   * @param category The Category to be deleted
    * @param inventoryUuid The UUID of the Inventory
-   * @param thingUuid THe UUID of the Thing
    */
   async deleteStock(
-    stock: Stock,
+    category: Category,
     inventoryUuid: string,
     thingUuid: string
   ): Promise<void> {
-    // TODO implement this
     const now = new Date();
     const event = {
       inventoryUuid,
       date: now,
       data: {
         crudType: crudType.DELETE,
-        itemType: itemType.STOCK,
+        itemType: itemType.CATEGORY,
         userUuid: (await this.as.getCurrentUser()).user.uuid
       }
     } as Event;
 
     await this.ess.appendEventToInventoryLog(event);
-    await this.applyStockEvent(event);
+    await this.applyCategoryEvent(event);
   }
 }
