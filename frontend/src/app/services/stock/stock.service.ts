@@ -125,8 +125,7 @@ export class StockService {
     const addedOn = new Date();
 
     const newStock = {
-      // TODO This could be a bug
-      addedOn,
+      addedOn: stockEvent.data.stockData.createdOn,
       exDate: stockEvent.data.stockData.exDate,
       openedOn: stockEvent.data.stockData.openedOn,
       percentLeft: stockEvent.data.stockData.percentLeft,
