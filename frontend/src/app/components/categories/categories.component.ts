@@ -13,6 +13,7 @@ import {
 } from "../crumb-trail/crumb-trail.component";
 import { Inventory } from "src/app/models/inventory/inventory";
 import { InventoryService } from "src/app/services/inventory/inventory.service";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-categories",
@@ -49,5 +50,17 @@ export class CategoriesComponent implements OnInit {
         title: "Categories"
       }
     ];
+
+    await this.cs.ready;
+
+    // TODO remove this log
+    console.log(this.cs.categories);
+
+    const randomness = Math.random() * 1000;
+
+    await this.cs.createCategory(
+      { createdOn: new Date(), name: "rand_" + randomness, uuid: v4() },
+      this.inventoryUuid
+    );
   }
 }

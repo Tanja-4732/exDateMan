@@ -161,8 +161,8 @@ export class CategoryService {
 
       case crudType.CREATE:
         // Check, if th parent UUID is null
-        if (existingCategory == null) {
-          throw new Error("The category does not exist");
+        if (existingCategory != null) {
+          throw new Error("The category already exists");
         }
 
         // Check if the Category should be top-level
@@ -189,6 +189,11 @@ export class CategoryService {
         ][categoryEvent.data.stockData.thingUuid].push(newCategory);
         break;
       case crudType.UPDATE:
+        // Check, if th parent UUID is null
+        if (existingCategory == null) {
+          throw new Error("The category does not exist");
+        }
+
         // Update a Stock already included in the projection
 
         // Remove immutable values
@@ -267,7 +272,10 @@ export class CategoryService {
    * @param category The category to be created
    * @param inventoryUuid The UUID of the Inventory
    */
-  async newCategory(category: Category, inventoryUuid: string): Promise<void> {
+  async createCategory(
+    category: Category,
+    inventoryUuid: string
+  ): Promise<void> {
     /**
      * A date object which represents the current moment in time
      */
