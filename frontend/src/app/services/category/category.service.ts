@@ -9,6 +9,7 @@ import {
 } from "../EventSourcing/event-sourcing.service";
 import { AuthService } from "../auth/auth.service";
 import { StockService } from "../stock/stock.service";
+import { v4 } from "uuid";
 
 @Injectable({
   providedIn: "root"
@@ -166,10 +167,7 @@ export class CategoryService {
         }
 
         // Check if the Category should be top-level
-        if (
-          categoryEvent.data.categoryData.parentUuid == null ||
-          categoryEvent.data.categoryData.parentUuid === ""
-        ) {
+        if (categoryEvent.data.categoryData.parentUuid === "") {
           CategoryService.inventoryCategoriesProjection[
             categoryEvent.inventoryUuid
           ].push(newCategory);
@@ -270,10 +268,12 @@ export class CategoryService {
    * Creates a Category
    *
    * @param category The category to be created
+   * @param parentUuid The UUID of the parent of the category, root gets ""
    * @param inventoryUuid The UUID of the Inventory
    */
   async createCategory(
-    category: Category,
+    name: string,
+    parentUuid: string,
     inventoryUuid: string
   ): Promise<void> {
     /**
@@ -288,14 +288,14 @@ export class CategoryService {
       date: now,
       inventoryUuid,
       data: {
-        uuid: category.uuid,
+        uuid: v4(),
         crudType: crudType.CREATE,
         itemType: itemType.CATEGORY,
         userUuid: (await this.as.getCurrentUser()).user.uuid,
         categoryData: {
           createdOn: now,
-          name: category.name,
-          parentUuid: category.parentUuid
+          name,
+          parentUuid
         }
       }
     } as Event;

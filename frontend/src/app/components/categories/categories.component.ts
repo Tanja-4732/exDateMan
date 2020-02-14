@@ -54,12 +54,15 @@ export class CategoriesComponent implements OnInit {
     await this.cs.ready;
 
     // TODO remove this log
-    console.log(this.cs.categories);
+    console.log(JSON.stringify(this.cs.categories));
 
     const randomness = Math.random() * 1000;
 
+    // await this.cs.createCategory("rand_" + randomness, "", this.inventoryUuid);
+
     await this.cs.createCategory(
-      { createdOn: new Date(), name: "rand_" + randomness, uuid: v4() },
+      "child_" + randomness,
+      "f7526905-b05c-489a-935e-dc80a2bd2b75",
       this.inventoryUuid
     );
   }
