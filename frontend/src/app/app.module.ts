@@ -120,7 +120,6 @@ import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.compon
     })
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [DeleteConfirmationDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
