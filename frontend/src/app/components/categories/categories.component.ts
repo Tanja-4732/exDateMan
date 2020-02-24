@@ -15,6 +15,7 @@ import {
 import { Inventory } from "src/app/models/inventory/inventory";
 import { InventoryService } from "src/app/services/inventory/inventory.service";
 import { v4 } from "uuid";
+import { Category } from "src/app/models/category/category";
 
 /**
  * Food data with nested structure.
@@ -51,19 +52,17 @@ const TREE_DATA: FoodNode[] = [
   styleUrls: ["./categories.component.scss"]
 })
 export class CategoriesComponent implements OnInit {
-  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
-  dataSource = new MatTreeNestedDataSource<FoodNode>();
+  treeControl = new NestedTreeControl<Category>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<Category>();
 
   constructor(
     private cs: CategoryService,
     private is: InventoryService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-    this.dataSource.data = TREE_DATA;
-  }
+  ) {}
 
-  hasChild = (_: number, node: FoodNode) =>
+  hasChild = (_: number, node: Category) =>
     !!node.children && node.children.length > 0;
 
   name: string;
@@ -88,6 +87,10 @@ export class CategoriesComponent implements OnInit {
         title: "Categories"
       }
     ];
+
+    await this.cs.ready;
+
+    this.dataSource.data = this.cs.categories[this.inventoryUuid];
   }
 
   public async createCategory() {
