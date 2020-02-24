@@ -50,20 +50,32 @@ export class CategoriesComponent implements OnInit {
         title: "Categories"
       }
     ];
+  }
 
+  public async createCategory() {
     await this.cs.ready;
-
     // TODO remove this log
-    console.log(JSON.stringify(this.cs.categories));
-
     const randomness = Math.random() * 1000;
-
-    // await this.cs.createCategory("rand_" + randomness, "", this.inventoryUuid);
-
     await this.cs.createCategory(
       "child_" + randomness,
-      "f7526905-b05c-489a-935e-dc80a2bd2b75",
+      "root",
       this.inventoryUuid
     );
+  }
+
+  public async createChild() {
+    await this.cs.ready;
+    // TODO remove this log
+    const randomness = Math.random() * 1000;
+    await this.cs.createCategory(
+      "child_" + randomness,
+      "5b40ca41-2783-4c2d-89b7-41c7c1dc498f",
+      this.inventoryUuid
+    );
+  }
+
+  public logCategories() {
+    console.log("This is the categoriesComponent");
+    console.log(JSON.stringify(this.cs.categories));
   }
 }

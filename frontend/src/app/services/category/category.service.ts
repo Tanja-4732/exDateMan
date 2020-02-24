@@ -64,8 +64,6 @@ export class CategoryService {
    * Iterates over all Inventories and their Things and fetches their Stocks
    */
   private async fetchAllInventoryCategories() {
-    console.log("fetch all Categories");
-
     // Wait for the other services to be ready
     await this.is.ready;
     await this.ess.ready;
@@ -113,9 +111,6 @@ export class CategoryService {
       createdOn: categoryEvent.data.categoryData.createdOn,
       children: []
     } as Category;
-
-    console.log("This is the categoriesProjection");
-    console.log(CategoryService.inventoryCategoriesProjection);
 
     /**
      * The Category of the event in the projection, if any
@@ -167,24 +162,26 @@ export class CategoryService {
         }
 
         // Check if the Category should be top-level
-        if (categoryEvent.data.categoryData.parentUuid === "") {
+        if (categoryEvent.data.categoryData.parentUuid === "root") {
+          // Push a new Stock onto the Projection
           CategoryService.inventoryCategoriesProjection[
             categoryEvent.inventoryUuid
           ].push(newCategory);
         } else {
-          // Push to the parent Category
-          this.getCategoryByUuid(
+          /**
+           * The category to which to add the new category to
+           */
+          const parent = this.getCategoryByUuid(
             categoryEvent.inventoryUuid,
             categoryEvent.data.categoryData.parentUuid
-          ).children.push(newCategory);
+          );
+
+          // Push to the parent Category
+          parent.children.push(newCategory);
         }
 
         // Add the Category to its parent
 
-        // Push a new Stock onto the Projection
-        CategoryService.inventoryCategoriesProjection[
-          categoryEvent.inventoryUuid
-        ][categoryEvent.data.stockData.thingUuid].push(newCategory);
         break;
       case crudType.UPDATE:
         // Check, if th parent UUID is null
@@ -219,10 +216,14 @@ export class CategoryService {
     inventoryUuid: string,
     categoryUuid: string
   ): Category {
-    for (const c of CategoryService.inventoryCategoriesProjection[
-      inventoryUuid
-    ]) {
-      const result = this.getCategoryByUuidRecursive(c, categoryUuid);
+    // Loop over every root-level category in the inventory
+    for (const rootLevelCategory of CategoryService
+      .inventoryCategoriesProjection[inventoryUuid]) {
+      const result = this.getCategoryByUuidRecursive(
+        rootLevelCategory,
+        categoryUuid
+      );
+
       if (result != null) {
         return result;
       }
@@ -258,10 +259,10 @@ export class CategoryService {
       if (result !== null) {
         return result;
       }
-
-      // If nothing was found return null
-      return null;
     }
+
+    // If nothing was found return null
+    return null;
   }
 
   /**
