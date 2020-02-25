@@ -61,6 +61,10 @@ export class CategoriesComponent implements OnInit {
 
     await this.cs.ready;
 
+    this.setData();
+  }
+
+  private setData() {
     this.dataSource.data = this.cs.categories[this.inventoryUuid];
   }
 
@@ -73,6 +77,8 @@ export class CategoriesComponent implements OnInit {
       "root",
       this.inventoryUuid
     );
+
+    this.setData();
   }
 
   public async createChild() {
@@ -84,6 +90,7 @@ export class CategoriesComponent implements OnInit {
       "5b40ca41-2783-4c2d-89b7-41c7c1dc498f",
       this.inventoryUuid
     );
+    this.setData();
   }
 
   public logCategories() {
