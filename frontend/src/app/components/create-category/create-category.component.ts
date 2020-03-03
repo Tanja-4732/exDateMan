@@ -10,7 +10,9 @@ export class CreateCategoryComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CreateCategoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+    data.childName = "";
+  }
 
   ngOnInit(): void {}
 
