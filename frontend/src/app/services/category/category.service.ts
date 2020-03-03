@@ -182,8 +182,6 @@ export class CategoryService {
           parent.children.push(newCategory);
         }
 
-        // Add the Category to its parent
-
         break;
       case crudType.UPDATE:
         // Check, if th parent UUID is null
