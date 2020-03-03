@@ -81,3 +81,6 @@ div.mat-typography {
 // $theme: mat-dark-theme($primary, $accent);
 // // Include all theme styles for the components.
 // @include angular-material-theme($theme);
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
