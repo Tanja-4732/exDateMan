@@ -139,16 +139,21 @@ export class CategoryService {
             categoryEvent.inventoryUuid
           ].splice(index, 1);
         } else {
-          // Find the index of the Category
-          const index = this.getCategoryByUuid(
+          /**
+           * The parent category to delete from
+           */
+          const parentCategory = this.getCategoryByUuid(
             categoryEvent.inventoryUuid,
             existingCategory.parentUuid
-          ).children.findIndex(c => c.uuid === categoryEvent.data.uuid);
+          );
+
+          // Find the index of the Category
+          const index = parentCategory.children.findIndex(
+            c => c.uuid === categoryEvent.data.uuid
+          );
 
           // Remove a category from the projection
-          CategoryService.inventoryCategoriesProjection[
-            categoryEvent.inventoryUuid
-          ].splice(index, 1);
+          parentCategory.children.splice(index, 1);
         }
         break;
 
