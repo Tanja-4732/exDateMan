@@ -191,20 +191,9 @@ export class CategoryService {
           throw new Error("The category does not exist");
         }
 
-        // Update a Stock already included in the projection
-
-        // Remove immutable values
-        delete newCategory.uuid;
-        delete newCategory.createdOn;
-
-        // Delete all null values
-        Object.keys(newCategory).forEach(
-          key => newCategory[key] == null && delete newCategory[key]
-        );
-
         // Assign the changed values
-        // TODO check if this works (update category)
-        Object.assign(existingCategory, newCategory);
+        existingCategory.name = newCategory.name;
+        existingCategory.parentUuid = newCategory.parentUuid;
         break;
     }
   }
