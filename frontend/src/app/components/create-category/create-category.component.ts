@@ -9,17 +9,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 export class CreateCategoryComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CreateCategoryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData & { childName: string }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    data.childName = "";
+  }
 
   ngOnInit(): void {}
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-}
-
-export interface DialogData {
-  animal: string;
-  name: string;
 }

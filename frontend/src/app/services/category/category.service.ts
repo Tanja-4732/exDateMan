@@ -105,10 +105,10 @@ export class CategoryService {
     await this.is.ready;
 
     const newCategory = {
-      name: categoryEvent.data.categoryData.name,
+      name: categoryEvent.data.categoryData?.name,
       uuid: categoryEvent.data.uuid,
-      parentUuid: categoryEvent.data.categoryData.parentUuid,
-      createdOn: categoryEvent.data.categoryData.createdOn,
+      parentUuid: categoryEvent.data.categoryData?.parentUuid,
+      createdOn: categoryEvent.data.categoryData?.createdOn,
       children: []
     } as Category;
 
@@ -123,15 +123,12 @@ export class CategoryService {
     switch (categoryEvent.data.crudType) {
       case crudType.DELETE:
         // Avoid deleting what doesn't exist
-        if (existingCategory != null) {
+        if (existingCategory == null) {
           throw new Error("The category does not exist");
         }
 
         // Check if the Category is top-level
-        if (
-          existingCategory.parentUuid == null ||
-          existingCategory.parentUuid === ""
-        ) {
+        if (existingCategory.parentUuid === "root") {
           // Find the index of the Category
           const index = CategoryService.inventoryCategoriesProjection[
             categoryEvent.inventoryUuid
@@ -142,16 +139,21 @@ export class CategoryService {
             categoryEvent.inventoryUuid
           ].splice(index, 1);
         } else {
-          // Find the index of the Category
-          const index = this.getCategoryByUuid(
+          /**
+           * The parent category to delete from
+           */
+          const parentCategory = this.getCategoryByUuid(
             categoryEvent.inventoryUuid,
-            categoryEvent.data.categoryData.parentUuid
-          ).children.findIndex(c => c.uuid === categoryEvent.data.uuid);
+            existingCategory.parentUuid
+          );
+
+          // Find the index of the Category
+          const index = parentCategory.children.findIndex(
+            c => c.uuid === categoryEvent.data.uuid
+          );
 
           // Remove a category from the projection
-          CategoryService.inventoryCategoriesProjection[
-            categoryEvent.inventoryUuid
-          ].splice(index, 1);
+          parentCategory.children.splice(index, 1);
         }
         break;
 
@@ -316,8 +318,7 @@ export class CategoryService {
    */
   async updateCategory(
     category: Category,
-    inventoryUuid: string,
-    thingUuid: string
+    inventoryUuid: string
   ): Promise<void> {
     const now = new Date();
     const event = {
