@@ -1,4 +1,4 @@
-<button mat-raised-button color="accent" (click)="openDialog(null)">
+<button mat-raised-button color="accent" (click)="openCreateDialog(null)">
   Create new category
 </button>
 
@@ -18,12 +18,12 @@
       {{ node.name }}
 
       &nbsp;
-      <button mat-icon-button (click)="openDialog(node)">
+      <button mat-icon-button (click)="openCreateDialog(node)">
         <mat-icon>add</mat-icon>
       </button>
 
       <!-- &nbsp; -->
-      <button mat-icon-button>
+      <button mat-icon-button (click)="openEditDialog(node)">
         <mat-icon>edit</mat-icon>
       </button>
     </li>
@@ -45,12 +45,12 @@
         {{ node.name }}
 
         &nbsp;
-        <button mat-icon-button (click)="openDialog(node)">
+        <button mat-icon-button (click)="openCreateDialog(node)">
           <mat-icon>add</mat-icon>
         </button>
 
         <!-- &nbsp; -->
-        <button mat-icon-button>
+        <button mat-icon-button (click)="openEditDialog(node)">
           <mat-icon>edit</mat-icon>
         </button>
       </div>

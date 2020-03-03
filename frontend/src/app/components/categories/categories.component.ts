@@ -18,6 +18,7 @@ import { v4 } from "uuid";
 import { Category } from "src/app/models/category/category";
 import { MatDialog } from "@angular/material/dialog";
 import { CreateCategoryComponent } from "../create-category/create-category.component";
+import { EditCategoryComponent } from "../edit-category/edit-category.component";
 
 @Component({
   selector: "app-categories",
@@ -93,7 +94,7 @@ export class CategoriesComponent implements OnInit {
     console.log(JSON.stringify(this.cs.categories));
   }
 
-  openDialog(node?: Category): void {
+  openCreateDialog(node?: Category): void {
     // When creating a new root category ...
     if (node === null) {
       // ... provide a dummy-parent
@@ -114,6 +115,33 @@ export class CategoriesComponent implements OnInit {
 
         await this.cs.ready;
         await this.cs.createCategory(result, node.uuid, this.inventoryUuid);
+        this.setData();
+      }
+    });
+  }
+
+  openEditDialog(node: Category): void {
+    console.log(node);
+
+    const dialogRef = this.dialog.open(EditCategoryComponent, {
+      // width: "250px",
+      data: node
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      // Ignore cancel
+      if (result !== undefined) {
+        console.log(result);
+
+        await this.cs.ready;
+
+        if (result.wantsToDelete) {
+          await this.cs.deleteCategory(node, this.inventoryUuid);
+        } else {
+          node.name = result.childName;
+          await this.cs.updateCategory(node, this.inventoryUuid);
+        }
+
         this.setData();
       }
     });

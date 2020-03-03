@@ -1,1 +1,28 @@
-<p>edit-category works!</p>
+<h1 mat-dialog-title>Edit category</h1>
+<div mat-dialog-content>
+  <p>Editing {{ data.name }}</p>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.childName" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    mat-raised-button
+    color="accent"
+    [mat-dialog-close]="{ childName: data.childName, wantsToDelete: false }"
+    cdkFocusInitial
+  >
+    Save changes
+  </button>
+
+  <button
+    mat-raised-button
+    color="warn"
+    [mat-dialog-close]="{ childName: data.childName, wantsToDelete: true }"
+    cdkFocusInitial
+  >
+    Delete
+  </button>
+</div>
