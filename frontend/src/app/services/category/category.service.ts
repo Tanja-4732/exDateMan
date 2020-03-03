@@ -326,7 +326,7 @@ export class CategoryService {
       date: now,
       data: {
         crudType: crudType.UPDATE,
-        itemType: itemType.STOCK,
+        itemType: itemType.CATEGORY,
         userUuid: (await this.as.getCurrentUser()).user.uuid,
         uuid: category.uuid,
         categoryData: {}
