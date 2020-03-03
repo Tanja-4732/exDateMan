@@ -16,6 +16,8 @@ import { Inventory } from "src/app/models/inventory/inventory";
 import { InventoryService } from "src/app/services/inventory/inventory.service";
 import { v4 } from "uuid";
 import { Category } from "src/app/models/category/category";
+import { MatDialog } from "@angular/material/dialog";
+import { CreateCategoryComponent } from "../create-category/create-category.component";
 
 @Component({
   selector: "app-categories",
@@ -30,7 +32,8 @@ export class CategoriesComponent implements OnInit {
     private cs: CategoryService,
     private is: InventoryService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   name: string;
@@ -85,22 +88,34 @@ export class CategoriesComponent implements OnInit {
     this.setData();
   }
 
-  public async createChild() {
-    await this.cs.ready;
-    // TODO remove this log
-    const randomness = Math.random() * 1000;
-    await this.cs.createCategory(
-      // "child_" + randomness,
-      "amazing test " + randomness,
-      "5b40ca41-2783-4c2d-89b7-41c7c1dc498f",
-      // "f9219ad6-2ecc-4451-9b95-d95868976ce2",
-      this.inventoryUuid
-    );
-    this.setData();
-  }
-
   public logCategories() {
     console.log("This is the categoriesComponent");
     console.log(JSON.stringify(this.cs.categories));
+  }
+
+  openDialog(node?: Category): void {
+    // When creating a new root category ...
+    if (node === null) {
+      // ... provide a dummy-parent
+      node = { createdOn: null, uuid: "root", name: "root-category" };
+    }
+
+    console.log(node);
+
+    const dialogRef = this.dialog.open(CreateCategoryComponent, {
+      // width: "250px",
+      data: node
+    });
+
+    dialogRef.afterClosed().subscribe(async result => {
+      // Only create a category when a name was provided
+      if (result !== undefined) {
+        console.log(result);
+
+        await this.cs.ready;
+        await this.cs.createCategory(result, node.uuid, this.inventoryUuid);
+        this.setData();
+      }
+    });
   }
 }

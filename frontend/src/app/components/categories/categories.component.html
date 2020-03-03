@@ -1,16 +1,7 @@
-<p>categories works!</p>
+<button mat-raised-button color="accent" (click)="openDialog(null)">
+  Create new category
+</button>
 
-<button (click)="createCategory()">Create a category</button>
-<button (click)="createChild()">Create a child category</button>
-<button (click)="logCategories()">Log categories</button>
-
-<p>
-  {{ name }}
-</p>
-
-<br />
-<br />
-<br />
 <br />
 <br />
 
@@ -27,7 +18,7 @@
       {{ node.name }}
 
       &nbsp;
-      <button mat-icon-button>
+      <button mat-icon-button (click)="openDialog(node)">
         <mat-icon>add</mat-icon>
       </button>
 
@@ -52,6 +43,16 @@
           </mat-icon>
         </button>
         {{ node.name }}
+
+        &nbsp;
+        <button mat-icon-button (click)="openDialog(node)">
+          <mat-icon>add</mat-icon>
+        </button>
+
+        <!-- &nbsp; -->
+        <button mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button>
       </div>
       <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
         <ng-container matTreeNodeOutlet></ng-container>
