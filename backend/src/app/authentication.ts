@@ -145,7 +145,11 @@ export class Authentication {
         process.env.EDM_JWT_PUBLIC_KEY_VAL ||
         readFileSync(process.env.EDM_JWT_PUBLIC_KEY);
     } catch (err) {
-      throw new Error("Couldn't obtain JWT keys from environment.");
+      throw new Error(
+        "Couldn't obtain JWT keys from environment.\n" +
+          "Two RS256 keys (public and private) are required.\n" +
+          "Please set the environment variables correctly.",
+      );
     }
   }
 

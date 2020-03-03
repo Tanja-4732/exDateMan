@@ -9,6 +9,7 @@ import {
 } from "../EventSourcing/event-sourcing.service";
 import { AuthService } from "../auth/auth.service";
 import { StockService } from "../stock/stock.service";
+import { v4 } from "uuid";
 
 @Injectable({
   providedIn: "root"
@@ -63,8 +64,6 @@ export class CategoryService {
    * Iterates over all Inventories and their Things and fetches their Stocks
    */
   private async fetchAllInventoryCategories() {
-    console.log("fetch all Categories");
-
     // Wait for the other services to be ready
     await this.is.ready;
     await this.ess.ready;
@@ -113,9 +112,6 @@ export class CategoryService {
       children: []
     } as Category;
 
-    console.log("This is the categoriesProjection");
-    console.log(CategoryService.inventoryCategoriesProjection);
-
     /**
      * The Category of the event in the projection, if any
      */
@@ -161,34 +157,38 @@ export class CategoryService {
 
       case crudType.CREATE:
         // Check, if th parent UUID is null
-        if (existingCategory == null) {
-          throw new Error("The category does not exist");
+        if (existingCategory != null) {
+          throw new Error("The category already exists");
         }
 
         // Check if the Category should be top-level
-        if (
-          categoryEvent.data.categoryData.parentUuid == null ||
-          categoryEvent.data.categoryData.parentUuid === ""
-        ) {
+        if (categoryEvent.data.categoryData.parentUuid === "root") {
+          // Push a new Stock onto the Projection
           CategoryService.inventoryCategoriesProjection[
             categoryEvent.inventoryUuid
           ].push(newCategory);
         } else {
-          // Push to the parent Category
-          this.getCategoryByUuid(
+          /**
+           * The category to which to add the new category to
+           */
+          const parent = this.getCategoryByUuid(
             categoryEvent.inventoryUuid,
             categoryEvent.data.categoryData.parentUuid
-          ).children.push(newCategory);
+          );
+
+          // Push to the parent Category
+          parent.children.push(newCategory);
         }
 
         // Add the Category to its parent
 
-        // Push a new Stock onto the Projection
-        CategoryService.inventoryCategoriesProjection[
-          categoryEvent.inventoryUuid
-        ][categoryEvent.data.stockData.thingUuid].push(newCategory);
         break;
       case crudType.UPDATE:
+        // Check, if th parent UUID is null
+        if (existingCategory == null) {
+          throw new Error("The category does not exist");
+        }
+
         // Update a Stock already included in the projection
 
         // Remove immutable values
@@ -216,10 +216,14 @@ export class CategoryService {
     inventoryUuid: string,
     categoryUuid: string
   ): Category {
-    for (const c of CategoryService.inventoryCategoriesProjection[
-      inventoryUuid
-    ]) {
-      const result = this.getCategoryByUuidRecursive(c, categoryUuid);
+    // Loop over every root-level category in the inventory
+    for (const rootLevelCategory of CategoryService
+      .inventoryCategoriesProjection[inventoryUuid]) {
+      const result = this.getCategoryByUuidRecursive(
+        rootLevelCategory,
+        categoryUuid
+      );
+
       if (result != null) {
         return result;
       }
@@ -255,19 +259,24 @@ export class CategoryService {
       if (result !== null) {
         return result;
       }
-
-      // If nothing was found return null
-      return null;
     }
+
+    // If nothing was found return null
+    return null;
   }
 
   /**
    * Creates a Category
    *
    * @param category The category to be created
+   * @param parentUuid The UUID of the parent of the category, root gets ""
    * @param inventoryUuid The UUID of the Inventory
    */
-  async newCategory(category: Category, inventoryUuid: string): Promise<void> {
+  async createCategory(
+    name: string,
+    parentUuid: string,
+    inventoryUuid: string
+  ): Promise<void> {
     /**
      * A date object which represents the current moment in time
      */
@@ -280,14 +289,14 @@ export class CategoryService {
       date: now,
       inventoryUuid,
       data: {
-        uuid: category.uuid,
+        uuid: v4(),
         crudType: crudType.CREATE,
         itemType: itemType.CATEGORY,
         userUuid: (await this.as.getCurrentUser()).user.uuid,
         categoryData: {
           createdOn: now,
-          name: category.name,
-          parentUuid: category.parentUuid
+          name,
+          parentUuid
         }
       }
     } as Event;
