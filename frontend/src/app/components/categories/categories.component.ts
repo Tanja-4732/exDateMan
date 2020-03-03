@@ -65,6 +65,10 @@ export class CategoriesComponent implements OnInit {
   }
 
   private setData() {
+    // Reset the data (workaround for an angular bug)
+    this.dataSource.data = null;
+
+    // Set the data of the data source to the categories projection
     this.dataSource.data = this.cs.categories[this.inventoryUuid];
   }
 
@@ -86,8 +90,10 @@ export class CategoriesComponent implements OnInit {
     // TODO remove this log
     const randomness = Math.random() * 1000;
     await this.cs.createCategory(
-      "child_" + randomness,
+      // "child_" + randomness,
+      "amazing test " + randomness,
       "5b40ca41-2783-4c2d-89b7-41c7c1dc498f",
+      // "f9219ad6-2ecc-4451-9b95-d95868976ce2",
       this.inventoryUuid
     );
     this.setData();
