@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="onAddThing()">
-  <mat-form-field appearance="outline" cdkFocusRegionStart cdkFocusInitial>
+  <mat-form-field appearance="outline">
     <mat-label>Thing name</mat-label>
     <input
       matInput
@@ -8,6 +8,8 @@
       formControlName="name"
       autofocus
       required
+      cdkFocusRegionStart
+      cdkFocusInitial
     />
     <i matSuffix class="material-icons">crop_free</i>
     <!-- <mat-hint>Hint</mat-hint> -->

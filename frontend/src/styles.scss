@@ -26,7 +26,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 10px 10px;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 10px;
   // grid-auto-columns: 1fr, 1fr;
   // gap: 1rem 1rem;
 }
@@ -82,5 +83,11 @@ div.mat-typography {
 // // Include all theme styles for the components.
 // @include angular-material-theme($theme);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -1,0 +1,35 @@
+{
+  "editor.rulers": [80],
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+  "editor.formatOnSave": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true
+  },
+
+  "cSpell.words": [
+    "AGPL",
+    "BSON",
+    "Booter",
+    "TOTP",
+    "Uuids",
+    "ZXing",
+    "autosize",
+    "keycodes",
+    "ngsw",
+    "postgresql",
+    "prefetch",
+    "prestart",
+    "readables",
+    "sessionstorage",
+    "writables"
+  ]
+}

@@ -1,20 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CategoryService } from "src/app/services/category/category.service";
-
-import { FlatTreeControl, NestedTreeControl } from "@angular/cdk/tree";
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-  MatTreeNestedDataSource
-} from "@angular/material/tree";
+import { NestedTreeControl } from "@angular/cdk/tree";
+import { MatTreeNestedDataSource } from "@angular/material/tree";
 import {
   CrumbTrailComponent,
   Icon
 } from "../crumb-trail/crumb-trail.component";
 import { Inventory } from "src/app/models/inventory/inventory";
 import { InventoryService } from "src/app/services/inventory/inventory.service";
-import { v4 } from "uuid";
 import { Category } from "src/app/models/category/category";
 import { MatDialog } from "@angular/material/dialog";
 import { CreateCategoryComponent } from "../create-category/create-category.component";
@@ -76,32 +70,12 @@ export class CategoriesComponent implements OnInit {
     this.dataSource.data = this.cs.categories[this.inventoryUuid];
   }
 
-  public async createCategory() {
-    await this.cs.ready;
-    // TODO remove this log
-    const randomness = Math.random() * 1000;
-    await this.cs.createCategory(
-      "child_" + randomness,
-      "root",
-      this.inventoryUuid
-    );
-
-    this.setData();
-  }
-
-  public logCategories() {
-    console.log("This is the categoriesComponent");
-    console.log(JSON.stringify(this.cs.categories));
-  }
-
   openCreateDialog(node?: Category): void {
     // When creating a new root category ...
     if (node === null) {
       // ... provide a dummy-parent
       node = { createdOn: null, uuid: "root", name: "root-category" };
     }
-
-    console.log(node);
 
     const dialogRef = this.dialog.open(CreateCategoryComponent, {
       // width: "250px",
@@ -111,8 +85,6 @@ export class CategoriesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       // Only create a category when a name was provided
       if (result !== undefined) {
-        console.log(result);
-
         await this.cs.ready;
         await this.cs.createCategory(result, node.uuid, this.inventoryUuid);
         this.setData();
@@ -121,8 +93,6 @@ export class CategoriesComponent implements OnInit {
   }
 
   openEditDialog(node: Category): void {
-    console.log(node);
-
     const dialogRef = this.dialog.open(EditCategoryComponent, {
       // width: "250px",
       data: node
@@ -131,8 +101,6 @@ export class CategoriesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       // Ignore cancel
       if (result !== undefined) {
-        console.log(result);
-
         await this.cs.ready;
 
         if (result.wantsToDelete) {

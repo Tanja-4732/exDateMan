@@ -249,6 +249,31 @@ export class Authentication {
   }
 
   /**
+   * Handles API calls for user modification
+   */
+  private async handleUpdateUser(req: Request, res: Response) {
+    try {
+      const event: UserEvent = req.body;
+
+      // Check for authorization
+      if (this.verifyJWT(req.cookies.JWT).sub !== event.data.userUuid) {
+        // Unauthorized
+        res.sendStatus(401);
+
+        // Stop execution
+        return;
+      }
+
+      await ServerEvents.appendAuthenticationEvent(event);
+
+      res.json({ success: true });
+    } catch (err) {
+      res.status(400).json({ oof: true });
+      return;
+    }
+  }
+
+  /**
    * Issues (and sends) a JWT for a user.
    *
    * @param user The user uuid for which to generate a token for
@@ -380,19 +405,18 @@ export class Authentication {
         break;
 
       case crudType.UPDATE:
-        // Make temporary object
-        var temp = {
-          email: event.data.email,
-          name: event.data.name,
-          saltedPwdHash: event.data.saltedPwdHash,
-          totpSecret: event.data.totpSecret,
-        } as User;
-
-        // Delete all null values
-        Object.keys(temp).forEach(key => temp[key] == null && delete temp[key]);
+        /**
+         * The user to be updated
+         */
+        const user = Authentication.usersProjection[index];
 
         // Assign the changed values
-        Object.assign(Authentication.usersProjection[index], temp);
+        if (event.data.email != null) user.email = event.data.email;
+        if (event.data.name != null) user.name = event.data.name;
+        if (event.data.saltedPwdHash != null)
+          user.saltedPwdHash = event.data.saltedPwdHash;
+        if (event.data.totpSecret != null)
+          user.totpSecret = event.data.totpSecret;
         break;
 
       case crudType.DELETE:
