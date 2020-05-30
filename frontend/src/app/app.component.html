@@ -13,7 +13,7 @@
     <span class="example-fill-remaining-space"></span>
 
     <!-- On the right side-->
-    <ng-container class="user-right">
+    <div class="user-right">
       <ng-container *ngIf="!loading">
         <ng-container *ngIf="authStatus.authorized">
           <button mat-stroked-button [matMenuTriggerFor]="appMenu">
@@ -72,7 +72,7 @@
       </ng-container>
 
       <ng-container *ngIf="loading">Please wait...</ng-container>
-    </ng-container>
+    </div>
   </mat-toolbar>
 
   <mat-sidenav-container class="sidenav-container" autosize>
