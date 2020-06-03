@@ -7,6 +7,10 @@
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
 
+  "htmlhint.options": {
+    "attr-lowercase": false
+  },
+
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
