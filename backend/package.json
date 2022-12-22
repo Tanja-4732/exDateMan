@@ -37,7 +37,7 @@
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "node-gyp": "^5.1.0",
     "nodemon": "^1.19.4",
     "p-event": "^4.1.0",
